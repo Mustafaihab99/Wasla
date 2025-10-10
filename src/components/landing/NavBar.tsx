@@ -11,7 +11,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/icons/app-logo.png";
 
 export default function NavBar() {
@@ -23,6 +23,7 @@ export default function NavBar() {
   const [themeOpen, setThemeOpen] = useState(false);
 
   const isAuthPage = location.pathname.includes("auth");
+  const navigate = useNavigate();
 
   const themes = [
     { key: "light", label: t("nav.light") },
@@ -103,7 +104,7 @@ export default function NavBar() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
-            onClick={() => alert("Go to Login Page")}>
+            onClick={() => navigate("/auth/login")}>
             {t("nav.login")}
           </motion.button>
         )}
@@ -221,7 +222,7 @@ export default function NavBar() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  onClick={() => alert('Go to Login Page')}>
+                  onClick={() => navigate("/auth/login")}>
                   {t('nav.login')}
                 </motion.button>
 
