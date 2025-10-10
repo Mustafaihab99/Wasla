@@ -11,47 +11,43 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import logo from "../../assets/images/icons/app-logo.png";
 
 export default function NavBar() {
   const { theme, setTheme } = useContext(ThemeContext);
   const { t, i18n } = useTranslation();
+  const location = useLocation();
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [themeOpen, setThemeOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [themeOpen, setThemeOpen] = useState<boolean>(false);
+
+  // ✅ لو المسار يحتوي على كلمة auth
+  const isAuthPage = location.pathname.includes("auth");
+
   const themes = [
     { key: "light", label: t("nav.light") },
     { key: "dark", label: t("nav.dark") },
     { key: "warm", label: t("nav.warm") },
     { key: "cold", label: t("nav.cold") },
   ];
+
   const nav = [
-    {
-      label : t("nav.about"),
-      link : "about" 
-    } ,
-    {
-      label : t("nav.service"),
-      link : "services"
-    } ,
-    {
-      label : t("nav.home"),
-      link : "home"
-    }
-  ]
-  // Load saved theme
+    { label: t("nav.about"), link: "about" },
+    { label: t("nav.service"), link: "services" },
+    { label: t("nav.home"), link: "home" },
+  ];
+
   useEffect(() => {
     const savedTheme = localStorage.getItem("appTheme");
     if (savedTheme && themes.some((th) => th.key === savedTheme))
       setTheme(savedTheme);
   }, []);
 
-  // Save theme
   useEffect(() => {
     localStorage.setItem("appTheme", theme);
   }, [theme]);
 
-  // Toggle Language
   const toggleLanguage = () => {
     const newLang = i18n.language === "en" ? "ar" : "en";
     i18n.changeLanguage(newLang);
@@ -59,7 +55,6 @@ export default function NavBar() {
     document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
   };
 
-  // Theme Icon
   const themeIcon = (th: string) => {
     switch (th) {
       case "dark":
@@ -74,65 +69,57 @@ export default function NavBar() {
   };
 
   return (
-    <header
-      className="w-full bg-background shadow-md border-b border-border py-3 px-6 flex justify-between items-center fixed top-0 left-0 z-50"
-      dir="ltr"
-    >
+    <header className="w-full bg-background shadow-md border-b border-border py-3 px-6 flex justify-between items-center fixed top-0 left-0 z-50" dir="ltr">
       {/* Logo */}
       <motion.div
         className="flex items-center gap-2"
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+        transition={{ duration: 0.5 }}>
         <img src={logo} alt="Logo" className="w-10 h-10" />
         <h3 className="text-lg font-semibold text-foreground">Wasla</h3>
       </motion.div>
 
-      {/* Desktop Nav */}
-      <nav className="hidden md:flex gap-6 text-foreground font-medium">
-        {nav.map((item, i) => (
-          <motion.a
-            key={item.link}
-            href={`#${item.link}`}
-            className="hover:text-primary transition-colors"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 * i }}
-          >
-            {item.label}
-          </motion.a>
-        ))}
-      </nav>
+      {/* ✅ لو مش صفحة auth نعرض اللينكات */}
+      {!isAuthPage && (
+        <nav className="hidden md:flex gap-6 text-foreground font-medium">
+          {nav.map((item, i) => (
+            <motion.a
+              key={item.link}
+              href={`#${item.link}`}
+              className="hover:text-primary transition-colors"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 * i }}>
+              {item.label}
+            </motion.a>
+          ))}
+        </nav>
+      )}
 
       {/* Actions */}
       <div className="flex items-center gap-3 relative">
-        {/* Login Button */}
-        <motion.button
-          className="hidden md:block px-4 py-2 rounded-lg bg-primary text-white font-semibold hover:opacity-90 transition-all"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          onClick={() => alert('Go to Login Page')}
-        >
-          {t("nav.login")}
-        </motion.button>
+        {/* ✅ زرار Login يظهر فقط لو مش في صفحة auth */}
+        {!isAuthPage && (
+          <motion.button
+            className="hidden md:block px-4 py-2 rounded-lg bg-primary text-white font-semibold hover:opacity-90 transition-all"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => alert("Go to Login Page")}>
+            {t("nav.login")}
+          </motion.button>
+        )}
 
         {/* Theme Button */}
-        <motion.div
-          className="relative"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
+        <motion.div className="relative" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <button
             onClick={() => setThemeOpen((prev) => !prev)}
             className="p-2 rounded-full border border-border hover:bg-primary/10 transition-all text-primary"
-            title="Change Theme"
-          >
+            title="Change Theme">
             {themeIcon(theme)}
           </button>
 
-          {/* Dropdown Animation */}
           <AnimatePresence mode="wait">
             {themeOpen && (
               <motion.ul
@@ -140,8 +127,7 @@ export default function NavBar() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -10, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
-                className="absolute right-0 mt-2 bg-background border border-border rounded-xl shadow-lg z-40"
-              >
+                className="absolute right-0 mt-2 bg-background border border-border rounded-xl shadow-lg z-40">
                 {themes.map((th) => (
                   <li
                     key={th.key}
@@ -153,12 +139,9 @@ export default function NavBar() {
                       theme === th.key
                         ? "text-primary font-semibold"
                         : "text-foreground"
-                    }`}
-                  >
+                    }`}>
                     {themeIcon(th.key)}
-                    <span>
-                      {th.label.charAt(0).toUpperCase() + th.label.slice(1)}
-                    </span>
+                    <span>{th.label.charAt(0).toUpperCase() + th.label.slice(1)}</span>
                   </li>
                 ))}
               </motion.ul>
@@ -171,91 +154,72 @@ export default function NavBar() {
           onClick={toggleLanguage}
           className="flex items-center gap-1 p-2 px-3 rounded-md border border-border hover:bg-primary/10 transition-all"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
+          animate={{ opacity: 1 }}>
           <FaGlobe className="text-primary" />
           <span className="font-semibold uppercase">{i18n.language}</span>
         </motion.button>
 
         {/* Mobile Menu Icon */}
-        <button
-          className="md:hidden text-foreground text-xl"
-          onClick={() => {
-            setMenuOpen(!menuOpen);
-            setThemeOpen(false);
-          }}
-        >
-          {menuOpen ? <FaTimes /> : <FaBars />}
-        </button>
+        {!isAuthPage && (
+          <button
+            className="md:hidden text-foreground text-xl"
+            onClick={() => {
+              setMenuOpen(!menuOpen);
+              setThemeOpen(false);
+            }}>
+            {menuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        )}
       </div>
 
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 flex justify-end"
-            onClick={() => setMenuOpen(false)}
-          >
+      {!isAuthPage && (
+        <AnimatePresence>
+          {menuOpen && (
             <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 200, damping: 22 }}
-              className="w-3/4 sm:w-1/2 md:w-1/3 h-full bg-background border-l border-border shadow-2xl flex flex-col p-6 relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close Button */}
-              <button
-                className="absolute top-4 right-4 text-xl text-foreground hover:text-primary transition-colors"
-                onClick={() => setMenuOpen(false)}
-              >
-                <FaTimes />
-              </button>
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 flex justify-end"
+              onClick={() => setMenuOpen(false)}>
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", stiffness: 200, damping: 22 }}
+                className="w-3/4 sm:w-1/2 md:w-1/3 h-full bg-background border-l border-border shadow-2xl flex flex-col p-6 relative"
+                onClick={(e) => e.stopPropagation()}>
+                <button
+                  className="absolute top-4 right-4 text-xl text-foreground hover:text-primary transition-colors"
+                  onClick={() => setMenuOpen(false)}>
+                  <FaTimes />
+                </button>
 
-              {/* Logo */}
-              <div className="flex items-center gap-2 mb-8 mt-8">
-                <img src={logo} alt="Logo" className="w-10 h-10" />
-                <h3 className="text-lg font-semibold text-foreground">Wasla</h3>
-              </div>
+                <div className="flex items-center gap-2 mb-8 mt-8">
+                  <img src={logo} alt="Logo" className="w-10 h-10" />
+                  <h3 className="text-lg font-semibold text-foreground">Wasla</h3>
+                </div>
 
-              {/* Links */}
-              <div className="flex flex-col gap-5">
-                {nav.map((item, i) => (
-                  <motion.a
-                    key={item.link}
-                    href={`#${item.link}`}
-                    onClick={() => setMenuOpen(false)}
-                    className="text-lg font-medium text-foreground hover:text-primary transition-all"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 * i }}
-                  >
-                    {item.label}
-                  </motion.a>
-                ))}
-              </div>
-
-              {/* actions */}
-              <div className="mt-auto pt-6 border-t border-border flex flex-col gap-3">
-                <motion.button
-                  className="w-full py-2 rounded-lg bg-primary text-white font-semibold hover:opacity-90 transition-all"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  onClick={() => alert('Go to Login Page')}
-                >
-                  {t("nav.login")}
-                </motion.button>
-
-              </div>
+                <div className="flex flex-col gap-5">
+                  {nav.map((item, i) => (
+                    <motion.a
+                      key={item.link}
+                      href={`#${item.link}`}
+                      onClick={() => setMenuOpen(false)}
+                      className="text-lg font-medium text-foreground hover:text-primary transition-all"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 * i }}>
+                      {item.label}
+                    </motion.a>
+                  ))}
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      )}
     </header>
   );
 }

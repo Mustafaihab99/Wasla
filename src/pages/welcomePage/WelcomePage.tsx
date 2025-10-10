@@ -1,8 +1,10 @@
-import AboutSection from "../../components/landing/About";
-import FooterSection from "../../components/landing/Footer";
-import HeroSection from "../../components/landing/HeroSection";
-import NavBar from "../../components/landing/NavBar";
-import ServicesSection from "../../components/landing/ServiceSection";
+import { lazy } from "react";
+
+const AboutSection = lazy(() => import("../../components/landing/About"));
+const FooterSection = lazy(() => import("../../components/landing/Footer"));
+const HeroSection = lazy(() =>import("../../components/landing/HeroSection"));
+const NavBar = lazy(() => import("../../components/landing/NavBar"));
+const ServicesSection = lazy(() =>import("../../components/landing/ServiceSection"));
 
 export default function Home() {
   

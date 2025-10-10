@@ -57,6 +57,11 @@
         "Online Payments" : "Online Payments",
         "contact" : "Get in Touch",
         "All rights reserved" : "All rights reserved"
+    },
+    "notfound" : {
+        "404" : "404",
+        "oops" : "Oops! The page you're looking for doesn't exist or has been moved",
+        "back" : "Back to Home"
     }
 
 }

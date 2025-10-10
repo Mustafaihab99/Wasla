@@ -2,15 +2,21 @@ import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
 const Home = lazy(() => import ("../pages/welcomePage/WelcomePage"));
+const AuthLayout = lazy(() => import ("../components/layouts/AuthLayout"));
+const NotFound = lazy(() => import ("../pages/notFound/NotFound"));
 
 export default function AppRoutes() {
   return (
       <Routes>
-        {/* App layout */}
-        {/* {/* <Route element={<AppLayout />}> */}
+        {/* welcome page */}
         <Route path="/" element={<Home />} /> 
-        {/* </Route> */}
-        {/* end of app layout */}
+        {/* not found */}
+        <Route path="*" element={<NotFound />} />
+        {/* Auth Layout */}
+        <Route path="auth" element={<AuthLayout />} >
+
+        </Route>
+        {/* End Auth Layout */}
       </Routes>
   );
 }
