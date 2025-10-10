@@ -225,7 +225,7 @@ export default function NavBar() {
                   onClick={() => navigate("/auth/login")}>
                   {t('nav.login')}
                 </motion.button>
-
+                
               </motion.div>
             </motion.div>
           )}
