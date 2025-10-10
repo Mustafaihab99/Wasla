@@ -1,25 +1,23 @@
 import { Outlet } from "react-router-dom";
 import authImage from "../../assets/images/Community.png";
+import NavBar from "../landing/NavBar";
+import FooterSection from "../landing/Footer";
 
-const NavBar = lazy(() => import ("../landing/NavBar")) ;
-const FooterSection = lazy(() => import ("../landing/Footer")) ;
-
-import { lazy } from "react";
 
 export default function AuthLayout(){
     return(
         <div className="flex flex-col min-h-screen">
               <NavBar />
-              <main className="container flex flex-col items-center lg:flex-row flex-1">
-                <div className="flex flex-1 items-center justify-between py-6 lg:py-0">
+              <main className="flex flex-col items-center justify-between lg:flex-row flex-1 mt-20">
+                <div className="flex items-center w-full justify-between py-6 lg:py-0 lg:w-[50%]">
                   <Outlet />
                 </div>
-                <div className="hidden lg:block lg:w-1/2">
+                <div className="hidden lg:block lg:w-[40%]">
                   <img
                     src={authImage}
                     loading="lazy"
                     alt="Auth"
-                    className=""
+                    className="w-[350px] h-[250px]"
                   />
                 </div>
               </main>

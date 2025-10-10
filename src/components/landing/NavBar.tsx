@@ -19,10 +19,9 @@ export default function NavBar() {
   const { t, i18n } = useTranslation();
   const location = useLocation();
 
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const [themeOpen, setThemeOpen] = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [themeOpen, setThemeOpen] = useState(false);
 
-  // ✅ لو المسار يحتوي على كلمة auth
   const isAuthPage = location.pathname.includes("auth");
 
   const themes = [
@@ -69,7 +68,7 @@ export default function NavBar() {
   };
 
   return (
-    <header className="w-full bg-background shadow-md border-b border-border py-3 px-6 flex justify-between items-center fixed top-0 left-0 z-50" dir="ltr">
+    <header className="w-full bg-background shadow-md border-b border-border py-3 px-6 lg:px-32 flex justify-between items-center fixed top-0 left-0 z-50 transition-colors duration-300" dir="ltr">
       {/* Logo */}
       <motion.div
         className="flex items-center gap-2"
@@ -80,26 +79,24 @@ export default function NavBar() {
         <h3 className="text-lg font-semibold text-foreground">Wasla</h3>
       </motion.div>
 
-      {/* ✅ لو مش صفحة auth نعرض اللينكات */}
-      {!isAuthPage && (
-        <nav className="hidden md:flex gap-6 text-foreground font-medium">
-          {nav.map((item, i) => (
-            <motion.a
-              key={item.link}
-              href={`#${item.link}`}
-              className="hover:text-primary transition-colors"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 * i }}>
-              {item.label}
-            </motion.a>
-          ))}
-        </nav>
-      )}
+      {/* Desktop Nav */}
+      <nav className="hidden md:flex gap-6 text-foreground font-medium">
+        {nav.map((item, i) => (
+          <motion.a
+            key={item.link}
+            href={`${isAuthPage ? "/" : `#${item.link}`}`}
+            className="hover:text-primary transition-colors"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 * i }}>
+            {item.label}
+          </motion.a>
+        ))}
+      </nav>
 
       {/* Actions */}
       <div className="flex items-center gap-3 relative">
-        {/* ✅ زرار Login يظهر فقط لو مش في صفحة auth */}
+        {/* Desktop Login Button */}
         {!isAuthPage && (
           <motion.button
             className="hidden md:block px-4 py-2 rounded-lg bg-primary text-white font-semibold hover:opacity-90 transition-all"
@@ -111,7 +108,7 @@ export default function NavBar() {
           </motion.button>
         )}
 
-        {/* Theme Button */}
+        {/* Theme Switcher */}
         <motion.div className="relative" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <button
             onClick={() => setThemeOpen((prev) => !prev)}
@@ -190,17 +187,21 @@ export default function NavBar() {
                 transition={{ type: "spring", stiffness: 200, damping: 22 }}
                 className="w-3/4 sm:w-1/2 md:w-1/3 h-full bg-background border-l border-border shadow-2xl flex flex-col p-6 relative"
                 onClick={(e) => e.stopPropagation()}>
+                
+                {/* Close Button */}
                 <button
                   className="absolute top-4 right-4 text-xl text-foreground hover:text-primary transition-colors"
                   onClick={() => setMenuOpen(false)}>
                   <FaTimes />
                 </button>
 
+                {/* Logo */}
                 <div className="flex items-center gap-2 mb-8 mt-8">
                   <img src={logo} alt="Logo" className="w-10 h-10" />
                   <h3 className="text-lg font-semibold text-foreground">Wasla</h3>
                 </div>
 
+                {/* Links */}
                 <div className="flex flex-col gap-5">
                   {nav.map((item, i) => (
                     <motion.a
@@ -215,6 +216,15 @@ export default function NavBar() {
                     </motion.a>
                   ))}
                 </div>
+                <motion.button
+                  className="mt-10 py-2 rounded-lg bg-primary text-white font-semibold hover:opacity-90 transition-all absolute bottom-4 w-[80%]"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  onClick={() => alert('Go to Login Page')}>
+                  {t('nav.login')}
+                </motion.button>
+
               </motion.div>
             </motion.div>
           )}

@@ -9,6 +9,7 @@ import {
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import logo from "../../assets/images/icons/app-logo.png";
+import { Link } from "react-router-dom";
 
 export default function FooterSection() {
   const { t } = useTranslation();
@@ -24,14 +25,14 @@ export default function FooterSection() {
   };
 
   return (
-    <footer className="relative w-full bg-background border-t border-border pt-14 pb-4">
+    <footer className="relative w-full bg-background border-t border-border pt-14 pb-4 transition-colors duration-300">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(99,102,241,0.08),transparent_60%)]"></div>
       <motion.div
         variants={container}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
-        className="relative container mx-auto px-6 lg:px-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"
+        className="relative mx-auto px-6 lg:px-36 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12"
       >
         {/* logo */}
         <motion.div variants={fadeInUp} className="space-y-4">
@@ -61,9 +62,9 @@ export default function FooterSection() {
             {t("footer.quick")}
           </h4>
           <ul className="space-y-2 text-muted-foreground text-sm">
-            <li><a href="#home" className="hover:text-primary transition-colors">{t("nav.home")}</a></li>
-            <li><a href="#about" className="hover:text-primary transition-colors">{t("nav.about")}</a></li>
-            <li><a href="#services" className="hover:text-primary transition-colors">{t("nav.service")}</a></li>
+            <li><Link to="/" className="hover:text-primary transition-colors">{t("nav.home")}</Link></li>
+            <li><Link to="/" className="hover:text-primary transition-colors">{t("nav.about")}</Link></li>
+            <li><Link to="/" className="hover:text-primary transition-colors">{t("nav.service")}</Link></li>
           </ul>
         </motion.div>
 
