@@ -83,10 +83,10 @@
     "Sending...": "Sending...",
     "Send OTP": "Send OTP",
     "back": "Back to Login",
-    "otplen": "OTP must be 6 digits",
+    "otplen": "OTP must be 4 digits",
     "OTP is required": "OTP is required",
     "Verify OTP": "Verify OTP",
-    "please": "Please enter the 6-digit code sent to",
+    "please": "Please enter the 4-digit code sent to",
     "Enter OTP": "Enter OTP",
     "Verifying...": "Verifying...",
     "Resend Code": "Resend Code",
@@ -97,6 +97,17 @@
     "New Password": "New Password",
     "Confirm New Password": "Confirm New Password",
     "Resetting...": "Resetting...",
-    "passwordMin" : "Password must be more then 8 chars"
+    "passwordMin" : "Password must be more then 8 chars",
+    "rolereq" : "Role is required",
+    "sign" : "Create a new account",
+    "confirm" : "Confirm Password",
+    "enterconf" : "Enter your password again",
+    "Signing in..." : "Signing in...",
+    "SignUp" : "Sign Up",
+    "have" : "I already have an account ",
+    "role": "Role",
+    "chooseRole": "Select your role",
+    "passregex": "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
+
   }
 }

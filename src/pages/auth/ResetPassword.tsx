@@ -17,8 +17,12 @@ export default function ResetPassword() {
 
   const validationSchema = Yup.object({
     password: Yup.string()
-      .min(6, t("login.passwordMin"))
-      .required(t("login.Password is required")),
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          t("login.passregex")
+        )
+        .required(t("login.Password is required")),
+    
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), ""], t("login.passwordsMustMatch"))
       .required(t("login.Confirm password is required")),

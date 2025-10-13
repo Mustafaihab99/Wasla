@@ -10,8 +10,10 @@ import image2 from "../../assets/images/booking.jpg";
 import image3 from "../../assets/images/ride.jpg";
 import image4 from "../../assets/images/chat.jpg";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 export default function HeroSection() {
     const { t } = useTranslation();
+    const navigate = useNavigate()
     const slides = [
     {
       id: 1,
@@ -71,7 +73,10 @@ export default function HeroSection() {
                   <button className="px-5 py-2.5 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-all font-medium text-base">
                     {t("hero.explore")}
                   </button>
-                  <button className="px-5 py-2.5 border border-white text-white rounded-lg hover:bg-white/10 transition-all font-medium text-base">
+                  <button 
+                  className="px-5 py-2.5 border border-white text-white rounded-lg hover:bg-white/10 transition-all font-medium text-base"
+                  onClick={()=> navigate("/auth/login")}
+                  >
                     {t("hero.join")}
                   </button>
                 </div>

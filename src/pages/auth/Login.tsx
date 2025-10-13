@@ -1,11 +1,13 @@
-import { Formik, Form, Field, ErrorMessage , FormikHelpers} from "formik";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import useLogin from "../../hooks/auth/useLogin";
 
 export default function Login() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
+  const { mutateAsync: login, isPending } = useLogin();
 
   const initialValues = {
     email: "",
@@ -13,27 +15,37 @@ export default function Login() {
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string().email(t("login.Invalid email")).required(t("login.Email is required")),
-    password: Yup.string().min(8, t("login.least")).required(t("login.Password is required")),
+    email: Yup.string()
+      .email(t("login.Invalid email"))
+      .required(t("login.Email is required")),
+    password: Yup.string()
+      .min(8, t("login.least"))
+      .required(t("login.Password is required")),
   });
 
- const handleSubmit = (
-  values: typeof initialValues,
-  { setSubmitting }: FormikHelpers<typeof initialValues>
-) => {
-  console.log("Login data:", values);
-  setTimeout(() => setSubmitting(false), 1000);
-};
-
+  const handleSubmit = async (
+    values: typeof initialValues,
+    { setSubmitting }: FormikHelpers<typeof initialValues>
+  ) => {
+    try {
+      await login(values); 
+    } catch (error) {
+      console.error("Login failed", error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <motion.div
-      className="w-full max-w-md mx-auto p-8"
+      className="w-full max-w-lg mx-auto p-8"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="text-4xl font-semibold mb-10 text-foreground">{t("login.log")} </h2>
+      <h2 className="text-4xl font-semibold mb-10 text-foreground">
+        {t("login.log")}
+      </h2>
 
       <Formik
         initialValues={initialValues}
@@ -54,7 +66,11 @@ export default function Login() {
                 placeholder={t("login.enter")}
                 className="p-3 border border-border rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-primary"
               />
-              <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
+              <ErrorMessage
+                name="email"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
             </div>
 
             {/* Password */}
@@ -69,7 +85,11 @@ export default function Login() {
                 placeholder={t("login.enterpass")}
                 className="p-3 border border-border rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-primary"
               />
-              <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
+              <ErrorMessage
+                name="password"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
             </div>
 
             {/* Forgot Password */}
@@ -85,10 +105,10 @@ export default function Login() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isPending}
               className="bg-primary text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-all"
             >
-              {isSubmitting ? t("login.Logging in...") : t("login.Login")}
+              {isPending ? t("login.Logging in...") : t("login.Login")}
             </button>
 
             {/* Divider */}
