@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import useResetPass from "../../hooks/auth/useResetPass";
 
 export default function ResetPassword() {
   const location = useLocation();
@@ -10,35 +11,44 @@ export default function ResetPassword() {
   const email = location.state?.email;
   const { t } = useTranslation();
 
+  const { mutateAsync: resetpass, isPending } = useResetPass();
+
   const initialValues = {
-    password: "",
+    newPassword: "",
     confirmPassword: "",
   };
 
   const validationSchema = Yup.object({
-    password: Yup.string()
-        .matches(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-          t("login.passregex")
-        )
-        .required(t("login.Password is required")),
-    
+    newPassword: Yup.string()
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/,
+        t("login.passregex")
+      )
+      .required(t("login.Password is required")),
+
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), ""], t("login.passwordsMustMatch"))
+      .oneOf([Yup.ref("newPassword")], t("login.passwordsMustMatch"))
       .required(t("login.Confirm password is required")),
   });
 
   const handleSubmit = async (values: typeof initialValues) => {
-    console.log("Reset Password for:", email, "with new password:", values.password);
-    navigate("/auth/login");
+    try {
+      const payload = { email, newPassword: values.newPassword };
+      await resetpass(payload, {
+        onSuccess: () => {
+          navigate("/auth/login");
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <motion.div
       className="w-full max-w-md mx-auto p-6"
       initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-    >
+      animate={{ opacity: 1, y: 0 }}>
       <h2 className="text-2xl font-bold mb-6 text-foreground">
         {t("login.Reset Password")}
       </h2>
@@ -49,19 +59,18 @@ export default function ResetPassword() {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+        onSubmit={handleSubmit}>
         {({ isSubmitting }) => (
           <Form className="flex flex-col gap-4">
             <div>
               <Field
-                name="password"
+                name="newPassword"
                 type="password"
                 placeholder={t("login.New Password")}
                 className="w-full border border-border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
               />
               <ErrorMessage
-                name="password"
+                name="newPassword"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
@@ -84,11 +93,8 @@ export default function ResetPassword() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:opacity-90 transition-all"
-            >
-              {isSubmitting
-                ? t("login.Resetting...")
-                : t("login.Reset Password")}
+              className="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:opacity-90 transition-all">
+              {isPending ? t("login.Resetting...") : t("login.Reset Password")}
             </button>
           </Form>
         )}

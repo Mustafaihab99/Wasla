@@ -3,11 +3,13 @@ import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import useResendCode from "../../hooks/auth/useResendCode";
 
 export default function ForgetPassword() {
   const navigate = useNavigate();
   const {t} = useTranslation();
   const initialValues = { email: "" };
+  const {mutateAsync: resend , isPending} = useResendCode();
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -15,11 +17,18 @@ export default function ForgetPassword() {
       .required(t("login.Email is required")),
   });
 
-  const handleSubmit = async (values: { email: string; }) => {
-    console.log("Send OTP to:", values.email);
-    navigate("/auth/verify-otp", { state: { email: values.email } });
-
-  };
+  const handleSubmit = async (values: { email: string }) => {
+  try {
+    const payload = { email: values.email };
+    await resend(payload, {
+      onSuccess: () => {
+        navigate("/auth/verify-otp", { state: { email: values.email } });
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <motion.div
@@ -60,7 +69,7 @@ export default function ForgetPassword() {
               disabled={isSubmitting}
               className="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:opacity-90 transition-all"
             >
-              {isSubmitting ? t("login.Sending...") : t("login.Send OTP")}
+              {isPending ? t("login.Sending...") : t("login.Send OTP")}
             </button>
 
             <p

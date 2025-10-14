@@ -107,7 +107,7 @@
     "have" : "I already have an account ",
     "role": "Role",
     "chooseRole": "Select your role",
-    "passregex": "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
-
+    "passregex": "Password must be at least 8 characters and include uppercase, lowercase, number, and special character",
+    "Resend available in" : "Resend available in "
   }
 }

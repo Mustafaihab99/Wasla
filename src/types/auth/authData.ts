@@ -18,3 +18,7 @@ export interface verifyEmailData{
 export interface resendData{
     email: string;
 }
+export interface forgetData{
+    email: string;
+    newPassword: string;
+}

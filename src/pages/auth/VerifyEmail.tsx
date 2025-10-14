@@ -5,17 +5,21 @@ import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useVerifyEmail from "../../hooks/auth/useVerifyEmail";
 import useResendCode from "../../hooks/auth/useResendCode";
+import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
 export default function VerifyEmail() {
   const location = useLocation();
-  // const navigate = useNavigate();
   const email = location.state?.email;
   const { t } = useTranslation();
 
   const { mutateAsync: verifyEmail, isPending } = useVerifyEmail();
-  const {mutateAsync: resendcode , isPending: isLoading} = useResendCode();
+  const { mutateAsync: resendcode, isPending: isLoading } = useResendCode();
 
-  const initialValues = { 
+  const [timer, setTimer] = useState(0);
+  const [isCooldown, setIsCooldown] = useState(false);
+
+  const initialValues = {
     verificationCode: "",
   };
 
@@ -30,6 +34,7 @@ export default function VerifyEmail() {
       const payload = { email, verificationCode: values.verificationCode };
       await verifyEmail(payload, {
         onSuccess: () => {
+          toast.success("Verified Successfully");
           // navigate("/auth/login");
         },
       });
@@ -37,10 +42,33 @@ export default function VerifyEmail() {
       console.error(error);
     }
   };
-  async function handleResend(){
-    const payload = {email};
-    await resendcode(payload);
-  }
+
+  const handleResend = async () => {
+    if (isCooldown) return;
+
+    try {
+      const payload = { email };
+      await resendcode(payload);
+      toast.success("Code resent successfully");
+      setIsCooldown(true);
+      setTimer(60);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | undefined;
+    if (isCooldown && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setIsCooldown(false);
+    }
+    return () => clearInterval(interval);
+  }, [isCooldown, timer]);
+
   return (
     <motion.div
       className="w-full max-w-md mx-auto p-6"
@@ -85,10 +113,19 @@ export default function VerifyEmail() {
               {isPending ? t("login.Verifying...") : t("login.Verify OTP")}
             </button>
 
-            <p className="text-center text-sm text-primary cursor-pointer hover:underline"
-            onClick={handleResend}
+            <p
+              onClick={handleResend}
+              className={`text-center text-sm cursor-pointer transition-all ${
+                isCooldown || isLoading
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "text-primary hover:underline"
+              }`}
             >
-              {!isLoading ? t("login.Resend Code") : t("login.Sending...")}
+              {isCooldown
+                ? `${t("login.Resend available in")} ${timer}s`
+                : !isLoading
+                ? t("login.Resend Code")
+                : t("login.Sending...")}
             </p>
           </Form>
         )}

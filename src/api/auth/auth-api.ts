@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import axiosInstance from "../axios-instance";
 import {
+  forgetData,
   loginData,
   resendData,
   roleData,
@@ -93,6 +94,23 @@ export async function resendApi(formData: resendData) {
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     const errorMessage = axiosError.response?.data?.message || "Sended failed";
+    toast.error(errorMessage);
+    console.log(error);
+    throw error;
+  }
+}
+
+// forget pass
+export async function forgetPassApi(formData: forgetData) {
+  try{
+    const response = await axiosInstance.post("Account/forget-password" , formData);
+    console.log(response);
+    if(response?.status === 201)
+      toast.success(response?.data?.message || "Reseted Successful");
+    return response;
+  }catch(error){
+    const axiosError = error as AxiosError<{message?: string}>;
+    const errorMessage = axiosError.response?.data?.message || "Reseted Failed";
     toast.error(errorMessage);
     console.log(error);
     throw error;

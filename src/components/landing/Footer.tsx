@@ -9,11 +9,11 @@ import {
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import logo from "../../assets/images/icons/app-logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function FooterSection() {
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
     show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOut } },
@@ -37,7 +37,7 @@ export default function FooterSection() {
         {/* logo */}
         <motion.div variants={fadeInUp} className="space-y-4">
           <div className="flex items-center gap-2">
-          <img src={logo} alt="logo" className="w-10 h-10" />  
+          <img src={logo} alt="logo" className="w-10 h-10 hover:cursor-pointer" onClick={()=> navigate("/")} />  
           <h3 className="text-2xl font-extrabold text-primary">Wasla</h3>
           </div>
           <p className="text-muted-foreground text-sm leading-relaxed">
