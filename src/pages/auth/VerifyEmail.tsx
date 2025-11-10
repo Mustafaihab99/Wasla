@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useVerifyEmail from "../../hooks/auth/useVerifyEmail";
 import useResendCode from "../../hooks/auth/useResendCode";
@@ -11,8 +11,9 @@ import { useEffect, useState } from "react";
 export default function VerifyEmail() {
   const location = useLocation();
   const email = location.state?.email;
+  const role = location.state?.role;
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   const { mutateAsync: verifyEmail, isPending } = useVerifyEmail();
   const { mutateAsync: resendcode, isPending: isLoading } = useResendCode();
 
@@ -35,7 +36,7 @@ export default function VerifyEmail() {
       await verifyEmail(payload, {
         onSuccess: () => {
           toast.success("Verified Successfully");
-          // navigate("/auth/login");
+          navigate("/auth/complete-profile", { state: { email, role } });
         },
       });
     } catch (error) {

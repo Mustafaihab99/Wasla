@@ -48,7 +48,7 @@ const validationSchema = Yup.object({
   ) => {
     try {
       await signup(values as signData);
-      navigate("/auth/verify-email", { state: { email: values.email } });
+      navigate("/auth/verify-email", { state: { email: values.email , role: values.role } });
     } catch (err) {
       console.error("Signup failed:", err);
     } finally {

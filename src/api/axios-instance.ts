@@ -1,7 +1,11 @@
 import axios from "axios";
 
+const isLocal = window.location.hostname === "localhost";
+
 const axiosInstance = axios.create({
-  baseURL: "/api/",
+  baseURL: isLocal
+    ? "http://wasla1.runasp.net/api/"
+    : "/api/",
   headers: {
     "Content-Type": "application/json",
   },
