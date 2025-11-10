@@ -109,5 +109,36 @@
     "chooseRole": "Select your role",
     "passregex": "Password must be at least 8 characters and include uppercase, lowercase, number, and special character",
     "Resend available in" : "Resend available in "
+  },
+  "profile" : {
+    "complete" : "Complete Your Profile",
+    "Saving..." : "Saving...",
+    "doctor" : {
+      "saveDoc" : "Save Doctor Profile",
+      "uploadcv" : "Upload CV",
+      "descripe": "Describe your experience...",
+      "Description": "Description",
+      "Phone" : "Phone",
+      "Birthday" : "Birthday",
+      "Graduation" : "Graduation Year",
+      "University" : "University Name",
+      "enteruni" : "Enter your university",
+      "Experience" : "Experience Years",
+      "selectspi" : "Select specialization",
+      "Specialization" : "Specialization",
+      "entername" : "Enter your full name",
+      "name" : "Full Name",
+      "cvreq" : "CV file required",
+      "imgreq" : "Profile image required",
+      "descreq" : "Description required",
+      "phonereq" : "Phone is required",
+      "birthreq": "Birth date is required",
+      "gradreq" : "Graduation year required",
+      "unireq" : "University name required",
+      "exreq" : "Experience years required",
+      "year" : "Years must be positive",
+      "spireq" : "Specialization is required",
+      "namereq" : "Full name is required"
+    }
   }
 }

@@ -11,6 +11,7 @@ const VerifyOTP = lazy(() => import ("../pages/auth/VerifyOTP"));
 const ResetPassword = lazy(() => import ("../pages/auth/ResetPassword"));
 const SignUp = lazy(() => import ("../pages/auth/SignUp"));
 const VerifyEmail = lazy(() => import ("../pages/auth/VerifyEmail"));
+const CompleteProfile = lazy(() => import ("../pages/auth/CompleteProfile"));
 
 export default function AppRoutes() {
   return (
@@ -28,6 +29,7 @@ export default function AppRoutes() {
           <Route path="/auth/verify-email" element={<VerifyEmail />} />
           <Route path="/auth/reset-password" element={<ResetPassword />} />
         </Route>
+          <Route path="/auth/complete-profile" element={<CompleteProfile />} />
         {/* End Auth Layout */}
       </Routes>
   );
