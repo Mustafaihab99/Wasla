@@ -139,6 +139,14 @@
       "year" : "Years must be positive",
       "spireq" : "Specialization is required",
       "namereq" : "Full name is required"
+    },
+    "resident" : {
+      "natmin" : "National ID should at least 14 digits",
+      "nationalreq" : "National ID is required",
+      "nationalnum" : "National ID should be numbers",
+      "national" : "National ID",
+      "enternational" : "Enter your National ID",
+      "saveResident" : "Save Resident Profile"
     }
   }
 }

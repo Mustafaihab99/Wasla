@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import DoctorFormFields from "../../components/auth/DoctorFormFields";
 import NavBar from "../../components/landing/NavBar";
 import FooterSection from "../../components/landing/Footer";
-// import ResidentFormFields from "../../components/forms/ResidentFormFields";
+import ResidentFormFields from "../../components/auth/ResidentFormFields";
 
 export default function CompleteProfile() {
   const location = useLocation();
@@ -21,7 +21,7 @@ export default function CompleteProfile() {
 
   const roleComponents: Record<string, React.FC<{ email: string }>> = {
     Doctor: DoctorFormFields,
-    // resident: ResidentFormFields,
+    Resident: ResidentFormFields,
     // restaurant: RestaurantFormFields,
     // technician: TechnicianFormFields,
   };
