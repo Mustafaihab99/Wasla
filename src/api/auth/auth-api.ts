@@ -34,9 +34,9 @@ export async function loginApi(credentials: loginData) {
 }
 
 // get roles
-export async function allRoles(): Promise<roleData> {
+export async function allRoles(): Promise<roleData[]> {
   const response = await axiosInstance.get(`Roles`);
-  return response.data;
+  return response.data.data;
 }
 
 // sign up
@@ -45,7 +45,6 @@ export async function signupApi(formData: signData) {
     const response = await axiosInstance.post(`Account/register`, formData);
     console.log(response);
     if (response?.status === 201) {
-      console.log(response.data);
       toast.success(response?.data?.message || "Registration successful");
     }
     return response;
@@ -54,7 +53,6 @@ export async function signupApi(formData: signData) {
     const errorMessage =
       axiosError.response?.data?.message || "Registration failed";
     toast.error(errorMessage);
-    console.log(error);
     throw error;
   }
 }
@@ -65,7 +63,6 @@ export async function verifyEmailApi(formData: verifyEmailData) {
     const response = await axiosInstance.post(`Account/verify-email`, formData);
     console.log(response);
     if (response?.status === 201) {
-      console.log(response.data);
       toast.success(response?.data?.message || "sended successful");
     }
     return response;
@@ -73,7 +70,6 @@ export async function verifyEmailApi(formData: verifyEmailData) {
     const axiosError = error as AxiosError<{ message?: string }>;
     const errorMessage = axiosError.response?.data?.message || "Sended failed";
     toast.error(errorMessage);
-    console.log(error);
     throw error;
   }
 }
@@ -87,7 +83,6 @@ export async function resendApi(formData: resendData) {
     );
     console.log(response);
     if (response?.status === 201) {
-      console.log(response.data);
       toast.success(response?.data?.message || "sended successful");
     }
     return response;
@@ -112,7 +107,6 @@ export async function forgetPassApi(formData: forgetData) {
     const axiosError = error as AxiosError<{message?: string}>;
     const errorMessage = axiosError.response?.data?.message || "Reseted Failed";
     toast.error(errorMessage);
-    console.log(error);
     throw error;
   }
 }

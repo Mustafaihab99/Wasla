@@ -11,23 +11,8 @@ export async function allSpecialzed(): Promise<SpicialzedData[]> {
   const response = await axiosInstance.get(`Doctor/DoctorSpecializations`);
   return response.data.data;
 }
-// post doctor data
-export interface fieldValues {
-  Email: string;
-  FullName: string;
-  SpecializationId: number;
-  ExperienceYears: number;
-  UniversityName: string;
-  GraduationYear: number;
-  BirthDay: string;
-  Phone: string;
-  Latitude: number;
-  Longitude: number;
-  Description: string;
-  Image: File;
-  CV: File;
-}
 
+// post doctor data
 export async function setDoctorProfile(formData: FormData) {
   try {
     const response = await axiosInstance.post("Doctor/CompleteData", formData, {

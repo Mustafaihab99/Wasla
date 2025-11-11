@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -47,7 +46,6 @@ export default function ResidentFormFields({ email }: { email: string }) {
       await completeResident(formData);
       navigate("/auth/login");
     } catch (error) {
-      toast.error("Registeration Failed");
       console.error(error);
     }
   };
@@ -139,7 +137,7 @@ export default function ResidentFormFields({ email }: { email: string }) {
             {/* BirthDay */}
             <div className="flex flex-col">
               <label className="font-medium mb-1 text-foreground">
-                {t("profile.doctor.birthday")}
+                {t("profile.doctor.Birthday")}
               </label>
               <Field
                 type="date"
@@ -156,7 +154,7 @@ export default function ResidentFormFields({ email }: { email: string }) {
             {/* Phone */}
             <div className="flex flex-col">
               <label className="font-medium mb-1 text-foreground">
-                {t("profile.doctor.phone")}
+                {t("profile.doctor.Phone")}
               </label>
               <Field
                 name="Phone"
@@ -178,7 +176,7 @@ export default function ResidentFormFields({ email }: { email: string }) {
                 className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-all"
               >
                 {isPending
-                  ? t("profile.saving")
+                  ? t("profile.Saving...")
                   : t("profile.resident.saveResident")}
               </button>
             </div>

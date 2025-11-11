@@ -21,7 +21,7 @@ export default function SignUp() {
   };
 
   const { data } = useRoles();
-  const roles = data?.data ?? [];
+  const roles = data ?? [];
 const validationSchema = Yup.object({
   email: Yup.string()
     .email(t("login.Invalid email"))
@@ -138,9 +138,9 @@ const validationSchema = Yup.object({
                 className="p-3 border border-primary rounded-lg bg-background text-gray-500 font-semibold focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
               >
                 <option value="">{t("login.chooseRole")}</option>
-                {roles.map((role: string) => (
-                  <option key={role} value={role}>
-                    {role}
+                {roles.map((role) => (
+                  <option key={role.id} value={role.value}>
+                    {role.roleName}
                   </option>
                 ))}
               </Field>

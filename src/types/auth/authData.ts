@@ -3,7 +3,9 @@ export interface loginData{
     password: string;
 }
 export interface roleData{
-    data : string[];
+    id : string;
+    roleName: string;
+    value: string;
 }
 export interface signData{
     email: string;
