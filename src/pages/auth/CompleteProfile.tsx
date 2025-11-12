@@ -20,8 +20,8 @@ export default function CompleteProfile() {
   }
 
   const roleComponents: Record<string, React.FC<{ email: string }>> = {
-    Doctor: DoctorFormFields,
-    Resident: ResidentFormFields,
+    doctor: DoctorFormFields,
+    resident: ResidentFormFields,
     // restaurant: RestaurantFormFields,
     // technician: TechnicianFormFields,
   };

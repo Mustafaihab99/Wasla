@@ -1,4 +1,5 @@
 import axios from "axios";
+import i18n from "../i18n";
 
 const isLocal = window.location.hostname === "localhost";
 
@@ -11,18 +12,21 @@ const axiosInstance = axios.create({
   },
 });
 
+i18n.on("languageChanged", (lng) => {
+  axiosInstance.defaults.headers["Accept-Language"] = lng;
+});
 // Add token and language before each request
 axiosInstance.interceptors.request.use(
   (config) => {
-    // read token
     const token = sessionStorage.getItem("auth_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // read current language from localStorage every time
-    const lang = localStorage.getItem("applang") || "en";
-    // if your API uses it as query param, we add it automatically
+    const lang = i18n.language || "en";
+    config.headers["Accept-Language"] = lang;
+
+    // add query param
     if (config.url && !config.url.includes("lan=")) {
       const separator = config.url.includes("?") ? "&" : "?";
       config.url += `${separator}lan=${lang}`;
@@ -32,6 +36,7 @@ axiosInstance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
 
 // Handle 401 responses
 axiosInstance.interceptors.response.use(
