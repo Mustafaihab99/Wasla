@@ -14,9 +14,7 @@ import {
 export async function loginApi(credentials: loginData) {
   try {
     const response = await axiosInstance.post(`/Account/login`, credentials);
-
     if (response.status === 200) {
-      toast.success(response.data?.message || "Login successful");
       sessionStorage.setItem("auth_token", response.data?.data?.token);
     }
 
@@ -24,7 +22,6 @@ export async function loginApi(credentials: loginData) {
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const message = error.response?.data?.message || "Login failed";
-
       toast.error(message);
     } else {
       toast.error("Unexpected error occurred");
@@ -43,7 +40,6 @@ export async function allRoles(): Promise<roleData[]> {
 export async function signupApi(formData: signData) {
   try {
     const response = await axiosInstance.post(`Account/register`, formData);
-    console.log(response);
     if (response?.status === 201) {
       toast.success(response?.data?.message || "Registration successful");
     }
@@ -61,7 +57,6 @@ export async function signupApi(formData: signData) {
 export async function verifyEmailApi(formData: verifyEmailData) {
   try {
     const response = await axiosInstance.post(`Account/verify-email`, formData);
-    console.log(response);
     if (response?.status === 201) {
       toast.success(response?.data?.message || "sended successful");
     }
@@ -81,7 +76,6 @@ export async function resendApi(formData: resendData) {
       "Account/check-mail-verification",
       formData
     );
-    console.log(response);
     if (response?.status === 201) {
       toast.success(response?.data?.message || "sended successful");
     }
@@ -99,7 +93,6 @@ export async function resendApi(formData: resendData) {
 export async function forgetPassApi(formData: forgetData) {
   try{
     const response = await axiosInstance.post("Account/forget-password" , formData);
-    console.log(response);
     if(response?.status === 201)
       toast.success(response?.data?.message || "Reseted Successful");
     return response;

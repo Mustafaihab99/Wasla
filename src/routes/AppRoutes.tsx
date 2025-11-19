@@ -12,6 +12,8 @@ const ResetPassword = lazy(() => import ("../pages/auth/ResetPassword"));
 const SignUp = lazy(() => import ("../pages/auth/SignUp"));
 const VerifyEmail = lazy(() => import ("../pages/auth/VerifyEmail"));
 const CompleteProfile = lazy(() => import ("../pages/auth/CompleteProfile"));
+// main dashboard
+const MainDashboard = lazy(() => import ("../pages/dashboard/MainDashboard"));
 
 export default function AppRoutes() {
   return (
@@ -31,6 +33,9 @@ export default function AppRoutes() {
         </Route>
           <Route path="/auth/complete-profile" element={<CompleteProfile />} />
         {/* End Auth Layout */}
+        {/* main Dashboard */}
+          <Route path="/dashboard" element={<MainDashboard />} />
+        {/* end main Dashboard */}
       </Routes>
   );
 }

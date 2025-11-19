@@ -4,10 +4,8 @@ import { loginApi } from "../../api/auth/auth-api"
 export default function useLogin(){
     return(
         useMutation({
+            mutationKey: ["login"],
             mutationFn: loginApi,
-            onSuccess: () =>{
-                // navigate
-            }
         })
     )
 }

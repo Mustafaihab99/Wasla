@@ -108,7 +108,11 @@
     "role": "Role",
     "chooseRole": "Select your role",
     "passregex": "Password must be at least 8 characters and include uppercase, lowercase, number, and special character",
-    "Resend available in" : "Resend available in "
+    "Resend available in" : "Resend available in ",
+    "Logged in successfully!" : "Logged in successfully!",
+    "Your account is suspended." : "Your account is suspended.",
+    "Your account is not approved yet." : "Your account is not approved yet.",
+    "Your account has been deleted." : "Your account has been deleted."
   },
   "profile" : {
     "complete" : "Complete Your Profile",

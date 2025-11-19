@@ -108,7 +108,11 @@
     "role": "الدور",
     "chooseRole": "اختارك ما هو دورك",
     "passregex" : "من فضلك ادخل كلمة مرور على الاقل 8 حروف وتحتوى على حرف صغير وحرف كبير ورقم وعلامه مميزه",
-    "Resend available in" : "يمكنك اعادة الارسال بعد "
+    "Resend available in" : "يمكنك اعادة الارسال بعد ",
+    "Logged in successfully!" : "تم تسجيل الدخول بنجاح!",
+    "Your account is suspended." : "ملفك الشخصي موقوف.",
+    "Your account is not approved yet." : "المشرف لم يوافق على ملفك بعد.",
+    "Your account has been deleted." : "تم حذف ملفك الشخصي."
   },
   "profile" : {
     "complete" : "اكمل ملفك الشخصي",
@@ -134,7 +138,7 @@
       "phonereq" : "رقم التلفون مطلوب",
       "birthreq" : "تاريخ الميلاد مطلوب",
       "gradreq" : "سنة التخرج مطلوبة",
-      "nuireq" : "اسم الجامعة مطلوب",
+      "unireq" : "اسم الجامعة مطلوب",
       "exreq" : "سنوات الخبرة مطلوبة",
       "year" : "السنوات يجب ان تكون صحيحة",
       "spireq" : "التخصص مطلوب",

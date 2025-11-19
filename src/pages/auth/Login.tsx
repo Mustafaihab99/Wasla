@@ -1,13 +1,15 @@
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import useLogin from "../../hooks/auth/useLogin";
+import { toast } from "sonner";
 
 export default function Login() {
   const { t } = useTranslation();
   const { mutateAsync: login, isPending } = useLogin();
+  const navigate = useNavigate();
 
   const initialValues = {
     email: "",
@@ -24,17 +26,53 @@ export default function Login() {
   });
 
   const handleSubmit = async (
-    values: typeof initialValues,
-    { setSubmitting }: FormikHelpers<typeof initialValues>
-  ) => {
-    try {
-      await login(values); 
-    } catch (error) {
-      console.error("Login failed", error);
-    } finally {
-      setSubmitting(false);
+  values: typeof initialValues,
+  { setSubmitting }: FormikHelpers<typeof initialValues>
+) => {
+  try {
+    const res = await login(values); 
+    const data = res.data.data;
+
+    const { isVerfied, isCompletedRegister, statue, role } = data;
+
+    //Not Verified
+    if (!isVerfied) {
+      return navigate("/auth/verify-email", {
+        state: { email: values.email , role}
+      });
     }
-  };
+
+    //Verified but !completed
+    if (!isCompletedRegister) {
+      return navigate("/auth/complete-profile", {
+        state: { email: values.email, role }
+      });
+    }
+
+    // check statue
+    switch (statue) {
+      case 0:
+        // success login
+        toast.success(t("login.Logged in successfully!"));
+        sessionStorage.setItem("auth_token", data.token);
+        sessionStorage.setItem("role", role);
+        return navigate("/dashboard");
+
+      case 1:
+        return toast.error(t("login.Your account is suspended."));
+
+      case 2:
+        return toast.error(t("login.Your account is not approved yet."));
+
+      case 3:
+        return toast.error(t("login.Your account has been deleted."));
+    }
+  } catch (error) {
+    console.error("Login failed", error);
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   return (
     <motion.div
