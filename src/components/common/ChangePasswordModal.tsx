@@ -67,7 +67,7 @@ export default function ChangePasswordModal({
             value={formik.values.email}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="border border-border p-3 rounded-lg w-full bg-input"
+            className="border border-border p-3 rounded-lg w-full text-primary bg-input"
           />
           {formik.touched.email && formik.errors.email && (
             <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
@@ -83,7 +83,7 @@ export default function ChangePasswordModal({
             value={formik.values.currentPassword}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="border border-border p-3 rounded-lg w-full bg-input"
+            className="border border-border p-3 text-primary rounded-lg w-full bg-input"
           />
           {formik.touched.currentPassword && formik.errors.currentPassword && (
             <p className="text-red-500 text-sm mt-1">{formik.errors.currentPassword}</p>
@@ -99,7 +99,7 @@ export default function ChangePasswordModal({
             value={formik.values.newPassword}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="border border-border p-3 rounded-lg w-full bg-input"
+            className="border border-border p-3 text-primary rounded-lg w-full bg-input"
           />
           {formik.touched.newPassword && formik.errors.newPassword && (
             <p className="text-red-500 text-sm mt-1">{formik.errors.newPassword}</p>
@@ -115,7 +115,7 @@ export default function ChangePasswordModal({
             value={formik.values.confirmPassword}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            className="border border-border p-3 rounded-lg w-full bg-input"
+            className="border border-border p-3 rounded-lg w-full bg-input text-primary"
           />
           {formik.touched.confirmPassword && formik.errors.confirmPassword && (
             <p className="text-red-500 text-sm mt-1">{formik.errors.confirmPassword}</p>

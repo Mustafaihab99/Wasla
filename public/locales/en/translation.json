@@ -175,5 +175,13 @@
     "save" : "Save",
     "oldPassword" : "Old Password",
     "newPassword" : "New Password"
+  },
+  "doctor" : {
+    "dashboard" : "Doctor Dashboard",
+    "inbox" : "Inbox",
+    "Service" : "Services Management",
+    "profile" : "Profile",
+    "Bio" : "Bio",
+    "downCV" : "Download CV"
   }
 }

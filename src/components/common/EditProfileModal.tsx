@@ -23,6 +23,7 @@ export default function EditProfileModal({
   const [file, setFile] = useState<File | null>(null);
   const { t } = useTranslation();
   const userId = sessionStorage.getItem("user_id");
+  const role = sessionStorage.getItem("role");
 
   useEffect(() => {
     setName(fullname || "");
@@ -41,7 +42,7 @@ export default function EditProfileModal({
     editProfileMutation.mutate(formData, {
       onSuccess: () => {
         queryClient.invalidateQueries({
-  queryKey: ["residentProfile"],
+   queryKey: role === "doctor" ? ["doctorProfile"]:["residentProfile"],
 });
         onClose();
       },
@@ -58,7 +59,7 @@ export default function EditProfileModal({
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="border border-border p-3 rounded-lg w-full bg-input"
+            className="border border-border p-3 text-primary rounded-lg w-full bg-input"
           />
         </div>
 
@@ -68,7 +69,7 @@ export default function EditProfileModal({
             type="text"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="border border-border p-3 rounded-lg w-full bg-input"
+            className="border border-border p-3 text-primary rounded-lg w-full bg-input"
           />
         </div>
 
@@ -77,7 +78,7 @@ export default function EditProfileModal({
           <input
             type="file"
             onChange={(e) => setFile(e.target.files?.[0] || null)}
-            className="border border-border p-3 rounded-lg w-full bg-input"
+            className="border border-border p-3 text-primary rounded-lg w-full bg-input"
           />
         </div>
 

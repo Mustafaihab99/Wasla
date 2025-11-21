@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoutes";
 
 const Home = lazy(() => import ("../pages/welcomePage/WelcomePage"));
@@ -18,6 +18,10 @@ const MainDashboard = lazy(() => import ("../pages/dashboard/MainDashboard"));
 // resident dashboard
 const ResidentDashboard = lazy(() => import ("../components/layouts/ResidentLayout"));
 const ResidentProfile = lazy(() => import ("../components/resident/ResidentProfile"));
+// doctor dashboard
+const DoctorDashboard = lazy(() => import ("../components/serviceDashboards/DoctorDashboard"));
+const DoctorHomeDashboard = lazy(() => import ("../components/doctor/DoctorHomeDahboard"));
+const DoctorProfile = lazy(() => import ("../components/doctor/DoctorProfile"));
 
 export default function AppRoutes() {
   return (
@@ -48,6 +52,18 @@ export default function AppRoutes() {
             <Route path="profile" element={<ResidentProfile />} /> 
           </Route>
         </Route>  
+        {/* end resident Dashboard */}
+
+        {/* doctor Dashboard */}
+        <Route element={<ProtectedRoute allowedRoles={["doctor"]} />}>
+        {/* Doctor layout */}
+        <Route path="/doctor" element={<DoctorDashboard />}>
+          <Route index element={<Navigate to="manage-dashboard" replace />} />
+          <Route path="manage-dashboard" element={<DoctorHomeDashboard />} />
+          <Route path="profile" element={<DoctorProfile />} />
+          {/* باقي الروابط لو موجودة */}
+        </Route>
+      </Route> 
         {/* end resident Dashboard */}
       </Routes>
   );

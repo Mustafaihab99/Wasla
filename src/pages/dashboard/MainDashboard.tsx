@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import DoctorDashboard from "./DoctorDashboard";
+import DoctorDashboard from "../../components/serviceDashboards/DoctorDashboard";
 import ResidentDashboard from "../../components/serviceDashboards/ResidentDashboard";
 import { toast } from "sonner";
 
@@ -9,7 +9,7 @@ export default function MainDashboard() {
   const role = sessionStorage.getItem("role");
 
   const roleComponents: Record<string, React.FC> = {
-    // doctor: DoctorDashboard,
+    doctor: DoctorDashboard,
     resident: ResidentDashboard,
     // restaurant: RestaurantDashboard,
     // technician: TechnicianDashboard,
@@ -23,7 +23,9 @@ export default function MainDashboard() {
   }, [role, navigate]);
 
   if (!role) return null;
-
+  if (role === "doctor") {
+      navigate("/doctor/manage-dashboard", { replace: true });
+    }
   const RoleDashboard = roleComponents[role];
 
   if (!RoleDashboard) {
