@@ -3,6 +3,16 @@
     {
       "source": "/api/:path*",
       "destination": "http://wasla1.runasp.net/api/:path*"
+    },
+    {
+      "source": "/assets/:path*",
+      "destination": "http://wasla1.runasp.net/assets/:path*"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
