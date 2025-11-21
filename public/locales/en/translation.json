@@ -172,6 +172,8 @@
     "edit" : "Edit Profile",
     "change" : "Change Password",
     "ProfileImage" : "Profile Image",
-    "save" : "Save"
+    "save" : "Save",
+    "oldPassword" : "Old Password",
+    "newPassword" : "New Password"
   }
 }

@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import axiosInstance from "../axios-instance";
 import {
+  changePassData,
   forgetData,
   loginData,
   resendData,
@@ -115,6 +116,20 @@ export async function EditProfile(formData: FormData , id:string) {
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     const errorMessage = axiosError.response?.data?.message || "Registration failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// change password
+export async function changePassApi(formData: changePassData) {
+  try{
+    const response = await axiosInstance.post("Account/change-password" , formData);
+    if(response?.status === 201)
+      toast.success(response?.data?.message || "Reseted Successful");
+    return response;
+  }catch(error){
+    const axiosError = error as AxiosError<{message?: string}>;
+    const errorMessage = axiosError.response?.data?.message || "Reseted Failed";
     toast.error(errorMessage);
     throw error;
   }

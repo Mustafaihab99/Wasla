@@ -24,3 +24,8 @@ export interface forgetData{
     email: string;
     newPassword: string;
 }
+export interface changePassData{
+    email:string;
+    currentPassword : string;
+    newPassword : string;
+}
