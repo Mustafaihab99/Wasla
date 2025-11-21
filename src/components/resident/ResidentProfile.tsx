@@ -7,13 +7,12 @@ import { useTranslation } from "react-i18next";
 export default function ResidentProfile() {
   const id = sessionStorage.getItem("user_id")!;
   const { data, isLoading } = useGetResidentProfile(id);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [openEdit, setOpenEdit] = useState(false);
   const [openPass, setOpenPass] = useState(false);
 
   return (
     <div className="flex flex-col items-center w-full">
-      
       {/* Page Title */}
       <h1 className="text-4xl font-bold text-center mt-10 mb-6 text-foreground">
         {t("resident.YourProfile")}
@@ -47,8 +46,12 @@ export default function ResidentProfile() {
         ) : (
           <>
             <h2 className="text-3xl font-bold text-center">{data?.fullname}</h2>
-            <p className="text-muted-foreground text-center mt-2">{data?.email}</p>
-            <p className="text-muted-foreground text-center">{data?.phoneNumber}</p>
+            <p className="text-muted-foreground text-center mt-2">
+              {data?.email}
+            </p>
+            <p className="text-muted-foreground text-center">
+              {data?.phoneNumber}
+            </p>
           </>
         )}
 
@@ -77,6 +80,7 @@ export default function ResidentProfile() {
           onClose={() => setOpenEdit(false)}
           fullname={data.fullname}
           phoneNumber={data.phoneNumber}
+          userId={id}
         />
       )}
 

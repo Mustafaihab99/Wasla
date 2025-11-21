@@ -170,6 +170,8 @@
     "YourProfile" : "Your Profile",
     "manage" : "Manage your personal information and update your details here",
     "edit" : "Edit Profile",
-    "change" : "Change Password"
+    "change" : "Change Password",
+    "ProfileImage" : "Profile Image",
+    "save" : "Save"
   }
 }

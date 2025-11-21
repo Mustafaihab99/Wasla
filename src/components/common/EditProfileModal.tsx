@@ -1,30 +1,59 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "./Modal";
+import { useTranslation } from "react-i18next";
+import useEditProfile from "../../hooks/auth/useEditProfile";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  fullname: string |undefined;
+  fullname: string | undefined;
   phoneNumber: string | undefined;
+  userId: string;
 }
 
-export default function EditProfileModal({ isOpen, onClose, fullname, phoneNumber }: EditProfileModalProps) {
-  const [name, setName] = useState(fullname);
-  const [phone, setPhone] = useState(phoneNumber);
+export default function EditProfileModal({
+  isOpen,
+  onClose,
+  fullname,
+  phoneNumber,
+}: EditProfileModalProps) {
+  const [name, setName] = useState(fullname || "");
+  const [phone, setPhone] = useState(phoneNumber || "");
   const [file, setFile] = useState<File | null>(null);
+  const { t } = useTranslation();
+  const userId = sessionStorage.getItem("user_id");
+
+  useEffect(() => {
+    setName(fullname || "");
+    setPhone(phoneNumber || "");
+  }, [fullname, phoneNumber]);
+
+  const queryClient = useQueryClient();
+  const editProfileMutation = useEditProfile(userId!);
 
   const handleSave = () => {
-    // هنا هتبعت البيانات للـ API
-    console.log({ name, phone, file });
-    onClose();
+    const formData = new FormData();
+    formData.append("fullname", name);
+    formData.append("phone", phone);
+    if (file) formData.append("image", file);
+
+    editProfileMutation.mutate(formData, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+  queryKey: ["residentProfile"],
+});
+        onClose();
+      },
+    });
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <h3 className="text-2xl font-bold mb-6 text-center">Edit Profile</h3>
+      <h3 className="text-2xl font-bold mb-6 text-center">{t("resident.edit")}</h3>
       <div className="flex flex-col gap-4">
         <div>
-          <label className="text-sm font-medium mb-1 block">Full Name</label>
+          <label className="text-sm font-medium mb-1 block">{t("profile.doctor.name")}</label>
           <input
             type="text"
             value={name}
@@ -34,7 +63,7 @@ export default function EditProfileModal({ isOpen, onClose, fullname, phoneNumbe
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-1 block">Phone Number</label>
+          <label className="text-sm font-medium mb-1 block">{t("profile.doctor.Phone")}</label>
           <input
             type="text"
             value={phone}
@@ -44,7 +73,7 @@ export default function EditProfileModal({ isOpen, onClose, fullname, phoneNumbe
         </div>
 
         <div>
-          <label className="text-sm font-medium mb-1 block">Profile Image</label>
+          <label className="text-sm font-medium mb-1 block">{t("resident.ProfileImage")}</label>
           <input
             type="file"
             onChange={(e) => setFile(e.target.files?.[0] || null)}
@@ -54,9 +83,10 @@ export default function EditProfileModal({ isOpen, onClose, fullname, phoneNumbe
 
         <button
           onClick={handleSave}
-          className="mt-4 bg-primary text-white py-3 rounded-lg w-full font-semibold"
+          disabled={editProfileMutation.isPending}
+          className="mt-4 bg-primary text-white py-3 rounded-lg w-full font-semibold disabled:opacity-50"
         >
-          Save
+          {editProfileMutation.isPending ? t("profile.Saving...") : t("resident.save")}
         </button>
       </div>
     </Modal>

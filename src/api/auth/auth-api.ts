@@ -103,3 +103,19 @@ export async function forgetPassApi(formData: forgetData) {
     throw error;
   }
 }
+
+// Edit Profile
+export async function EditProfile(formData: FormData , id:string) {
+   try {
+    const response = await axiosInstance.put(`Account/edit-Profile?id=${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    toast.success(response.data.message || "profile Updated successfully!");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "Registration failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
