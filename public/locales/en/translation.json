@@ -166,6 +166,10 @@
     "rest" : "Book at Restaurant",
     "technical" : "Request a Technician",
     "gym" : "Book at Gym",
-    "driver" : "Request a Driver"
+    "driver" : "Request a Driver",
+    "YourProfile" : "Your Profile",
+    "manage" : "Manage your personal information and update your details here",
+    "edit" : "Edit Profile",
+    "change" : "Change Password"
   }
 }

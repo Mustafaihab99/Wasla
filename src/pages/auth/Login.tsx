@@ -33,7 +33,7 @@ export default function Login() {
     const res = await login(values); 
     const data = res.data.data;
 
-    const { isVerfied, isCompletedRegister, statue, role } = data;
+    const { isVerfied, isCompletedRegister, statue, role , userId } = data;
 
     //Not Verified
     if (!isVerfied) {
@@ -56,6 +56,7 @@ export default function Login() {
         toast.success(t("login.Logged in successfully!"));
         sessionStorage.setItem("auth_token", data.token);
         sessionStorage.setItem("role", role);
+        sessionStorage.setItem("user_id", userId);
         return navigate("/dashboard");
 
       case 1:
