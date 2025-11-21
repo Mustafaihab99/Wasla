@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoutes";
 
 const Home = lazy(() => import ("../pages/welcomePage/WelcomePage"));
 // Auth
@@ -14,6 +15,9 @@ const VerifyEmail = lazy(() => import ("../pages/auth/VerifyEmail"));
 const CompleteProfile = lazy(() => import ("../pages/auth/CompleteProfile"));
 // main dashboard
 const MainDashboard = lazy(() => import ("../pages/dashboard/MainDashboard"));
+// resident dashboard
+const ResidentDashboard = lazy(() => import ("../components/layouts/ResidentLayout"));
+const ResidentProfile = lazy(() => import ("../components/resident/ResidentProfile"));
 
 export default function AppRoutes() {
   return (
@@ -33,9 +37,18 @@ export default function AppRoutes() {
         </Route>
           <Route path="/auth/complete-profile" element={<CompleteProfile />} />
         {/* End Auth Layout */}
+
         {/* main Dashboard */}
           <Route path="/dashboard" element={<MainDashboard />} />
         {/* end main Dashboard */}
+
+        {/* resident Dashboard */}
+        <Route element={<ProtectedRoute allowedRoles={["resident"]} />}>
+          <Route path="/resident" element={<ResidentDashboard />}>
+            <Route path="profile" element={<ResidentProfile />} /> 
+          </Route>
+        </Route>  
+        {/* end resident Dashboard */}
       </Routes>
   );
 }

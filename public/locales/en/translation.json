@@ -7,7 +7,9 @@
     "dark": "dark",
     "warm": "warm",
     "cold": "cold",
-    "login": "Login"
+    "login": "Login",
+    "Logout" : "Logout",
+    "profile" : "Profile"
   },
   "hero": {
     "connect": "Connect, Live, and Grow with Your Community",
@@ -152,5 +154,18 @@
       "enternational" : "Enter your National ID",
       "saveResident" : "Save Resident Profile"
     }
+  },
+  "resident" : {
+    "service" : "Services",
+    "inbox" : "Inbox",
+    "welcome" : "Welcome Back,",
+    "allhome" : "All your residential services in one place — Easily find what you need.",
+    "look" : "Look for your service...",
+    "allservice" : "All Services",
+    "doctor" : "Book with Doctor",
+    "rest" : "Book at Restaurant",
+    "technical" : "Request a Technician",
+    "gym" : "Book at Gym",
+    "driver" : "Request a Driver"
   }
 }

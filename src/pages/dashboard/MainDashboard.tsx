@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 // import DoctorDashboard from "./DoctorDashboard";
-// import ResidentDashboard from "./ResidentDashboard";
+import ResidentDashboard from "../../components/serviceDashboards/ResidentDashboard";
 import { toast } from "sonner";
 
 export default function MainDashboard() {
@@ -10,7 +10,7 @@ export default function MainDashboard() {
 
   const roleComponents: Record<string, React.FC> = {
     // doctor: DoctorDashboard,
-    // resident: ResidentDashboard,
+    resident: ResidentDashboard,
     // restaurant: RestaurantDashboard,
     // technician: TechnicianDashboard,
   };
