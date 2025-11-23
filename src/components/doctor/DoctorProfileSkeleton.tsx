@@ -1,6 +1,6 @@
 export default function DoctorProfileSkeleton() {
   return (
-    <div className="max-w-4xl mx-auto mt-10 bg-background border border-border shadow-md rounded-xl p-6 animate-pulse">
+    <div className="max-w-5xl mt-10 bg-background border border-border shadow-md rounded-xl p-6 animate-pulse">
 
       {/* Top Section */}
       <div className="flex flex-col md:flex-row gap-6 items-center">

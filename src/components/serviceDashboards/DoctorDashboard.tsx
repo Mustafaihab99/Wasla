@@ -1,6 +1,9 @@
 import { useState, useEffect, useContext } from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { FaSun, FaMoon, FaGlobe, FaBars, FaTimes } from "react-icons/fa";
+import { FaSun, FaMoon, FaGlobe, FaBars, FaTimes, FaSnowflake } from "react-icons/fa";
+import { FaUser, FaUserDoctor } from "react-icons/fa6";
+import { SiGooglemessages } from "react-icons/si";
+import { MdMedicalServices } from "react-icons/md";
 import logo from "../../assets/images/icons/app-logo.png";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -16,7 +19,7 @@ export default function DoctorDashboardLayout() {
   useEffect(() => {
     const savedTheme = localStorage.getItem("appTheme");
     if (savedTheme) setTheme(savedTheme);
-  }, []);
+  }, [setTheme]);
 
   const toggleLanguage = () => {
     const lang = i18n.language === "en" ? "ar" : "en";
@@ -37,17 +40,17 @@ export default function DoctorDashboardLayout() {
   };
 
   const navItems = [
-    { label: t("doctor.dashboard"), link: "/doctor/manage-dashboard" },
-    { label: t("doctor.Service"), link: "/doctor/manage-service" },
-    { label: t("doctor.inbox"), link: "/doctor/inbox" },
-    { label: t("doctor.profile"), link: "/doctor/profile" },
+    { label: t("doctor.dashboard"), link: "/doctor/manage-dashboard" , icon: <FaUserDoctor /> },
+    { label: t("doctor.Service"), link: "/doctor/manage-service" , icon: <MdMedicalServices />},
+    { label: t("doctor.inbox"), link: "/doctor/inbox" , icon: <SiGooglemessages />},
+    { label: t("doctor.profile"), link: "/doctor/profile" , icon : <FaUser /> },
   ];
 
   const themeIcon = (th: string) => {
     switch (th) {
       case "dark": return <FaMoon />;
       case "warm": return <FaSun />;
-      case "cold": return <FaGlobe />;
+      case "cold": return <FaSnowflake />;
       default: return <FaSun />;
     }
   };
@@ -65,19 +68,43 @@ export default function DoctorDashboardLayout() {
           </div>
 
           {/* Nav Links */}
-          <nav className="flex flex-col mt-6 gap-2 px-2">
-            {navItems.map((item, i) => (
-              <NavLink
-                key={i}
-                to={item.link}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 p-3 rounded-md hover:bg-primary/10 transition-colors ${isActive ? "bg-primary text-white font-semibold" : ""}`
-                }
-              >
-                <span className={`${sidebarOpen ? "block" : "hidden"}`}>{item.label}</span>
-              </NavLink>
-            ))}
-          </nav>
+        <nav className="flex flex-col mt-6 gap-2 px-3">
+  {navItems.map((item, i) => (
+    <NavLink
+      key={i}
+      to={item.link}
+      className={({ isActive }) =>
+        `
+          group flex items-center gap-3 p-3 rounded-lg 
+          transition-all duration-300 
+          cursor-pointer
+          ${isActive 
+            ? sidebarOpen ? 
+            "bg-primary text-white shadow-sm font-semibold" 
+            :"bg-primary  text-white shadow-sm font-semibold w-10 h-10"
+            : "text-foreground hover:bg-primary/10 hover:text-primary"
+          }
+        `
+      }
+    >
+      {/* Icon Animation */}
+      <span className="text-xl transition-transform duration-300 group-hover:scale-110">
+        {item.icon}
+      </span>
+
+      {/* Label */}
+      <span
+        className={`
+          transition-all duration-300 
+          ${sidebarOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3 w-0 overflow-hidden"}
+        `}
+      >
+        {item.label}
+      </span>
+    </NavLink>
+  ))}
+</nav>
+
         </div>
 
         {/* Bottom Actions */}

@@ -5,125 +5,179 @@ import EditDoctorProfileModal from "../common/EditProfileModal";
 import { FaEdit, FaLock } from "react-icons/fa";
 import DoctorProfileSkeleton from "./DoctorProfileSkeleton";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
 
 export default function DoctorProfile() {
   const id = sessionStorage.getItem("user_id")!;
   const { data, isLoading } = useGetDoctorProfile(id);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [openEdit, setOpenEdit] = useState(false);
   const [openPass, setOpenPass] = useState(false);
 
-  if (isLoading) {
-    return <DoctorProfileSkeleton />
-  }
-
+  if (isLoading) return <DoctorProfileSkeleton />;
   if (!data) return <p>No profile found</p>;
 
   return (
     <>
-     <h1 className="text-4xl font-bold mt-10 mb-6 text-foreground">
+      {/* Title  */}
+      <motion.h1
+        className="text-4xl font-bold mt-10 mb-2 text-foreground"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}>
         {t("resident.YourProfile")}
-      </h1>
+      </motion.h1>
 
-      {/* Subtitle / Hint */}
-      <p className="text-muted-foreground mb-10">
+      <motion.p
+        className="text-muted-foreground mb-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}>
         {t("resident.manage")}
-      </p>
-    <div className="max-w-4xl mx-auto mt-10 bg-background border border-border shadow-md rounded-xl p-6">
-      {/* Top Section */}
-      <div className="flex flex-col md:flex-row gap-6 items-center">
-        
-        {/* IMAGE */}
-        <img 
-          src={import.meta.env.VITE_USER_IMAGE + data.image} 
-          alt="Doctor" 
-          className="w-32 h-32 rounded-full object-cover border border-border shadow-sm"
-        />
+      </motion.p>
 
-        {/* BASIC INFO */}
+      {/* profile */}
+      <motion.div
+        className="max-w-5xl mt-10 bg-background border border-border shadow-xl rounded-xl p-8"
+        initial={{ opacity: 0, x: -60 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{
+          duration: 0.6,
+          type: "spring",
+          stiffness: 70,
+          damping: 15,
+        }}>
+        <div className="flex flex-col md:flex-row gap-8 items-center">
+          <motion.img
+            src={import.meta.env.VITE_USER_IMAGE + data.image}
+            alt="Doctor"
+            className="w-36 h-36 rounded-full object-cover border border-border shadow-md"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1 }}
+          />
         <div className="flex-1">
-          <h2 className="text-3xl font-bold text-primary">{data.fullName}</h2>
-          <p className="text-foreground mt-1 text-lg">{data.specializationName}</p>
+            <motion.h2
+              className="text-3xl font-bold text-primary"
+              initial={{ opacity: 0, x: -15 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.15 }}>
+              {data.fullName}
+            </motion.h2>
 
-          <div className="flex gap-3 mt-4">
-            <button 
-              onClick={() => setOpenEdit(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80 transition-all"
-            >
-              <FaEdit /> {t("resident.edit")}
-            </button>
+            <motion.p
+              className="text-foreground mt-1 text-lg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.25 }}>
+              {data.specializationName}
+            </motion.p>
+        
+            <motion.div
+              className="flex gap-3 mt-4 flex-col md:flex-row"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}>
+              <motion.button
+                onClick={() => setOpenEdit(true)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg shadow-sm hover:bg-primary/80 transition">
+                <FaEdit /> {t("resident.edit")}
+              </motion.button>
 
-            <button 
-              onClick={() => setOpenPass(true)}
-              className="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg hover:bg-secondary/80 transition-all"
-            >
-              <FaLock /> {t("resident.change")}
-            </button>
+              <motion.button
+                onClick={() => setOpenPass(true)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg shadow-sm hover:bg-primary/10 transition">
+                <FaLock /> {t("resident.change")}
+              </motion.button>
+            </motion.div>
           </div>
         </div>
-      </div>
 
-      {/* Divider */}
-      <div className="my-6 border-t border-border"></div>
+        <div className="my-6 border-t border-border"></div>
 
-      {/* Details Grid */}
-      <div className="grid md:grid-cols-2 gap-6">
+        <motion.div
+          className="grid md:grid-cols-2 gap-6"
+          initial="hidden"
+          animate="show"
+          variants={{
+            hidden: {},
+            show: {
+              transition: { staggerChildren: 0.08 },
+            },
+          }}>
+          <ProfileItem title={t("login.Email")} value={data.email} />
+          <ProfileItem title={t("profile.doctor.Phone")} value={data.phone} />
+          <ProfileItem
+            title={t("profile.doctor.University")}
+            value={data.universityName}
+          />
+          <ProfileItem
+            title={t("profile.doctor.Graduation")}
+            value={data.graduationYear}
+          />
+          <ProfileItem
+            title={t("profile.doctor.Experience")}
+            value={`${data.experienceYears} Years`}
+          />
+          <ProfileItem
+            title={t("profile.doctor.Birthday")}
+            value={data.birthDay?.split("T")[0]}
+          />
 
-        <ProfileItem title={t("login.Email")} value={data.email} />
-        <ProfileItem title={t("profile.doctor.Phone")} value={data.phone} />
-        <ProfileItem title={t("profile.doctor.University")} value={data.universityName} />
-        <ProfileItem title={t("profile.doctor.Graduation")} value={data.graduationYear} />
-        <ProfileItem title={t("profile.doctor.Experience")} value={`${data.experienceYears} Years`} />
-        <ProfileItem title={t("profile.doctor.Birthday")} value={data.birthDay?.split("T")[0]} />
+          <div className="md:col-span-2">
+            <ProfileItem title={t("doctor.Bio")} value={data.description} />
+          </div>
+        </motion.div>
 
-        <div className="md:col-span-2">
-          <ProfileItem title={t("doctor.Bio")} value={data.description} />
-        </div>
+        {data.cv && (
+          <motion.div
+            className="mt-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}>
+            <a
+              href={import.meta.env.VITE_DOCTOR_CV + data.cv}
+              target="_blank"
+              className="text-primary underline font-medium hover:opacity-80">
+              {t("doctor.downCV")}
+            </a>
+          </motion.div>
+        )}
 
-      </div>
+        {/* Edit Modal */}
+        {data && (
+          <EditDoctorProfileModal
+            isOpen={openEdit}
+            onClose={() => setOpenEdit(false)}
+            fullname={data.fullName}
+            phoneNumber={data.phone}
+            userId={id}
+          />
+        )}
 
-      {/* CV Download */}
-      {data.cv && (
-        <div className="mt-6">
-          <a 
-            href={import.meta.env.VITE_DOCTOR_CV + data.cv}
-            target="_blank"
-            className="text-primary underline font-medium"
-          >
-            {t("doctor.downCV")}
-          </a>
-        </div>
-      )}
-
-      {/* Edit Modal */}
-      {data && (
-        <EditDoctorProfileModal
-          isOpen={openEdit}
-          onClose={() => setOpenEdit(false)}
-          fullname={data.fullName}
-          phoneNumber={data.phone}
-          userId={id}
+        {/* Change Password Modal */}
+        <ChangePasswordModal
+          isOpen={openPass}
+          onClose={() => setOpenPass(false)}
         />
-      )}
-
-      {/* Change Password Modal */}
-      <ChangePasswordModal
-        isOpen={openPass}
-        onClose={() => setOpenPass(false)}
-      />
-    </div>
+      </motion.div>
     </>
   );
 }
 
-/* Small reusable component */
+/* Reusable Profile Item with fade reveal */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ProfileItem({ title, value }: { title: string; value: any }) {
   return (
-    <div className="flex flex-col">
+    <motion.div
+      className="flex flex-col"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}>
       <span className="text-sm text-muted-foreground">{title}</span>
       <span className="text-lg font-semibold">{value ?? "—"}</span>
-    </div>
+    </motion.div>
   );
-  
 }

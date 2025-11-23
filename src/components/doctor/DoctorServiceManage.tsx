@@ -1,0 +1,136 @@
+import { motion } from "framer-motion";
+import { useState } from "react";
+import useGetDoctorServices from "../../hooks/doctor/useGetDoctorService";
+import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { doctorServiceData, doctorServiceEdit } from "../../types/doctor/doctorTypes";
+import DeleteConfirmModal from "./modals/DeleteModal";
+import AddServiceModal from "./modals/AddModal";
+import UpdateServiceModal from "./modals/UpdateModal";
+import { useTranslation } from "react-i18next";
+
+export default function DoctorServiceManage() {
+  const doctorId = sessionStorage.getItem("user_id")!;
+  const { data, isLoading } = useGetDoctorServices(doctorId);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingService, setEditingService] = useState<doctorServiceEdit | null>(null);
+
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deletingService, setDeletingService] = useState<doctorServiceData | null>(null);
+  const {t} = useTranslation();
+
+  // Map doctorServiceData -> doctorServiceedit
+  const mapDataToAdd = (service: doctorServiceData): doctorServiceEdit => ({
+    serviceName: { english: service.serviceName, arabic: service.serviceName },
+    description: { english: service.description || "", arabic: service.description || "" },
+    price: service.price,
+    serviceDays: service.serviceDays,
+    serviceDates: service.serviceDates,
+    timeSlots: service.timeSlots,
+    serviceId : service.id
+  });
+
+  return (
+    <div className="p-6">
+      <motion.h1 className="text-4xl font-bold text-foreground mt-4" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+        {t("doctor.manTit")}</motion.h1>
+
+      <div className="flex justify-between items-center mt-2 mb-6">
+        <motion.p className="text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+          {t("doctor.manage")}
+        </motion.p>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg shadow hover:bg-primary/90"
+          onClick={() => { setEditingService(null); setIsModalOpen(true); }}
+        >
+          <FaPlus /> {t("doctor.addServ")}
+        </motion.button>
+      </div>
+
+      {isLoading && <p>Loading...</p>}
+
+      {!isLoading && data && (
+<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="overflow-x-auto">
+  <table className="w-full border-collapse border border-border shadow-sm">
+    <thead>
+      <tr className="bg-border text-primary">
+        <th className="p-3 text-left">{t("doctor.ServiceName")}</th>
+        <th className="p-3 text-left">{t("doctor.Price")}</th>
+        <th className="p-3 text-left">{t("doctor.Days")}</th>
+        <th className="p-3 text-left">{t("doctor.Dates")}</th>
+        <th className="p-3 text-left">{t("doctor.TimeSlots")}</th>
+        <th className="p-3 text-center">{t("doctor.Actions")}</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {data.map((service: doctorServiceData, i) => (
+        <motion.tr key={service.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} className="border-b hover:bg-canceled transition">
+          <td className="p-3 font-medium">{service.serviceName}</td>
+          <td className="p-3">{service.price} {t("doctor.EGP")}</td>
+
+          {/* Days */}
+          <td className="p-3">
+            <div className="flex flex-wrap gap-1">
+              {service.serviceDays.map((d) => (
+                <span key={d.id} className="px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                  {[t("doctor.Sat"),t("doctor.Sun"),t("doctor.Mon"),t("doctor.Tue"),t("doctor.Wed"),t("doctor.Thu"),t("doctor.Fri")][d.dayOfWeek]}
+                </span>
+              ))}
+            </div>
+          </td>
+
+          {/* Dates */}
+          <td className="p-3">
+            <div className="flex flex-wrap gap-1">
+              {service.serviceDates.map((date) => (
+                <span key={date.id} className="px-2 py-1 bg-secondary/10 rounded text-xs">
+                  {date.date}
+                </span>
+              ))}
+            </div>
+          </td>
+
+          {/* Time Slots */}
+          <td className="p-3">
+            <div className="flex flex-wrap gap-1">
+              {service.timeSlots.map((time) => (
+                <span key={time.id} className="px-2 py-1 bg-primary/10 text-primary rounded text-xs">
+                  {time.start.slice(0,5)} {t("doctor.to")} {time.end.slice(0,5)}
+                </span>
+              ))}
+            </div>
+          </td>
+
+          {/* Actions */}
+          <td className="p-3 flex justify-center items-center gap-2">
+            <button className="p-2 bg-primary text-white rounded hover:bg-primary/80 transition" onClick={() => { setEditingService(mapDataToAdd(service)); setIsModalOpen(true); }}>
+              <FaEdit />
+            </button>
+
+            <button className="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition" onClick={() => { setDeletingService(service); setIsDeleteOpen(true); }}>
+              <FaTrash />
+            </button>
+          </td>
+        </motion.tr>
+      ))}
+    </tbody>
+  </table>
+</motion.div>
+      )}
+
+      {/* Modals */}
+{isModalOpen && !editingService && (
+  <AddServiceModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} doctorId={doctorId} />
+)}
+
+{isModalOpen && editingService && (
+  <UpdateServiceModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} initialData={editingService} doctorId={doctorId} />
+)}
+      {isDeleteOpen && <DeleteConfirmModal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} serviceId={deletingService?.id} serviceName={deletingService?.serviceName} />}
+    </div>
+  );
+}
