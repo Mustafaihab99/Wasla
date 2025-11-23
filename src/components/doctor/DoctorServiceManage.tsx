@@ -7,6 +7,7 @@ import DeleteConfirmModal from "./modals/DeleteModal";
 import AddServiceModal from "./modals/AddModal";
 import UpdateServiceModal from "./modals/UpdateModal";
 import { useTranslation } from "react-i18next";
+import DoctorProfileSkeleton from "./DoctorProfileSkeleton";
 
 export default function DoctorServiceManage() {
   const doctorId = sessionStorage.getItem("user_id")!;
@@ -35,7 +36,7 @@ export default function DoctorServiceManage() {
       <motion.h1 className="text-4xl font-bold text-foreground mt-4" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         {t("doctor.manTit")}</motion.h1>
 
-      <div className="flex justify-between items-center mt-2 mb-6">
+      <div className="flex justify-between flex-col md:flex-row gap-4 md:gap-0 items-center mt-2 mb-6">
         <motion.p className="text-muted-foreground" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
           {t("doctor.manage")}
         </motion.p>
@@ -50,7 +51,7 @@ export default function DoctorServiceManage() {
         </motion.button>
       </div>
 
-      {isLoading && <p>Loading...</p>}
+      {isLoading && <DoctorProfileSkeleton />}
 
       {!isLoading && data && (
 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="overflow-x-auto">
