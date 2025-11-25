@@ -44,7 +44,7 @@ export default function DoctorFormFields({ email }: { email: string }) {
       .min(1950)
       .max(new Date().getFullYear()),
     BirthDay: Yup.string().required(t("profile.doctor.birthreq")),
-    Phone: Yup.string().required(t("profile.doctor.phonereq")),
+    Phone: Yup.string().min(11,t("profile.doctor.phonemin")).max(11,t("profile.doctor.phonemin")).required(t("profile.doctor.phonereq")),
     Description: Yup.string().required(t("profile.doctor.descreq")),
     Image: Yup.mixed().required(t("profile.doctor.imgreq")),
     CV: Yup.mixed().required(t("profile.doctor.cvreq")),

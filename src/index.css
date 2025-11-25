@@ -15,7 +15,6 @@
   font-family: 'Cairo', sans-serif;
   scroll-behavior: smooth;
 }
-
 :root {
   --background: #f9fafb;
   --foreground: #111827;
@@ -25,6 +24,7 @@
   --canceled: #f3f4f6;
   --success: #16a34a;
   --error: #dc2626;
+  --dried: #6b7280;
 }
 
 [data-theme="light"] {
@@ -36,6 +36,7 @@
   --canceled: #f3f4f6;
   --success: #16a34a;
   --error: #dc2626;
+  --dried: #6b7280;
 }
 
 [data-theme="dark"] {
@@ -47,6 +48,7 @@
   --canceled: #576a83;
   --success: #22c55e;
   --error: #ef4444;
+  --dried: #94a3b8; /* أخف عشان يكون واضح على الغامق */
 }
 
 [data-theme="warm"] {
@@ -58,6 +60,7 @@
   --canceled: #ffedd5;
   --success: #65a30d;
   --error: #b91c1c;
+  --dried: #6b7280;
 }
 
 [data-theme="cold"] {
@@ -69,6 +72,7 @@
   --canceled: #e0f2fe;
   --success: #14b8a6;
   --error: #ef4444;
+  --dried: #475569; 
 }
 
 @layer utilities {

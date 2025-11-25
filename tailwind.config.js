@@ -9,8 +9,10 @@ export default {
         primary: "var(--primary)",
         border: "var(--border)",
         canceled: "var(--canceled)",
+        dried: "var(--dried)"
       },
     },
   },
   plugins: [],
 };
+

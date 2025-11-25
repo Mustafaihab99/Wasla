@@ -29,7 +29,7 @@ export default function ResidentFormFields({ email }: { email: string }) {
       .required(t("profile.resident.nationalreq"))
       .matches(/^\d+$/, t("profile.resident.nationalnum")),
     BirthDay: Yup.string().required(t("profile.doctor.birthreq")),
-    Phone: Yup.string().required(t("profile.doctor.phonereq")),
+    Phone: Yup.string().min(11,t("profile.doctor.phonemin")).max(11,t("profile.doctor.phonemin")).required(t("profile.doctor.phonereq")),
     Image: Yup.mixed().required(t("profile.doctor.imgreq")),
   });
 

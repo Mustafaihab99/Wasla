@@ -27,8 +27,10 @@ export interface timeSlots{
 }
 export interface doctorServiceData{
     id: number,
-    serviceName: string,
-    description : string,
+    serviceNameEnglish: string,
+    serviceNameArabic: string,
+    descriptionEnglish : string,
+    descriptionArabic : string,
     price: number,
     serviceDays : serviceDays[],
     serviceDates : serviceDates[],

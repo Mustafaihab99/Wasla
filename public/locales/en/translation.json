@@ -143,6 +143,7 @@
       "unireq" : "University name required",
       "exreq" : "Experience years required",
       "year" : "Years must be positive",
+      "phonemin" : "Phone must be 11 digits",
       "spireq" : "Specialization is required",
       "namereq" : "Full name is required"
     },
@@ -174,9 +175,18 @@
     "ProfileImage" : "Profile Image",
     "save" : "Save",
     "oldPassword" : "Old Password",
-    "newPassword" : "New Password"
+    "newPassword" : "New Password",
+    "All" : "All",
+    "yearsExp" : "Years of experience",
+    "patients" : "no of patients",
+    "ViewDetails" : "View Details",
+    "rating" : "Rating",
+    "reviews" : "Reviews",
+    "price" : "Price",
+    "bookNow" : "Book Now"
   },
   "doctor" : {
+    "ViewCV" : "View CV",
     "dashboard" : "Doctor Dashboard",
     "inbox" : "Inbox",
     "Service" : "Services Management",
@@ -197,6 +207,8 @@
     "Update" : "Update",
     "TimeSlots" : "Time Slots",
     "Actions" : "Actions",
+    "week" : "(Weekly)",
+    "specific" : "(Select specific days)",
     "to" : "to" ,
     "EGP" : "EGP",
     "Sat" : "Sat",
@@ -212,14 +224,21 @@
     "sure?" : "Are you sure ?",
     "doyou"  : "Do you really want to delete",
     "Delete" : "Delete",
-    "error" : {
-      "namEreq" : "Service Name (EN) is required",
-      "namAreq" : "Service Name (Ar) is required",
-      "descEreq" : "Description (EN) is required",
-      "descAreq" : "Description (AR) is required",
-      "pospri" : "Price must be greater than 0",
-      "dayleas" : "Select at least one day",
-      "dateleas" : "Select at least one date"
+      "selectMode": "Choose service type",
+  "weekly": "Weekly days",
+  "specificDates": "Specific dates",
+  "modeError": "You can choose either weekly days or specific dates, not both.",
+  "slotMaxHour": "Each time slot cannot exceed 1 hour.",
+  "error" : {
+    "namEreq" : "Service Name (EN) is required",
+    "namAreq" : "Service Name (Ar) is required",
+    "descEreq" : "Description (EN) is required",
+    "descAreq" : "Description (AR) is required",
+    "pospri" : "Price must be greater than 0",
+    "dayleas" : "Select at least one day",
+    "dateleas" : "Select at least one date",
+    "invalidSlot" : "Invalid Slot",
+    "slotOverlap": "This time slot overlaps with another slot"
     }
   }
 }
