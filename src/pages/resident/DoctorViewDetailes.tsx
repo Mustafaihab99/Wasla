@@ -120,7 +120,7 @@ export default function DoctorViewDetailes() {
                         {service.serviceDays
                           .sort((a,b)=>a.dayOfWeek - b.dayOfWeek)
                           .map(d => (
-                            <span key={d.id} className="px-3 py-1 border border-primary text-primary rounded-full text-xs">
+                            <span key={d.dayOfWeek} className="px-3 py-1 border border-primary text-primary rounded-full text-xs">
                               {daysOfWeek[d.dayOfWeek]}
                             </span>
                         ))}
@@ -131,7 +131,7 @@ export default function DoctorViewDetailes() {
                     {service.serviceDates.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {service.serviceDates.map(d => (
-                          <span key={d.id} className="px-3 py-1 border rounded-full text-xs">
+                          <span key={d.date} className="px-3 py-1 border border-primary text-primary rounded-full text-xs">
                             {new Date(d.date).toLocaleDateString()}
                           </span>
                         ))}
@@ -142,9 +142,9 @@ export default function DoctorViewDetailes() {
                     {service.timeSlots.length > 0 && (
                       <div className="flex flex-wrap gap-2 items-center">
                         <FaClock className="text-gray-400" />
-                        {service.timeSlots.map(t => (
-                          <span key={t.id} className="px-2 py-1 border rounded-full text-xs">
-                            {`${t.start} - ${t.end}`}
+                        {service.timeSlots.map(ti => (
+                          <span key={ti.start} className="px-2 py-1 border rounded-full text-xs">
+                            {`${ti.start.slice(0,5)} ${t("doctor.to")} ${ti.end.slice(0,5)}`}
                           </span>
                         ))}
                       </div>

@@ -5,36 +5,22 @@ import useAddDoctorService from "../../../hooks/doctor/useAddDoctorService";
 import { doctorServiceAdd, serviceDays, timeSlots } from "../../../types/doctor/doctorTypes";
 import { useTranslation } from "react-i18next";
 
-interface AddServiceModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  doctorId: string;
-}
+/* ======================== COMPONENT ======================== */
+export default function AddServiceModal({ isOpen, onClose, doctorId }: { isOpen: boolean; onClose: () => void; doctorId: string }) {
+  const { t } = useTranslation();
+  const addService = useAddDoctorService();
 
-export default function AddServiceModal({ isOpen, onClose, doctorId }: AddServiceModalProps) {
+  /* ======================== STATE ======================== */
   const [serviceName, setServiceName] = useState({ english: "", arabic: "" });
   const [description, setDescription] = useState({ english: "", arabic: "" });
   const [price, setPrice] = useState<number>(0);
-
   const [mode, setMode] = useState<"weekly" | "specific" | null>(null);
 
   const [serviceDays, setServiceDays] = useState<serviceDays[]>([]);
   const [serviceDates, setServiceDates] = useState<Date[]>([]);
   const [timeSlots, setTimeSlots] = useState<timeSlots[]>([]);
   const [slotErrors, setSlotErrors] = useState<string[]>([]);
-
-  const { t } = useTranslation();
-
-  const [errors, setErrors] = useState<{
-    serviceNameEn?: string;
-    serviceNameAr?: string;
-    descEn?: string;
-    descAr?: string;
-    price?: string;
-    mode?: string;
-    days?: string;
-    dates?: string;
-  }>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const weekdays = [
     { name: t("doctor.Sat"), value: 0 },
@@ -46,310 +32,238 @@ export default function AddServiceModal({ isOpen, onClose, doctorId }: AddServic
     { name: t("doctor.Fri"), value: 6 },
   ];
 
-  const addService = useAddDoctorService();
   if (!isOpen) return null;
 
-  const validateSlot = (index: number, slots: timeSlots[]) => {
-    const slot = slots[index];
-    const errors = [...slotErrors];
+  /* ======================== TIME SLOT HELPERS ======================== */
+  const toMinutes = (t: string) => {
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+  };
+  const toHHMM = (min: number) => `${String(min / 60 | 0).padStart(2,"0")}:${String(min % 60).padStart(2,"0")}`;
+  const overlap = (a: timeSlots, b: timeSlots) => toMinutes(a.start) < toMinutes(b.end) && toMinutes(a.end) > toMinutes(b.start);
 
-    const startTime = new Date(`2000-01-01T${slot.start}:00`);
-    const endTime = new Date(`2000-01-01T${slot.end}:00`);
-    const diff = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
-
-    if (diff <= 0) {
-      errors[index] = t("doctor.error.invalidSlot"); // End must be after start
-    } else if (diff > 60) {
-      errors[index] = t("doctor.slotMaxHour"); // Max 1 hour
-    } else {
-      errors[index] = "";
-    }
-
-    setSlotErrors(errors);
+  const validateSlot = (slots: timeSlots[], i: number) => {
+    const s = toMinutes(slots[i].start);
+    const e = toMinutes(slots[i].end);
+    if (e <= s) return t("doctor.error.invalidSlot");
+    if (e - s > 60) return t("doctor.slotMaxHour");
+    return "";
   };
 
-  const checkAllOverlaps = (slots: timeSlots[]) => {
-  const errors = Array(slots.length).fill("");
+  const rebuildErrors = (slots: timeSlots[]) => {
+    const errs = Array(slots.length).fill("");
+    slots.forEach((s,i)=>{
+      errs[i] = validateSlot(slots,i);
+      slots.forEach((x,j)=> i !== j && overlap(s,x) && (errs[i] = t("doctor.error.slotOverlap")));
+    });
+    return errs;
+  };
 
-  for (let i = 0; i < slots.length; i++) {
-    const startI = new Date(`2000-01-01T${slots[i].start}:00`);
-    const endI = new Date(`2000-01-01T${slots[i].end}:00`);
-
-    for (let j = 0; j < slots.length; j++) {
-      if (i === j) continue;
-      const startJ = new Date(`2000-01-01T${slots[j].start}:00`);
-      const endJ = new Date(`2000-01-01T${slots[j].end}:00`);
-
-      if (startI < endJ && endI > startJ) {
-        errors[i] = t("doctor.error.slotOverlap");
-      }
+  const addSlot = () => {
+    let start = 9*60;
+    if(timeSlots.length){
+      const last = timeSlots[timeSlots.length -1];
+      start = toMinutes(last.end)+1;
     }
-  }
+    const end = Math.min(start+60,1439);
+    const newList = [...timeSlots,{start:toHHMM(start),end:toHHMM(end)}];
+    setTimeSlots(newList);
+    setSlotErrors(rebuildErrors(newList));
+  };
 
-  setSlotErrors(errors);
-};
+  const onChangeStart = (i:number,val:string)=>{
+    const copy=[...timeSlots];
+    copy[i].start=val;
+    if(toMinutes(copy[i].end)<=toMinutes(val))
+      copy[i].end=toHHMM(toMinutes(val)+1);
+    copy.sort((a,b)=> toMinutes(a.start)-toMinutes(b.start));
+    setTimeSlots(copy);
+    setSlotErrors(rebuildErrors(copy));
+  };
 
+  const onChangeEnd = (i:number,val:string)=>{
+    const copy=[...timeSlots];
+    copy[i].end=val;
+    if(toMinutes(val)-toMinutes(copy[i].start)>60)
+      copy[i].end=toHHMM(toMinutes(copy[i].start)+60);
+    copy.sort((a,b)=>toMinutes(a.start)-toMinutes(b.start));
+    setTimeSlots(copy);
+    setSlotErrors(rebuildErrors(copy));
+  };
 
+  const deleteSlot=(i:number)=>{
+    const updated=timeSlots.filter((_,x)=>x!==i);
+    setTimeSlots(updated);
+    setSlotErrors(rebuildErrors(updated));
+  };
 
+  /* ======================== SUBMIT ======================== */
   const handleSubmit = () => {
-    const newErrors: typeof errors = {};
+    const e:Record<string,string>={};
+    if(!serviceName.english) e.serviceNameEn=t("doctor.error.namEreq");
+    if(!serviceName.arabic) e.serviceNameAr=t("doctor.error.namAreq");
+    if(!description.english) e.descEn=t("doctor.error.descEreq");
+    if(!description.arabic) e.descAr=t("doctor.error.descAreq");
+    if(!price || price<1) e.price=t("doctor.error.pospri");
+    if(!mode) e.mode=t("doctor.modeError");
+    if(mode==="weekly" && !serviceDays.length) e.days=t("doctor.error.dayleas");
+    if(mode==="specific" && !serviceDates.length) e.dates=t("doctor.error.dateleas");
 
-    if (!serviceName.english.trim()) newErrors.serviceNameEn = t("doctor.error.namEreq");
-    if (!serviceName.arabic.trim()) newErrors.serviceNameAr = t("doctor.error.namAreq");
-    if (!description.english.trim()) newErrors.descEn = t("doctor.error.descEreq");
-    if (!description.arabic.trim()) newErrors.descAr = t("doctor.error.descAreq");
-    if (!price || price <= 0) newErrors.price = t("doctor.error.pospri");
-    if (!mode) newErrors.mode = t("doctor.modeError");
-
-    if (mode === "weekly" && serviceDays.length === 0)
-      newErrors.days = t("doctor.error.dayleas");
-
-    if (mode === "specific" && serviceDates.length === 0)
-      newErrors.dates = t("doctor.error.dateleas");
-
-    setErrors(newErrors);
-
-    const hasSlotErrors = slotErrors.some(err => err !== "");
-    if (Object.keys(newErrors).length > 0 || hasSlotErrors) return;
+    setErrors(e);
+    if(Object.keys(e).length || slotErrors.some(x=>x)) return;
 
     const payload: doctorServiceAdd = {
       doctorId,
       serviceName,
       description,
       price,
-      serviceDays: mode === "weekly" ? serviceDays : [],
-      serviceDates: mode === "specific"
-        ? serviceDates.map((d, i) => ({ id: i, date: d.toISOString().split("T")[0] }))
-        : [],
-      timeSlots: timeSlots.map(t => ({ id: t.id, start: t.start + ":00", end: t.end + ":00" })),
+      serviceDays: mode==="weekly"?serviceDays:[],
+      serviceDates: mode==="specific"?serviceDates.map(d=>({date:d.toISOString().split("T")[0]})):[],
+      timeSlots: timeSlots.map(s=>({start:s.start+":00",end:s.end+":00"}))
     };
 
     addService.mutate(payload);
     onClose();
   };
 
+  /* ======================== UI ======================== */
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6 text-black overflow-y-auto max-h-[90vh]">
-        <h2 className="text-2xl font-semibold mb-6">{t("doctor.addServ")}</h2>
+    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-4">
+      <div className="bg-white rounded-xl w-full max-w-lg p-6 shadow-xl text-black overflow-y-auto max-h-[90vh]">
+        
+        <h2 className="text-xl font-semibold mb-4">{t("doctor.addServ")}</h2>
 
-        <div className="space-y-5">
-          {/* MODE */}
-          <div>
-            <label className="font-medium">{t("doctor.selectMode")}</label>
-            <div className="flex gap-3 mt-2">
-              <button
-                type="button"
-                onClick={() => { setMode("weekly"); setServiceDates([]); }}
-                className={`px-3 py-1 rounded-md border ${mode === "weekly" ? "bg-primary text-white border-primary" : "bg-gray-100 text-gray-700 border-gray-300"}`}
-              >
-                {t("doctor.weekly")}
-              </button>
-              <button
-                type="button"
-                onClick={() => { setMode("specific"); setServiceDays([]); }}
-                className={`px-3 py-1 rounded-md border ${mode === "specific" ? "bg-primary text-white border-primary" : "bg-gray-100 text-gray-700 border-gray-300"}`}
-              >
-                {t("doctor.specificDates")}
-              </button>
-            </div>
-            {errors.mode && <p className="text-red-500 text-sm mt-1">{errors.mode}</p>}
-          </div>
-
-          {/* Service Name */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div>
-              <label className="font-medium">{t("doctor.ServiceName")} (EN)</label>
-              <input
-                type="text"
-                value={serviceName.english}
-                onChange={e => setServiceName({ ...serviceName, english: e.target.value })}
-                className="w-full border rounded-md px-3 py-2 mt-1 focus:ring-2 focus:ring-primary"
-              />
-              {errors.serviceNameEn && <p className="text-red-500 text-sm mt-1">{errors.serviceNameEn}</p>}
-            </div>
-            <div>
-              <label className="font-medium">{t("doctor.ServiceName")} (AR)</label>
-              <input
-                type="text"
-                value={serviceName.arabic}
-                onChange={e => setServiceName({ ...serviceName, arabic: e.target.value })}
-                className="w-full border rounded-md px-3 py-2 mt-1 focus:ring-2 focus:ring-primary"
-              />
-              {errors.serviceNameAr && <p className="text-red-500 text-sm mt-1">{errors.serviceNameAr}</p>}
-            </div>
-          </div>
-
-          {/* Description */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div>
-              <label className="font-medium">{t("doctor.desc")} (EN)</label>
-              <textarea
-                value={description.english}
-                onChange={e => setDescription({ ...description, english: e.target.value })}
-                className="w-full border rounded-md px-3 py-2 mt-1 focus:ring-2 focus:ring-primary"
-              />
-              {errors.descEn && <p className="text-red-500 text-sm mt-1">{errors.descEn}</p>}
-            </div>
-            <div>
-              <label className="font-medium">{t("doctor.desc")} (AR)</label>
-              <textarea
-                value={description.arabic}
-                onChange={e => setDescription({ ...description, arabic: e.target.value })}
-                className="w-full border rounded-md px-3 py-2 mt-1 focus:ring-2 focus:ring-primary"
-              />
-              {errors.descAr && <p className="text-red-500 text-sm mt-1">{errors.descAr}</p>}
-            </div>
-          </div>
-
-          {/* Price */}
-          <div>
-            <label className="font-medium">{t("doctor.Price")}</label>
-            <input
-              type="number"
-              value={price}
-              onChange={e => setPrice(Number(e.target.value))}
-              className="w-full border rounded-md px-3 py-2 mt-1 focus:ring-2 focus:ring-primary"
-            />
-            {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
-          </div>
-
-          {/* Weekly Days */}
-          {mode === "weekly" && (
-            <div>
-              <label className="font-medium">{t("doctor.Days")} {t("doctor.week")}</label>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {weekdays.map(day => {
-                  const selected = serviceDays.some(d => d.dayOfWeek === day.value);
-                  return (
-                    <button
-                      key={day.value}
-                      type="button"
-                      onClick={() => {
-                        if (selected)
-                          setServiceDays(serviceDays.filter(d => d.dayOfWeek !== day.value));
-                        else
-                          setServiceDays([...serviceDays, { id: serviceDays.length, dayOfWeek: day.value }]);
-                      }}
-                      className={`px-3 py-1 rounded-md border ${selected ? "bg-primary text-white border-primary" : "bg-gray-100 text-gray-700 border-gray-300"}`}
-                    >
-                      {day.name}
-                    </button>
-                  );
-                })}
-              </div>
-              {errors.days && <p className="text-red-500 text-sm mt-1">{errors.days}</p>}
-            </div>
-          )}
-
-          {/* Specific Dates */}
-          {mode === "specific" && (
-            <div>
-              <label className="font-medium">{t("doctor.Dates")} {t("doctor.specific")}</label>
-              <div className="mt-2 border rounded-md p-2">
-                <DatePicker
-                  inline
-                  selected={null}
-                  onChange={(date: Date | null) => {
-                    if (!date) return;
-                    const exists = serviceDates.find(d => d.toDateString() === date.toDateString());
-                    if (exists)
-                      setServiceDates(serviceDates.filter(d => d.toDateString() !== date.toDateString()));
-                    else
-                      setServiceDates([...serviceDates, date]);
-                  }}
-                  highlightDates={serviceDates}
-                  minDate={new Date()}
-                />
-              </div>
-              {errors.dates && <p className="text-red-500 text-sm mt-1">{errors.dates}</p>}
-            </div>
-          )}
-
-          {/* Time Slots */}
-          <div>
-            <label className="font-medium">{t("doctor.TimeSlots")} (HH:mm)</label>
-            <div className="space-y-2 mt-2">
-              {timeSlots.map((ti, i) => (
-                <div key={i} className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="time"
-                      value={ti.start}
-                      onChange={e => {
-                        const newSlots = [...timeSlots];
-                        newSlots[i].start = e.target.value;
-                        setTimeSlots(newSlots);
-                        validateSlot(i, newSlots);
-                        checkAllOverlaps(newSlots);
-                      }}
-                      className="border rounded-md px-2 py-1"
-                    />
-
-                    <span className="text-gray-500">{t("doctor.to")}</span>
-
-                    <input
-                      type="time"
-                      value={ti.end}
-                      onChange={e => {
-                        const newSlots = [...timeSlots];
-                        newSlots[i].end = e.target.value;
-                        setTimeSlots(newSlots);
-                        validateSlot(i, newSlots);
-                      }}
-                      className="border rounded-md px-2 py-1"
-                    />
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newSlots = timeSlots.filter((_, idx) => idx !== i);
-                        setTimeSlots(newSlots);
-                        setSlotErrors(slotErrors.filter((_, idx) => idx !== i));
-                      }}
-                      className="bg-red-500 text-white px-2 py-1 rounded-md"
-                    >
-                      X
-                    </button>
-                  </div>
-                  {slotErrors[i] && <p className="text-red-500 text-sm">{slotErrors[i]}</p>}
-                </div>
-              ))}
-
-              <button
-                type="button"
-                onClick={() => {
-                  setTimeSlots([...timeSlots, { id: timeSlots.length, start: "09:00", end: "10:00" }]);
-                  setSlotErrors([...slotErrors, ""]);
-                }}
-                className="bg-primary text-white px-3 py-1 rounded-md"
-              >
-                {t("doctor.AddSlot")}
-              </button>
-            </div>
-          </div>
-
+        {/* ================= MODE ================= */}
+        <label className="font-medium">{t("doctor.selectMode")}</label>
+        <div className="flex gap-3 my-2">
+          <button onClick={()=>{setMode("weekly");setServiceDates([])}} className={`px-3 py-1 rounded-md border ${mode==="weekly"?"bg-primary text-white":"bg-gray-100"}`}>{t("doctor.weekly")}</button>
+          <button onClick={()=>{setMode("specific");setServiceDays([])}} className={`px-3 py-1 rounded-md border ${mode==="specific"?"bg-primary text-white":"bg-gray-100"}`}>{t("doctor.specificDates")}</button>
         </div>
+        {errors.mode && <Error>{errors.mode}</Error>}
 
-        {/* Footer */}
-        <div className="mt-6 flex justify-end gap-3">
-          <button
-            type="button"
-            className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
-            onClick={onClose}
-          >
-            {t("doctor.Cancel")}
-          </button>
+        {/* ================= NAME ================= */}
+        <TwoColumn>
+          <Input label="Service Name (EN)" value={serviceName.english} onChange={v=>setServiceName({...serviceName,english:v})}/>
+          {errors.serviceNameEn && <Error>{errors.serviceNameEn}</Error>}
 
-          <button
-            type="button"
-            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
-            onClick={handleSubmit}
-          >
-            {t("doctor.Add")}
-          </button>
+          <Input label="Service Name (AR)" value={serviceName.arabic} onChange={v=>setServiceName({...serviceName,arabic:v})}/>
+          {errors.serviceNameAr && <Error>{errors.serviceNameAr}</Error>}
+        </TwoColumn>
+
+        {/* ================= DESCRIPTION ================= */}
+        <TwoColumn>
+          <TextArea label="Description (EN)" value={description.english} onChange={v=>setDescription({...description,english:v})}/>
+          <TextArea label="Description (AR)" value={description.arabic} onChange={v=>setDescription({...description,arabic:v})}/>
+        </TwoColumn>
+
+        {/* ================= PRICE ================= */}
+        <Input label={t("doctor.Price")} type="number" value={price} onChange={v=>setPrice(Number(v))}/>
+        {errors.price && <Error>{errors.price}</Error>}
+
+        {/* ================= WEEKLY DAYS ================= */}
+        {mode==="weekly" && (
+          <>
+            <SectionLabel>{t("doctor.Days")}</SectionLabel>
+            <div className="flex flex-wrap gap-2">
+              {weekdays.map(day=>{
+                const selected=serviceDays.some(d=>d.dayOfWeek===day.value);
+                return(
+                  <button
+                    key={day.value}
+                    className={`px-3 py-1 rounded-md border ${selected?"bg-primary text-white":"bg-gray-100"}`}
+                    onClick={()=>setServiceDays(selected?serviceDays.filter(d=>d.dayOfWeek!==day.value):[...serviceDays,{dayOfWeek:day.value}])}>
+                    {day.name}
+                  </button>
+                );
+              })}
+            </div>
+            {errors.days && <Error>{errors.days}</Error>}
+          </>
+        )}{/* ================= SPECIFIC DATES ================= */}
+                {mode === "specific" && (
+                  <>
+                    <SectionLabel>{t("doctor.Dates")}</SectionLabel>
+                    <div className="flex gap-3 items-center">
+                      <DatePicker
+                        selected={null}
+                        onChange={(d) =>
+                          !serviceDates.some(
+                            (x) => x.toDateString() === d?.toDateString()
+                          ) &&
+                          d &&
+                          setServiceDates([...serviceDates, d])
+                        }
+                        minDate={new Date()}
+                        dateFormat="dd/MM/yyyy"
+                        className="border p-2 rounded-md"
+                      />
+                      <button
+                        className="px-3 py-1 bg-red-500 text-white rounded-md"
+                        onClick={() => setServiceDates([])}>
+                        {t("doctor.clear")}
+                      </button>
+                    </div>
+                    <div className="flex gap-2 mt-2 flex-wrap">
+                      {serviceDates.map((d, i) => (
+                        <span
+                          key={i}
+                          className="bg-primary text-white px-3 py-1 rounded-md flex items-center gap-2">
+                          {d.toLocaleDateString()}
+                          <button
+                            onClick={() =>
+                              setServiceDates(serviceDates.filter((_, x) => x !== i))
+                            }>
+                            ✕
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                    {errors.dates && <Error>{errors.dates}</Error>}
+                  </>
+                )}
+        
+
+        {/* ================= TIME SLOTS ================= */}
+        <SectionLabel>{t("doctor.TimeSlots")}</SectionLabel>
+        {timeSlots.map((slot,i)=>(
+          <div key={i} className="flex gap-2 items-center mb-1">
+            <input type="time" value={slot.start} onChange={e=>onChangeStart(i,e.target.value)} className="border rounded p-1"/>
+            <span>{t("doctor.to")}</span>
+            <input type="time" value={slot.end} onChange={e=>onChangeEnd(i,e.target.value)} className="border rounded p-1"/>
+            <button onClick={()=>deleteSlot(i)} className="px-2 py-1 bg-red-500 text-white rounded">X</button>
+            {slotErrors[i] && <Error>{slotErrors[i]}</Error>}
+          </div>
+        ))}
+
+        <button onClick={addSlot} className="bg-primary text-white px-3 py-1 rounded-md">{t("doctor.AddSlot")}</button>
+
+        {/* ================= FOOTER ================= */}
+        <div className="flex justify-end gap-3 mt-5">
+          <button onClick={onClose} className="px-4 py-2 bg-gray-300 rounded-md">{t("doctor.Cancel")}</button>
+          <button onClick={handleSubmit} className="px-4 py-2 bg-primary text-white rounded-md">{t("doctor.Add")}</button>
         </div>
       </div>
     </div>
   );
 }
+
+/* ================= SMALL COMPONENTS ================= */
+const SectionLabel=({children}:{children:React.ReactNode})=><p className="font-medium mb-1">{children}</p>;
+const Error=({children}:{children:React.ReactNode})=><p className="text-red-500 text-sm">{children}</p>;
+const TwoColumn=({children}:{children:React.ReactNode})=><div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3">{children}</div>;
+
+const Input=({label,value,type="text",onChange}:{label:string;value:string|number;type?:string;onChange:(v:string)=>void})=>(
+  <div>
+    <label>{label}</label>
+    <input value={value} type={type} onChange={e=>onChange(e.target.value)}
+      className="w-full border px-3 py-2 rounded-md mt-1"/>
+  </div>
+);
+
+const TextArea=({label,value,onChange}:{label:string;value:string;onChange:(v:string)=>void})=>(
+  <div>
+    <label>{label}</label>
+    <textarea value={value} onChange={e=>onChange(e.target.value)}
+      className="w-full border px-3 py-2 rounded-md mt-1"/>
+  </div>
+);

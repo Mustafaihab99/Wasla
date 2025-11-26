@@ -13,15 +13,12 @@ export interface doctorProfileData{
 }
 // service data
 export interface serviceDays{
-    id:number,
     dayOfWeek:number,
 }
 export interface serviceDates{
-    id:number,
     date:string,
 }
 export interface timeSlots{
-    id:number,
     start:string,
     end:string
 }
