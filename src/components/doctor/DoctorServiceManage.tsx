@@ -133,7 +133,7 @@ export default function DoctorServiceManage() {
                         :
                         service.serviceDays.map((d) => (
                         <span
-                          key={d.id}
+                          key={d.dayOfWeek}
                           className="px-2 py-1 bg-primary/10 text-primary rounded text-xs">
                           {
                             [
@@ -161,7 +161,7 @@ export default function DoctorServiceManage() {
                         :
                       service.serviceDates.map((date) => (
                         <span
-                          key={date.id}
+                          key={date.date}
                           className="px-2 py-1 bg-secondary/10 rounded text-xs">
                           {date.date}
                         </span>
@@ -174,7 +174,7 @@ export default function DoctorServiceManage() {
                     <div className="flex flex-wrap gap-1">
                       {service.timeSlots.map((time) => (
                         <span
-                          key={time.id}
+                          key={time.start}
                           className="px-2 py-1 bg-primary/10 text-primary rounded text-xs">
                           {time.start.slice(0, 5)} {t("doctor.to")}{" "}
                           {time.end.slice(0, 5)}
