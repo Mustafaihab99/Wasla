@@ -230,15 +230,28 @@
   "specificDates": "Specific dates",
   "modeError": "You can choose either weekly days or specific dates, not both.",
   "slotMaxHour": "Each time slot cannot exceed 1 hour.",
+  "bookService" : "Book a Service",
+  "selectDay" : "Select Day",
+  "selectDate" : "select Date",
+  "selectTimeSlot" : "select Time Slot",
+  "bookingType" : "booking Type",
+  "checkup" : "Examination",
+  "consult" : "Consultation",
+  "book" : "Book",
+  "booking..." : "Booking...",
+  "uploadImages" : "upload images",
   "error" : {
     "namEreq" : "Service Name (EN) is required",
     "namAreq" : "Service Name (Ar) is required",
     "descEreq" : "Description (EN) is required",
     "descAreq" : "Description (AR) is required",
+    "uploadImages" : "upload images first",
     "pospri" : "Price must be greater than 0",
     "dayleas" : "Select at least one day",
     "dateleas" : "Select at least one date",
     "invalidSlot" : "Invalid Slot",
+    "selectDay" : "Select a Day",
+    "bookingFailed" : "Booking Failed",
     "slotOverlap": "This time slot overlaps with another slot"
     }
   }

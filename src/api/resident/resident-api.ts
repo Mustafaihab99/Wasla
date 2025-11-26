@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { doctorsToResidentData, residentProfile } from "../../types/resident/residentData";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
@@ -35,4 +35,20 @@ export async function fetchDoctorsToResident(specialid :string) : Promise<doctor
     }
     throw error;
     }
+}
+// book a service
+export async function bookService(formData: FormData) {
+  try {
+    const response = await axiosInstance.post("Service/BookService", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
 }

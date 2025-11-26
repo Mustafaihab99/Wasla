@@ -5,10 +5,20 @@ import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import { FaStar, FaUserTie, FaUsers, FaClock, FaFilePdf } from "react-icons/fa";
+import BookServiceModal from "../../components/resident/modal/BookServiceModal";
+import { useState } from "react";
 
 export default function DoctorViewDetailes() {
   const { doctorId } = useParams();
   const { t } = useTranslation();
+    const [selectedService, setSelectedService] = useState<null | {
+    serviceId: number;
+    serviceProviderId: string;
+    price: number;
+    serviceDays: { dayOfWeek: number }[];
+    serviceDates: { date: string }[];
+    timeSlots: { start: string; end: string }[];
+  }>(null);
 
   const { data: profile, isLoading: loadingProfile } = useGetDoctorProfile(doctorId!);
   const { data: services, isLoading: loadingServices } = useGetDoctorServices(doctorId!);
@@ -49,10 +59,10 @@ export default function DoctorViewDetailes() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
         {[
-          { icon: FaStar, value: "0", label: t("resident.rating"), color: "yellow-400" },
-          { icon: FaUserTie, value: profile?.experienceYears, label: t("resident.yearsExp"), color: "primary" },
-          { icon: FaUsers, value: 0, label: t("resident.patients"), color: "green-400" },
-          { icon: FaStar, value: 0, label: t("resident.reviews"), color: "blue-400" },
+          { icon: FaStar, value: "0", label: t("resident.rating"), color: "text-yellow-400" },
+          { icon: FaUserTie, value: profile?.experienceYears, label: t("resident.yearsExp"), color: "text-primary" },
+          { icon: FaUsers, value: 0, label: t("resident.patients"), color: "text-green-400" },
+          { icon: FaStar, value: 0, label: t("resident.reviews"), color: "text-blue-400" },
         ].map((stat, idx) => {
           const Icon = stat.icon;
           return (
@@ -61,7 +71,7 @@ export default function DoctorViewDetailes() {
               className="flex flex-col items-center p-4 rounded-2xl border hover:scale-105 transition"
             >
               <div className="p-3 rounded-full">
-                <Icon className={`text-${stat.color} text-3xl`} />
+                <Icon className={`${stat.color} text-3xl`} />
               </div>
 
               <span className="font-bold text-xl mt-2">{stat.value}</span>
@@ -156,12 +166,22 @@ export default function DoctorViewDetailes() {
                   </div>
                 </div>
 
-                <button
-                  className="mt-4 w-full px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition"
-                  onClick={() => console.log("Book service", service.id)}
-                >
-                  {t("resident.bookNow")}
-                </button>
+               <button
+  className="mt-4 w-full px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition"
+  onClick={() =>
+    setSelectedService({
+      serviceId: service.id,
+      serviceProviderId: doctorId!, 
+      price: service.price,
+      serviceDays: service.serviceDays,
+      serviceDates: service.serviceDates,
+      timeSlots: service.timeSlots,
+    })
+  }
+>
+  {t("resident.bookNow")}
+</button>
+
               </div>
             ))}
           </div>
@@ -169,6 +189,17 @@ export default function DoctorViewDetailes() {
           <p className="text-gray-500">{t("resident.noServices")}</p>
         )}
       </div>
+      {selectedService && (
+  <BookServiceModal
+    serviceId={selectedService.serviceId}
+    serviceProviderId={selectedService.serviceProviderId}
+    price={selectedService.price}
+    availableDays={selectedService.serviceDays || []}
+    availableDates={selectedService.serviceDates || []}
+    availableTimeSlots={selectedService.timeSlots || []}
+    onClose={() => setSelectedService(null)}
+  />
+)}
     </div>
   );
 }
