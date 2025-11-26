@@ -108,7 +108,7 @@ export async function forgetPassApi(formData: forgetData) {
 // Edit Profile
 export async function EditProfile(formData: FormData , id:string) {
    try {
-    const response = await axiosInstance.put(`Account/edit-Profile?id=${id}`, formData, {
+    const response = await axiosInstance.put(`Resident/edit-Profile?id=${id}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     toast.success(response.data.message || "profile Updated successfully!");
