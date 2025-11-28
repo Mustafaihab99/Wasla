@@ -115,7 +115,7 @@ export default function DoctorProfile() {
             title={t("profile.doctor.University")}
             value={data.universityName}
           />
-          <ProfileItem title={t("profile.doctor.hos")} value={data.hospitalName} />
+          <ProfileItem title={t("profile.doctor.hos")} value={data.hospitalname} />
           <ProfileItem
             title={t("profile.doctor.Graduation")}
             value={data.graduationYear}
