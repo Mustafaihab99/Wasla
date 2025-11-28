@@ -81,7 +81,7 @@ export default function ServiceBookDoctor() {
               <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
                 <div>
                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{doc.fullName}</h3>
-                  <p className="text-primary font-semibold mt-1 text-sm sm:text-base">{doc.specialization}</p>
+                  <p className="text-primary font-semibold mt-1 text-sm sm:text-base">{doc.specialtyName}</p>
                   <p className="text-gray-500 text-xs sm:text-sm mt-1">
                     {doc.universityName} - {doc.hospitalname}
                   </p>
@@ -89,7 +89,7 @@ export default function ServiceBookDoctor() {
                   <div className="flex flex-wrap gap-2 mt-2 text-gray-600 items-center text-xs sm:text-sm">
                     <span className="flex items-center gap-1">⭐ {doc.rating.toFixed(1)}</span>
                     <span className="flex items-center gap-1">🩺 {doc.experienceYears} {t("resident.yearsExp")}</span>
-                    <span className="flex items-center gap-1">👥 {doc.numberOfPatient} {t("resident.patients")}</span>
+                    <span className="flex items-center gap-1">👥 {doc.numberOfpatients} {t("resident.patients")}</span>
                   </div>
                 </div>
 

@@ -4,24 +4,37 @@ import useGetDoctorServices from "../../hooks/doctor/useGetDoctorService";
 import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
-import { FaStar, FaUserTie, FaUsers, FaClock, FaFilePdf } from "react-icons/fa";
+import {
+  FaStar,
+  FaUserTie,
+  FaUsers,
+  FaFilePdf,
+  FaPhoneAlt,
+  FaUniversity,
+  FaHospital,
+  FaCalendarAlt,
+} from "react-icons/fa";
+import noData from "../../assets/images/nodata.webp";
 import BookServiceModal from "../../components/resident/modal/BookServiceModal";
 import { useState } from "react";
 
 export default function DoctorViewDetailes() {
   const { doctorId } = useParams();
   const { t } = useTranslation();
-    const [selectedService, setSelectedService] = useState<null | {
-    serviceId: number;
-    serviceProviderId: string;
-    price: number;
-    serviceDays: { dayOfWeek: number }[];
-    serviceDates: { date: string }[];
-    timeSlots: { start: string; end: string }[];
-  }>(null);
+const [selectedService, setSelectedService] = useState<null | {
+  serviceId: number;
+  serviceProviderId: string;
+  price: number;
+  serviceDays: { dayOfWeek: number; timeSlots: { id:number , start: string; end: string , isBooking:boolean }[] }[];
+}> (null);
 
-  const { data: profile, isLoading: loadingProfile } = useGetDoctorProfile(doctorId!);
-  const { data: services, isLoading: loadingServices } = useGetDoctorServices(doctorId!);
+
+  const { data: profile, isLoading: loadingProfile } = useGetDoctorProfile(
+    doctorId!
+  );
+  const { data: services, isLoading: loadingServices } = useGetDoctorServices(
+    doctorId!
+  );
 
   if (loadingProfile) return <DoctorCardSkeleton />;
 
@@ -37,10 +50,10 @@ export default function DoctorViewDetailes() {
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-10">
-      
       {/* Header */}
-      <div className="flex flex-col md:flex-row items-center rounded-3xl p-6 md:p-8 gap-6">
-        <div className="w-40 h-40 md:w-52 md:h-52 rounded-full overflow-hidden border-4 border-primary/20">
+      <div className="flex flex-col md:flex-row items-center gap-8 p-6 rounded-3xl border shadow-sm">
+        {/* Profile Image */}
+        <div className="w-44 h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-md">
           <img
             src={import.meta.env.VITE_USER_IMAGE + profile?.image}
             alt={profile?.fullName}
@@ -48,28 +61,77 @@ export default function DoctorViewDetailes() {
           />
         </div>
 
-        <div className="flex-1 flex flex-col items-center md:items-start">
-          <h1 className="text-lg md:text-5xl font-extrabold text-foregrund">{profile?.fullName}</h1>
-          <p className="text-primary text-xl md:text-2xl mt-1 font-semibold">
+        <div className="flex-1 space-y-2 text-center md:text-left">
+          <h1 className="text-xl md:text-4xl font-extrabold text-foreground">
+            {profile?.fullName}
+          </h1>
+
+          <p className="text-primary text-xl font-semibold">
             {profile?.specializationName}
           </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 text-dried text-sm space-y-1">
+            <p className="flex gap-2 items-center">
+              <span>
+                <FaPhoneAlt className="text-red-700 inline" />
+              </span>
+              {profile?.phone}
+            </p>
+            <p className="flex gap-2 items-center">
+              <span>
+                <FaUniversity className="text-blue-400 inline" />
+              </span>{" "}
+              {profile?.universityName}
+            </p>
+            <p className="flex gap-2 items-center">
+              <span>
+                <FaHospital className="text-pink-400 inline" />
+              </span>
+              {profile?.hospitalname}
+            </p>
+            <p className="flex gap-2 items-center">
+              <span>
+                <FaCalendarAlt className="text-amber-500" />
+              </span>
+              {t("profile.doctor.Graduation")} {profile?.graduationYear}
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
         {[
-          { icon: FaStar, value: "0", label: t("resident.rating"), color: "text-yellow-400" },
-          { icon: FaUserTie, value: profile?.experienceYears, label: t("resident.yearsExp"), color: "text-primary" },
-          { icon: FaUsers, value: 0, label: t("resident.patients"), color: "text-green-400" },
-          { icon: FaStar, value: 0, label: t("resident.reviews"), color: "text-blue-400" },
+          {
+            icon: FaStar,
+            value: profile?.experienceYears,
+            label: t("resident.rating"),
+            color: "text-yellow-400",
+          },
+          {
+            icon: FaUserTie,
+            value: profile?.experienceYears,
+            label: t("resident.yearsExp"),
+            color: "text-primary",
+          },
+          {
+            icon: FaUsers,
+            value: profile?.numberOfpatients,
+            label: t("resident.patients"),
+            color: "text-green-400",
+          },
+          {
+            icon: FaStar,
+            value: 0,
+            label: t("resident.reviews"),
+            color: "text-blue-400",
+          },
         ].map((stat, idx) => {
           const Icon = stat.icon;
           return (
-            <div 
-              key={idx} 
-              className="flex flex-col items-center p-4 rounded-2xl border hover:scale-105 transition"
-            >
+            <div
+              key={idx}
+              className="flex flex-col items-center p-4 rounded-2xl border hover:scale-105 transition">
               <div className="p-3 rounded-full">
                 <Icon className={`${stat.color} text-3xl`} />
               </div>
@@ -92,14 +154,15 @@ export default function DoctorViewDetailes() {
               <a
                 href={import.meta.env.VITE_DOCTOR_CV + profile.cv}
                 target="_blank"
-                className="flex items-center gap-2 text-primary font-semibold hover:underline"
-              >
+                className="flex items-center gap-2 text-primary font-semibold hover:underline">
                 <FaFilePdf className="text-red-500" /> {t("doctor.ViewCV")}
               </a>
             )}
           </div>
 
-          <p className="text-dried text-lg leading-relaxed">{profile.description}</p>
+          <p className="text-dried text-lg leading-relaxed">
+            {profile.description}
+          </p>
         </div>
       )}
 
@@ -111,95 +174,79 @@ export default function DoctorViewDetailes() {
           <DoctorCardSkeleton />
         ) : services && services.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {services.map(service => (
+            {services?.map((service) => (
               <div
                 key={service.id}
-                className="flex flex-col justify-between rounded-2xl border p-6 hover:scale-[1.03] transition-transform"
-              >
-                <div>
-                  <h3 className="text-2xl font-bold">{i18next.language === "ar" ? service.serviceNameArabic : service.serviceNameEnglish}</h3>
-                  <p className="text-dried mt-2 text-sm">
-                    {i18next.language === "ar" ? service.descriptionArabic : service.descriptionEnglish}
-                  </p>
+                className="p-6 rounded-2xl border shadow-sm hover:shadow-lg transition">
+                <h3 className="text-2xl font-bold text-foreground">
+                  {i18next.language === "ar"
+                    ? service.serviceNameArabic
+                    : service.serviceNameEnglish}
+                </h3>
 
-                  <div className="mt-4 space-y-2 text-sm text-dried">
-                    
-                    {/* Days */}
-                    {service.serviceDays.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {service.serviceDays
-                          .sort((a,b)=>a.dayOfWeek - b.dayOfWeek)
-                          .map(d => (
-                            <span key={d.dayOfWeek} className="px-3 py-1 border border-primary text-primary rounded-full text-xs">
-                              {daysOfWeek[d.dayOfWeek]}
-                            </span>
-                        ))}
-                      </div>
-                    )}
+                <p className="text-dried mt-2">
+                  {i18next.language === "ar"
+                    ? service.descriptionArabic
+                    : service.descriptionEnglish}
+                </p>
 
-                    {/* Dates */}
-                    {service.serviceDates.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {service.serviceDates.map(d => (
-                          <span key={d.date} className="px-3 py-1 border border-primary text-primary rounded-full text-xs">
-                            {new Date(d.date).toLocaleDateString()}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                {/* Days*/}
+                <div className="flex flex-wrap gap-2 items-center mt-3">
+                  {service.serviceDays?.map((day) => (
+                    <div
+                      key={day.dayOfWeek}
+                      className="flex items-center gap-1 px-3 py-1 bg-primary/10 border border-primary/30 text-primary rounded-full text-xs font-semibold shadow-sm hover:bg-primary hover:text-white hover:border-primary transition-all duration-300">
+                      {/* Icon Circle */}
+                      <span className="w-2 h-2 bg-primary rounded-full"></span>
 
-                    {/* Time Slots */}
-                    {service.timeSlots.length > 0 && (
-                      <div className="flex flex-wrap gap-2 items-center">
-                        <FaClock className="text-gray-400" />
-                        {service.timeSlots.map(ti => (
-                          <span key={ti.start} className="px-2 py-1 border rounded-full text-xs">
-                            {`${ti.start.slice(0,5)} ${t("doctor.to")} ${ti.end.slice(0,5)}`}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-
-                    <p className="mt-2 font-semibold text-primary">
-                      {t("resident.price")}: ${service.price}
-                    </p>
-                  </div>
+                      {/* Day Name */}
+                      {daysOfWeek[day.dayOfWeek]}
+                    </div>
+                  ))}
                 </div>
 
-               <button
-  className="mt-4 w-full px-4 py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 transition"
-  onClick={() =>
-    setSelectedService({
-      serviceId: service.id,
-      serviceProviderId: doctorId!, 
-      price: service.price,
-      serviceDays: service.serviceDays,
-      serviceDates: service.serviceDates,
-      timeSlots: service.timeSlots,
-    })
-  }
->
-  {t("resident.bookNow")}
-</button>
+                <p className="text-primary font-bold mt-3">
+                  {service.price} {t("doctor.EGP")}
+                </p>
 
+                <button
+                  className="mt-4 w-full py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90"
+                  onClick={()=> setSelectedService({
+  serviceId: service.id,
+  serviceProviderId: doctorId!,
+  price: service.price,
+  serviceDays: service.serviceDays.map(d => ({
+    dayOfWeek: d.dayOfWeek,
+    timeSlots: d.timeSlots || [],
+  })),
+})
+}                  >
+                  {t("resident.bookNow")}
+                </button>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-gray-500">{t("resident.noServices")}</p>
+           <div className="flex justify-center mt-10">
+          <img src={noData} alt="no data found" className="opacity-80" />
+        </div>
         )}
       </div>
-      {selectedService && (
+{selectedService && (
   <BookServiceModal
     serviceId={selectedService.serviceId}
     serviceProviderId={selectedService.serviceProviderId}
     price={selectedService.price}
-    availableDays={selectedService.serviceDays || []}
-    availableDates={selectedService.serviceDates || []}
-    availableTimeSlots={selectedService.timeSlots || []}
+    availableDays={
+      selectedService.serviceDays.map(day => ({
+        dayOfWeek: day.dayOfWeek,
+        timeSlots: day.timeSlots || [],
+      }))
+    }
     onClose={() => setSelectedService(null)}
   />
 )}
+
     </div>
   );
 }

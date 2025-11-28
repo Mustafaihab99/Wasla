@@ -144,8 +144,13 @@
       "exreq" : "Experience years required",
       "year" : "Years must be positive",
       "phonemin" : "Phone must be 11 digits",
+      "age" : "Age",
+      "Years" : "Years",
       "spireq" : "Specialization is required",
-      "namereq" : "Full name is required"
+      "namereq" : "Full name is required",
+      "hosreq" : "Hospital Name is required",
+      "hos" : "Hospital Name",
+      "enterhos" : "Enter Hospital Name"
     },
     "resident" : {
       "natmin" : "National ID should at least 14 digits",
@@ -179,11 +184,17 @@
     "All" : "All",
     "yearsExp" : "Years of experience",
     "patients" : "no of patients",
+    "servicesWeOffer" : "Services we offer",
     "ViewDetails" : "View Details",
     "rating" : "Rating",
     "reviews" : "Reviews",
     "price" : "Price",
-    "bookNow" : "Book Now"
+    "bookNow" : "Book Now",
+    "tips" : "Tips Of The Day",
+    "popular" : "Popular Categories",
+    "Dermatology" : "Dermatology",
+    "technican" : "Technican",
+    "Fitness" : "Fitness Training"
   },
   "doctor" : {
     "ViewCV" : "View CV",
@@ -191,6 +202,7 @@
     "inbox" : "Inbox",
     "Service" : "Services Management",
     "profile" : "Profile",
+    "noSlots" : "Already booked",
     "Bio" : "Bio",
     "downCV" : "Download CV",
     "welcome" : "Welcome Doctor,",
@@ -254,5 +266,37 @@
     "bookingFailed" : "Booking Failed",
     "slotOverlap": "This time slot overlaps with another slot"
     }
+  },
+ "tips": {
+    "drinkWater": "Drink 2–3 liters of water daily to stay hydrated and energized.",
+    "walkDaily": "Take a 30-minute walk daily to boost cardiovascular health.",
+    "eatFruitsVeg": "Eat at least 5 servings of fruits and vegetables every day.",
+    "shortBreaks": "Take short breaks during work to relax your eyes and body.",
+    "sleepSchedule": "Maintain a regular sleep schedule for better mental health.",
+    "washHands": "Wash your hands regularly to prevent germs and infections.",
+    "deepBreathing": "Practice deep breathing exercises to reduce stress and anxiety.",
+    "limitSugaryDrinks": "Limit sugary drinks and opt for water or herbal teas.",
+    "morningStretch": "Stretch every morning to improve flexibility and posture.",
+    "organizeWorkspace": "Keep your workspace organized to boost productivity and reduce stress.",
+    "noSkippingBreakfast": "Avoid skipping breakfast to maintain energy levels throughout the day.",
+    "strengthTraining": "Incorporate strength training twice a week to build muscle and bone health.",
+    "mindfulEating": "Practice mindful eating to avoid overeating and improve digestion.",
+    "checkUps": "Schedule regular check-ups with your doctor for preventive care.",
+    "takeStairs": "Take the stairs instead of the elevator when possible for better fitness.",
+    "limitScreenTime": "Limit screen time before bed to improve sleep quality.",
+    "wholeGrains": "Include whole grains in your diet for sustained energy.",
+    "listenMusic": "Listen to music or podcasts to relax and uplift your mood.",
+    "firstAid": "Keep a small first-aid kit at home for emergencies.",
+    "planMeals": "Plan your meals in advance to eat healthier and save time.",
+    "indoorPlants": "Keep indoor plants to improve air quality and reduce stress.",
+    "sunscreen": "Wear sunscreen daily to protect your skin from UV damage.",
+    "gratitude": "Practice gratitude by writing down three things you're thankful for each day.",
+    "sunlight": "Take a few minutes outside every day to enjoy sunlight and fresh air.",
+    "socialConnections": "Maintain social connections to improve mental well-being.",
+    "declutterHome": "Declutter your home regularly for a cleaner, calmer environment.",
+    "newHobby": "Try a new hobby or activity weekly to stimulate your mind.",
+    "activeTransport": "Use public transport, walk, or cycle to reduce stress and stay active.",
+    "reusableBottle": "Keep a reusable water bottle with you to remind yourself to hydrate.",
+    "laughOften": "Laugh often—it boosts mood and strengthens your immune system."
   }
 }

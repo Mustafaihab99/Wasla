@@ -24,6 +24,7 @@ export default function DoctorFormFields({ email }: { email: string }) {
     SpecializationId: 0,
     ExperienceYears: "",
     UniversityName: "",
+    hospitalName: "",
     GraduationYear: "",
     BirthDay: "",
     Phone: "",
@@ -39,6 +40,7 @@ export default function DoctorFormFields({ email }: { email: string }) {
       .min(0, t("profile.doctor.year"))
       .required(t("profile.doctor.exreq")),
     UniversityName: Yup.string().required(t("profile.doctor.unireq")),
+    hospitalName: Yup.string().required(t("profile.doctor.hosreq")),
     GraduationYear: Yup.number()
       .required(t("profile.doctor.gradreq"))
       .min(1950)
@@ -58,6 +60,7 @@ export default function DoctorFormFields({ email }: { email: string }) {
     formData.append("SpecializationId", String(values.SpecializationId || ""));
     formData.append("ExperienceYears", String(values.ExperienceYears || ""));
     formData.append("UniversityName", values.UniversityName || "");
+    formData.append("hospitalName", values.hospitalName || "");
     formData.append("GraduationYear", String(values.GraduationYear || ""));
     formData.append("BirthDay", values.BirthDay || "");
     formData.append("Phone", values.Phone || "");
@@ -183,6 +186,21 @@ export default function DoctorFormFields({ email }: { email: string }) {
     />
     <ErrorMessage
       name="UniversityName"
+      component="div"
+      className="text-red-500 text-sm mt-1"
+    />
+  </div>
+
+  {/* hospiyal */}
+  <div className="flex flex-col">
+    <label className="font-medium mb-1 text-foreground">{t("profile.doctor.hos")}</label>
+    <Field
+      name="hospitalName"
+      placeholder={t("profile.doctor.enterhos")}
+      className="w-full p-3 border border-border rounded-lg bg-transparent focus:outline-none focus:ring-2 focus:ring-primary"
+    />
+    <ErrorMessage
+      name="hospitalName"
       component="div"
       className="text-red-500 text-sm mt-1"
     />

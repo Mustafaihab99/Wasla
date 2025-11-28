@@ -39,7 +39,7 @@ export async function fetchDoctorsToResident(specialid :string) : Promise<doctor
 // book a service
 export async function bookService(formData: FormData) {
   try {
-    const response = await axiosInstance.post("Service/BookService", formData, {
+    const response = await axiosInstance.post("Book/BookService", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 

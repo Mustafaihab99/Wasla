@@ -11,7 +11,7 @@ export interface signData{
     email: string;
     password: string;
     confirmPassword: string;
-    role: string;
+    roleId: string;
 }
 export interface verifyEmailData{
     email: string;

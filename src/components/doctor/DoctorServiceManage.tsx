@@ -36,7 +36,6 @@ export default function DoctorServiceManage() {
     },
     price: service.price,
     serviceDays: service.serviceDays,
-    serviceDates: service.serviceDates,
     timeSlots: service.timeSlots,
     serviceId: service.id,
   });
@@ -58,6 +57,7 @@ export default function DoctorServiceManage() {
           mt-2 mb-6
           justify-center md:justify-between
         "
+        style={{direction:"ltr"}}
       >
         <motion.p
           className="text-muted-foreground text-center md:text-left"
@@ -102,15 +102,13 @@ export default function DoctorServiceManage() {
               <tr className="bg-border text-primary">
                 <th className="p-3 text-left">{t("doctor.ServiceName")}</th>
                 <th className="p-3 text-left">{t("doctor.Price")}</th>
-                <th className="p-3 text-left">{t("doctor.Days")}</th>
-                <th className="p-3 text-left">{t("doctor.Dates")}</th>
-                <th className="p-3 text-left">{t("doctor.TimeSlots")}</th>
+                <th className="p-3 text-left">{t("doctor.Days")} & {t("doctor.TimeSlots")}</th>
                 <th className="p-3 text-center">{t("doctor.Actions")}</th>
               </tr>
             </thead>
 
             <tbody>
-              {data.map((service: doctorServiceData, i) => (
+              {data?.map((service: doctorServiceData, i) => (
                 <motion.tr
                   key={service.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -124,64 +122,29 @@ export default function DoctorServiceManage() {
                     {service.price} {t("doctor.EGP")}
                   </td>
 
-                  {/* Days */}
+                  {/* Days & times */}
                   <td className="p-3">
-                    <div className="flex flex-wrap gap-1">
-                      {
-                        service.serviceDays.length === 0 ?
-                        <div>⸻</div>
-                        :
-                        service.serviceDays.map((d) => (
-                        <span
-                          key={d.dayOfWeek}
-                          className="px-2 py-1 bg-primary/10 text-primary rounded text-xs">
-                          {
-                            [
-                              t("doctor.Sat"),
-                              t("doctor.Sun"),
-                              t("doctor.Mon"),
-                              t("doctor.Tue"),
-                              t("doctor.Wed"),
-                              t("doctor.Thu"),
-                              t("doctor.Fri"),
-                            ][d.dayOfWeek]
-                          }
-                        </span>
-                      )) 
-                    }
-                    </div>
-                  </td>
+  <div className="flex flex-col">
+    {service.serviceDays.map(day=>(
+      <details key={day.dayOfWeek} className="mb-1 bg-primary/5 rounded p-2">
+        <summary className="cursor-pointer font-semibold text-primary">
+          {[
+            t("doctor.Sat"),t("doctor.Sun"),t("doctor.Mon"),
+            t("doctor.Tue"),t("doctor.Wed"),t("doctor.Thu"),t("doctor.Fri")
+          ][day.dayOfWeek]}
+        </summary>
 
-                  {/* Dates */}
-                  <td className="p-3">
-                    <div className="flex flex-wrap gap-1">
-                      {
-                        service.serviceDates.length === 0 ?
-                        <div>⸻</div>
-                        :
-                      service.serviceDates.map((date) => (
-                        <span
-                          key={date.date}
-                          className="px-2 py-1 bg-secondary/10 rounded text-xs">
-                          {date.date}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-
-                  {/* Time Slots */}
-                  <td className="p-3">
-                    <div className="flex flex-wrap gap-1">
-                      {service.timeSlots.map((time) => (
-                        <span
-                          key={time.start}
-                          className="px-2 py-1 bg-primary/10 text-primary rounded text-xs">
-                          {time.start.slice(0, 5)} {t("doctor.to")}{" "}
-                          {time.end.slice(0, 5)}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
+        <div className="mt-2 flex flex-wrap gap-1">
+          {day.timeSlots.map(ti=>(
+            <span key={ti.id} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+              {ti.start.slice(0,5)} {t("doctor.to")} {ti.end.slice(0,5)}
+            </span>
+          ))}
+        </div>
+      </details>
+    ))}
+  </div>
+</td>
 
                   {/* Actions */}
                   <td className="p-3 flex justify-center items-center gap-2">

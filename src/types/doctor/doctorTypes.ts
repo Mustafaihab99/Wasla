@@ -4,23 +4,33 @@ export interface doctorProfileData{
     specializationName: string,
     experienceYears: number,
     universityName: string,
+    hospitalname: string,
     graduationYear: number,
+    numberOfpatients: number,
     birthDay: string,
     phone: string,
     description: string,
     image: string,
     cv: string;
 }
+        
 // service data
 export interface serviceDays{
     dayOfWeek:number,
 }
-export interface serviceDates{
-    date:string,
-}
 export interface timeSlots{
-    start:string,
-    end:string
+  start:string,
+  end:string
+}
+export interface getTimeSlots{
+  id : number,
+  start: string,
+  end: string,
+  isBooking:boolean
+}
+export interface getServiceDays{
+  dayOfWeek : number,
+  timeSlots : getTimeSlots[]
 }
 export interface doctorServiceData{
     id: number,
@@ -29,9 +39,8 @@ export interface doctorServiceData{
     descriptionEnglish : string,
     descriptionArabic : string,
     price: number,
-    serviceDays : serviceDays[],
-    serviceDates : serviceDates[],
-    timeSlots : timeSlots[]
+    serviceDays : getServiceDays[],
+    timeSlots : getTimeSlots[]
 }
 // add service
 export interface doctorServiceAdd{
@@ -46,7 +55,6 @@ export interface doctorServiceAdd{
   },
   price: number,
   serviceDays: serviceDays[],
-  serviceDates: serviceDates[],
   timeSlots: timeSlots[]
 }
 // edit
@@ -62,6 +70,5 @@ export interface doctorServiceEdit{
   },
   price: number,
   serviceDays: serviceDays[],
-  serviceDates: serviceDates[],
   timeSlots: timeSlots[]
 }

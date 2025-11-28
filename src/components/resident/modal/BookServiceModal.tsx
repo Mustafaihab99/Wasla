@@ -7,36 +7,32 @@ interface BookServiceModalProps {
   serviceId: number;
   serviceProviderId: string;
   price: number;
-  availableDays: { dayOfWeek: number }[];
-  availableDates: { date: string }[];
-  availableTimeSlots: { start: string; end: string }[];
+  availableDays: { dayOfWeek: number; timeSlots: { id:number , start: string; end: string , isBooking:boolean }[] }[];
   onClose: () => void;
 }
 
+
 export default function BookServiceModal({
-  serviceId,
   serviceProviderId,
   price,
   availableDays,
-  availableDates,
-  availableTimeSlots,
   onClose,
 }: BookServiceModalProps) {
 
   const { t } = useTranslation();
 
   const [selectedDay, setSelectedDay] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [bookingType, setBookingType] = useState<1 | 2>(1);
   const [images, setImages] = useState<File[]>([]);
+  const [availableTimesForDay, setAvailableTimesForDay] = useState<{ id:number, start: string; end: string ,isBooking:boolean }[]>([]);
+  const [selectedTimeSlotId, setSelectedTimeSlotId] = useState<number | null>(null);
 
   //error states for each section
   const [dayError, setDayError] = useState("");
-  const [dateError, setDateError] = useState("");
   const [timeError, setTimeError] = useState("");
   const [imgError, setImgError] = useState("");
-
+ 
   const { mutateAsync: mutation, isPending } = useBookService();
 
   const daysOfWeek = [
@@ -44,166 +40,212 @@ export default function BookServiceModal({
     t("doctor.Wed"),t("doctor.Thu"),t("doctor.Fri"),
   ];
 
+const handleDayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const day = Number(e.target.value);
+  setSelectedDay(day.toString());
+  setDayError("");
+  setSelectedTime("");
+  setSelectedTimeSlotId(null);
 
-  const handleSubmit = async () => {
+  const dayObj = availableDays.find(d => d.dayOfWeek === day);
+  if (dayObj) {
+    setAvailableTimesForDay(dayObj.timeSlots.filter(slot => !slot.isBooking));
+  } else {
+    setAvailableTimesForDay([]);
+  }
+};
 
-    // Reset errors first
-    setDayError(""); setDateError(""); setTimeError(""); setImgError("");
 
-    let hasError = false;
+const handleTimeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const slotId = Number(e.target.value);
+  const slot = availableTimesForDay.find(s => s.id === slotId);
+  if (slot) {
+    setSelectedTime(`${slot.start}-${slot.end}`);
+    setSelectedTimeSlotId(slot.id);
+  }
+  setTimeError("");
+};
 
-    if (!selectedDay && availableDays.length > 0) {
-      setDayError(t("doctor.error.selectDay"));
-      hasError = true;
+const pad = (n: number) => String(n).padStart(2, "0");
+
+const getNextBookingDate = (appDayIndex: number) => {
+  const mappingToJs = [6, 0, 1, 2, 3, 4, 5];
+  const targetJsDay = mappingToJs[appDayIndex];
+
+  const today = new Date();
+  const todayJs = today.getDay(); 
+
+  let diff = (targetJsDay - todayJs + 7) % 7;
+  if (diff === 0) diff = 7;
+
+  const bookingDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + diff);
+
+  const bookingDateStr = `${bookingDate.getFullYear()}-${pad(bookingDate.getMonth() + 1)}-${pad(bookingDate.getDate())}`;
+  return bookingDateStr;
+};
+
+const handleSubmit = async () => {
+  // Reset errors first
+  setDayError(""); setTimeError(""); setImgError("");
+
+  let hasError = false;
+
+  if (!selectedDay && availableDays.length > 0) {
+    setDayError(t("doctor.error.selectDay"));
+    hasError = true;
+  }
+
+  if (!selectedTime) {
+    setTimeError(t("doctor.selectTimeSlot"));
+    hasError = true;
+  }
+
+  if (bookingType === 2 && images.length === 0) {
+    setImgError(t("doctor.error.uploadImages"));
+    hasError = true;
+  }
+
+  if (hasError) return; 
+
+  try {
+      const selectedDayInt = Number(selectedDay);
+      const bookingDateStr = getNextBookingDate(selectedDayInt);
+    const formData = new FormData();
+    formData.append("userId", sessionStorage.getItem("user_id") || "");
+    formData.append("serviceProviderId", serviceProviderId);
+    formData.append("serviceDayId", selectedTimeSlotId?.toString() || "");
+    formData.append("price", price.toString());
+    formData.append("serviceProviderType", "1");
+    formData.append("bookingType", bookingType.toString());
+    formData.append("day", selectedDay);
+    formData.append("bookingDate", bookingDateStr);
+
+    if (bookingType === 2) {
+      images.forEach(file => formData.append("Images", file));
     }
 
-    if (!selectedDate && availableDates.length > 0) {
-      setDateError(t("doctor.error.selectDay"));
-      hasError = true;
-    }
+    await mutation(formData);
+    onClose();
 
-    if (!selectedTime) {
-      setTimeError(t("doctor.selectTimeSlot"));
-      hasError = true;
-    }
-
-    if (bookingType === 2 && images.length === 0) {
-      setImgError(t("doctor.error.uploadImages"));
-      hasError = true;
-    }
-
-    if (hasError) return; 
-
-    try {
-      const formData = new FormData();
-      formData.append("UserId", sessionStorage.getItem("user_id") || "");
-      formData.append("ServiceId", serviceId.toString());
-      formData.append("ServiceProviderId", serviceProviderId.toString());
-      formData.append("Price", price.toString());
-      formData.append("ServiceProviderType", "1");
-      formData.append("BookingType", bookingType.toString());
-      formData.append("TimeSlot", selectedTime);
-      formData.append("Day", selectedDate || selectedDay);
-
-      if (bookingType === 2) {
-        images.forEach(file => formData.append("Images", file));
-      }
-
-      await mutation(formData);
-      onClose();
-
-    } catch {
-      toast.error(t("doctor.error.bookingFailed"));
-    }
-  };
-
-  return (
-    <div
-    style={{marginTop: "0"}} 
-    className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-      <div className="bg-background text-foreground rounded-xl p-6 w-full max-w-md space-y-4">
-
-        <h2 className="text-xl font-bold">{t("doctor.bookService")}</h2>
-
-        {/* Select Day */}
-        {availableDays.length > 0 && (
-          <>
-            <label>{t("doctor.selectDay")}</label>
-            <select
-              value={selectedDay}
-              onChange={(e) => { setSelectedDay(e.target.value); setDayError(""); }}
-              className="w-full bg-background border rounded p-2"
-            >
-              <option value="">--{t("doctor.selectDay")}--</option>
-              {availableDays.map(d =>(
-                <option key={d.dayOfWeek} value={d.dayOfWeek}>{daysOfWeek[d.dayOfWeek]}</option>
-              ))}
-            </select>
-            {dayError && <p className="text-red-500 text-sm">{dayError}</p>}
-          </>
-        )}
-        
-
-        {/* Select Date */}
-        {availableDates.length > 0 && (
-          <>
-            <label>{t("doctor.selectDate")}</label>
-            <select
-              value={selectedDate}
-              onChange={(e) => { setSelectedDate(e.target.value); setDateError(""); }}
-              className="w-full border bg-background rounded p-2"
-            >
-              <option value="">--{t("doctor.selectDate")}--</option>
-              {availableDates.map(d =>(
-                <option key={d.date} value={d.date}>{new Date(d.date).toLocaleDateString()}</option>
-              ))}
-            </select>
-            {dateError && <p className="text-red-500 text-sm">{dateError}</p>}
-          </>
-        )}
+  } catch {
+    toast.error(t("doctor.error.bookingFailed"));
+  }
+};
 
 
-        {/* Select Time */}
-        <>
-          <label>{t("doctor.selectTimeSlot")}</label>
+ return (
+  <div 
+  style={{marginTop:"12px"}}
+  className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn">
+
+    <div className="w-full max-w-md bg-white/90 dark:bg-background text-black shadow-2xl rounded-2xl p-6 space-y-6 border border-white/30 animate-scaleUp">
+
+      <h2 className="text-2xl font-extrabold text-center text-primary">
+        {t("doctor.bookService")}
+      </h2>
+
+      {/* Select Day */}
+      {availableDays.length > 0 && (
+        <div className="space-y-1">
+          <label className="font-semibold text-gray-700 dark:text-gray-200">
+            {t("doctor.selectDay")}
+          </label>
+
           <select
-            value={selectedTime}
-            onChange={(e)=>{ setSelectedTime(e.target.value); setTimeError(""); }}
-            className="w-full border bg-background rounded p-2"
+            value={selectedDay}
+            onChange={handleDayChange}
+            className="w-full border rounded-lg p-2 bg-white dark:bg-background shadow-sm focus:ring-2 focus:ring-primary"
           >
-            <option value="">--{t("doctor.selectTimeSlot")}--</option>
-            {availableTimeSlots.map(ti =>(
-              <option key={ti.start} value={`${ti.start}-${ti.end}`}>
-                {`${ti.start.slice(0,5)} ${t("doctor.to")} ${ti.end.slice(0,5)}`}
+            <option value="">-- {t("doctor.selectDay")} --</option>
+            {availableDays.map(d=> (
+              <option key={d.dayOfWeek} value={d.dayOfWeek}>
+                {daysOfWeek[d.dayOfWeek]}
               </option>
             ))}
           </select>
-          {timeError && <p className="text-red-500 text-sm">{timeError}</p>}
-        </>
 
+          {dayError && <p className="text-red-500 text-sm">{dayError}</p>}
+        </div>
+      )}
 
-        {/* Booking type */}
-        <label>{t("doctor.bookingType")}</label>
+      {/* Select Time */}
+      <div className="space-y-1">
+        <label className="font-semibold text-gray-700 dark:text-gray-200">
+          {t("doctor.selectTimeSlot")}
+        </label>
+
+        <select
+          value={selectedTimeSlotId ?? ""}
+          onChange={handleTimeChange}
+          disabled={!selectedDay || availableTimesForDay.length === 0}
+          className="w-full border rounded-lg p-2 bg-white dark:bg-background shadow-sm focus:ring-2 focus:ring-primary disabled:opacity-50"
+        >
+          <option value="">
+            {availableTimesForDay.length === 0
+              ? t("doctor.noSlots")
+              : `-- ${t("doctor.selectTimeSlot")} --`}
+          </option>
+
+          {availableTimesForDay.map(slot => (
+            <option key={slot.id} value={slot.id}>
+              {slot.start.slice(0,5)} {t("doctor.to")} {slot.end.slice(0,5)}
+            </option>
+          ))}
+        </select>
+
+        {timeError && <p className="text-red-500 text-sm">{timeError}</p>}
+      </div>
+
+      {/* Booking Type */}
+      <div className="space-y-1">
+        <label className="font-semibold text-gray-700 dark:text-gray-200">
+          {t("doctor.bookingType")}
+        </label>
         <select
           value={bookingType}
           onChange={(e)=>setBookingType(Number(e.target.value) as 1|2)}
-          className="w-full border rounded p-2 bg-background"
+          className="w-full border p-2 rounded-lg bg-white dark:bg-background shadow-sm focus:ring-2 focus:ring-primary"
         >
           <option value={1}>{t("doctor.checkup")}</option>
           <option value={2}>{t("doctor.consult")}</option>
         </select>
+      </div>
 
-
-
-        {/* Upload images only if consult */}
-        {bookingType===2 && (
-          <>
-            <label>{t("doctor.uploadImages")}</label>
-            <input 
-              type="file"
-              multiple
-              onChange={(e)=>{setImages(Array.from(e.target.files||[])); setImgError("");}}
-              className="w-full border rounded p-2"
-            />
-            {imgError && <p className="text-red-500 text-sm">{imgError}</p>}
-          </>
-        )}
-
-
-        <div className="flex justify-end gap-2 mt-3">
-          <button onClick={onClose} className="px-4 py-2 border rounded">
-            {t("doctor.Cancel")}
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={isPending}
-            className="px-4 py-2 bg-primary text-white rounded disabled:opacity-50"
-          >
-            {isPending ? t("doctor.booking...") : t("doctor.book")}
-          </button>
+      {/* Upload Images */}
+      {bookingType === 2 && (
+        <div className="space-y-1">
+          <label className="font-semibold text-gray-700 dark:text-gray-200">
+            {t("doctor.uploadImages")}
+          </label>
+          <input
+            type="file"
+            multiple
+            onChange={(e)=>{setImages(Array.from(e.target.files||[])); setImgError("")}}
+            className="w-full border rounded-lg p-2 bg-white dark:bg-background"
+          />
+          {imgError && <p className="text-red-500 text-sm">{imgError}</p>}
         </div>
+      )}
 
+      {/* Footer Buttons */}
+      <div className="flex justify-between mt-2">
+        <button
+          onClick={onClose}
+          className="px-4 py-2 rounded-lg border hover:bg-gray-100 transition"
+        >
+          {t("doctor.Cancel")}
+        </button>
+
+        <button
+          onClick={handleSubmit}
+          disabled={isPending}
+          className="px-5 py-2 rounded-lg bg-primary text-white font-semibold shadow-md hover:bg-primary/90 transition disabled:opacity-50"
+        >
+          {isPending ? t("doctor.booking...") : t("doctor.book")}
+        </button>
       </div>
     </div>
-  );
+  </div>
+);
+
 }

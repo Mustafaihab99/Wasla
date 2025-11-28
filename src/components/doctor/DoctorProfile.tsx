@@ -6,6 +6,7 @@ import { FaEdit, FaLock } from "react-icons/fa";
 import DoctorProfileSkeleton from "./DoctorProfileSkeleton";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
+import noData from "../../assets/images/nodata.webp";
 
 export default function DoctorProfile() {
   const id = sessionStorage.getItem("user_id")!;
@@ -15,7 +16,7 @@ export default function DoctorProfile() {
   const [openPass, setOpenPass] = useState(false);
 
   if (isLoading) return <DoctorProfileSkeleton />;
-  if (!data) return <p>No profile found</p>;
+  if (!data) return <div><img src={noData} alt="nodata" /></div>;
 
   return (
     <>
@@ -114,19 +115,20 @@ export default function DoctorProfile() {
             title={t("profile.doctor.University")}
             value={data.universityName}
           />
+          <ProfileItem title={t("profile.doctor.hos")} value={data.hospitalName} />
           <ProfileItem
             title={t("profile.doctor.Graduation")}
             value={data.graduationYear}
           />
           <ProfileItem
             title={t("profile.doctor.Experience")}
-            value={`${data.experienceYears} Years`}
+            value={`${data.experienceYears} ${t("profile.doctor.Years")}`}
           />
           <ProfileItem
             title={t("profile.doctor.Birthday")}
             value={data.birthDay?.split("T")[0]}
           />
-
+          <ProfileItem title={t("profile.doctor.age")} value={new Date().getFullYear() - Number(data.birthDay.slice(0,4))}/>
           <div className="md:col-span-2">
             <ProfileItem title={t("doctor.Bio")} value={data.description} />
           </div>
@@ -142,7 +144,7 @@ export default function DoctorProfile() {
               href={import.meta.env.VITE_DOCTOR_CV + data.cv}
               target="_blank"
               className="text-primary underline font-medium hover:opacity-80">
-              {t("doctor.downCV")}
+              {t("doctor.ViewCV")}
             </a>
           </motion.div>
         )}

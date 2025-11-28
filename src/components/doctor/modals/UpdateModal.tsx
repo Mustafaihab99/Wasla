@@ -1,6 +1,4 @@
 import { useEffect, useState, useMemo } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import useUpdateDoctorService from "../../../hooks/doctor/useUpdateDoctorService";
 import {
   doctorServiceEdit,
@@ -8,7 +6,7 @@ import {
   timeSlots,
 } from "../../../types/doctor/doctorTypes";
 import { useTranslation } from "react-i18next";
-import i18next from "i18next";
+import { FaDeleteLeft } from "react-icons/fa6";
 
 interface UpdateServiceModalProps {
   isOpen: boolean;
@@ -28,9 +26,7 @@ export default function UpdateServiceModal({
   const [serviceName, setServiceName] = useState(initialData.serviceName);
   const [description, setDescription] = useState(initialData.description);
   const [price, setPrice] = useState(initialData.price);
-  const [mode, setMode] = useState<"weekly" | "specific" | null>(null);
   const [serviceDays, setServiceDays] = useState<serviceDays[]>([]);
-  const [serviceDates, setServiceDates] = useState<Date[]>([]);
   const [timeSlots, setTimeSlots] = useState<timeSlots[]>([]);
   const [errors, setErrors] = useState<{
     serviceNameEn?: string;
@@ -40,7 +36,6 @@ export default function UpdateServiceModal({
     price?: string;
     mode?: string;
     days?: string;
-    dates?: string;
   }>({});
   const [slotErrors, setSlotErrors] = useState<string[]>([]);
 
@@ -61,7 +56,6 @@ export default function UpdateServiceModal({
     setServiceName(initialData.serviceName);
     setDescription(initialData.description);
     setPrice(initialData.price);
-    setMode(initialData.serviceDays?.length ? "weekly" : "specific");
   }, [initialData, isOpen]);
 
 const toMinutes = (t: string) => {
@@ -139,11 +133,8 @@ const deleteSlot = (i:number)=>{
   setSlotErrors(rebuildErrors(updated));
 };
 
-
-
   const handleSubmit = () => {
     const newErrors: typeof errors = {};
-
     if (!serviceName.english)
       newErrors.serviceNameEn = t("doctor.error.namEreq");
     if (!serviceName.arabic)
@@ -151,11 +142,8 @@ const deleteSlot = (i:number)=>{
     if (!description.english) newErrors.descEn = t("doctor.error.descEreq");
     if (!description.arabic) newErrors.descAr = t("doctor.error.descAreq");
     if (!price || price < 1) newErrors.price = t("doctor.error.pospri");
-    if (!mode) newErrors.mode = t("doctor.modeError");
-    if (mode === "weekly" && serviceDays.length === 0)
+    if (serviceDays.length === 0)
       newErrors.days = t("doctor.error.dayleas");
-    if (mode === "specific" && serviceDates.length === 0)
-      newErrors.dates = t("doctor.error.dateleas");
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length || slotErrors.some((e) => e)) return;
@@ -165,11 +153,7 @@ const deleteSlot = (i:number)=>{
       serviceName,
       description,
       price,
-      serviceDays: mode === "weekly" ? serviceDays : [],
-      serviceDates:
-        mode === "specific"
-          ? serviceDates.map((d) => ({ date: d.toISOString().split("T")[0] }))
-          : [],
+      serviceDays: serviceDays,
       timeSlots: timeSlots.map((s) => ({
         start: s.start.length === 5 ? s.start + ":00" : s.start,
         end: s.end.length === 5 ? s.end + ":00" : s.end,
@@ -186,17 +170,6 @@ const deleteSlot = (i:number)=>{
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-3">
       <div className="bg-white p-6 rounded-xl w-full max-w-xl shadow-xl overflow-y-auto max-h-[90vh]">
         <h2 className="text-xl font-semibold mb-4">{t("doctor.updateServ")}</h2>
-
-        {/* MODE */}
-        <SectionLabel>{t("doctor.selectMode")}</SectionLabel>
-        <ModeButtons
-          mode={mode}
-          setMode={setMode}
-          onResetDates={() => setServiceDates([])}
-          onResetDays={() => setServiceDays([])}
-        />
-        {errors.mode && <Error>{errors.mode}</Error>}
-
         {/* NAME */}
         <TwoColumn>
           <Input
@@ -205,7 +178,6 @@ const deleteSlot = (i:number)=>{
             onChange={(v) => setServiceName({ ...serviceName, english: v })}
           />
           {errors.serviceNameEn && <Error>{errors.serviceNameEn}</Error>}
-
           <Input
             label={t("doctor.ServiceName") + "(AR)"}
             value={serviceName.arabic}
@@ -238,8 +210,6 @@ const deleteSlot = (i:number)=>{
         {errors.price && <Error>{errors.price}</Error>}
 
         {/*  WEEKLY DAYS  */}
-        {mode === "weekly" && (
-          <>
             <SectionLabel>{t("doctor.Days")}</SectionLabel>
             <div className="flex flex-wrap gap-2 mt-1">
               {weekdays.map((day) => {
@@ -265,53 +235,7 @@ const deleteSlot = (i:number)=>{
               })}
             </div>
             {errors.days && <Error>{errors.days}</Error>}
-          </>
-        )}
-
-        {/* ================= SPECIFIC DATES ================= */}
-        {mode === "specific" && (
-          <>
-            <SectionLabel>{t("doctor.Dates")}</SectionLabel>
-            <div className="flex gap-3 items-center">
-              <DatePicker
-                selected={null}
-                onChange={(d) =>
-                  !serviceDates.some(
-                    (x) => x.toDateString() === d?.toDateString()
-                  ) &&
-                  d &&
-                  setServiceDates([...serviceDates, d])
-                }
-                minDate={new Date()}
-                dateFormat="dd/MM/yyyy"
-                className="border p-2 rounded-md"
-              />
-              <button
-                className="px-3 py-1 bg-red-500 text-white rounded-md"
-                onClick={() => setServiceDates([])}>
-                {t("doctor.clear")}
-              </button>
-            </div>
-            <div className="flex gap-2 mt-2 flex-wrap">
-              {serviceDates.map((d, i) => (
-                <span
-                  key={i}
-                  className="bg-primary text-white px-3 py-1 rounded-md flex items-center gap-2">
-                  {d.toLocaleDateString()}
-                  <button
-                    onClick={() =>
-                      setServiceDates(serviceDates.filter((_, x) => x !== i))
-                    }>
-                    ✕
-                  </button>
-                </span>
-              ))}
-            </div>
-            {errors.dates && <Error>{errors.dates}</Error>}
-          </>
-        )}
-
-        {/* ================= TIME SLOTS ================= */}
+        {/* TIME SLOTS  */}
         <SectionLabel>{t("doctor.TimeSlots")}</SectionLabel>
         {timeSlots.map((slot, i) => (
           <div key={i} className="flex gap-2 items-center mb-1">
@@ -321,20 +245,17 @@ type="time"
   onChange={(e) => onChangeStart(i, e.target.value)}
               className="border p-1 rounded"
             />
-
             <span>{t("doctor.to")}</span>
-
             <input
               type="time"
               value={slot.end}
                onChange={(e) => onChangeEnd(i, e.target.value)}
               className="border p-1 rounded"
             />
-
             <button
               onClick={() => deleteSlot(i)}
               className="px-2 py-1 bg-red-500 text-white rounded">
-              X
+              <FaDeleteLeft />
             </button>
 
             {slotErrors[i] && <Error>{slotErrors[i]}</Error>}
@@ -347,8 +268,7 @@ onClick={addSlot}
   {t("doctor.AddSlot")}
 </button>
 
-
-        {/* ================= FOOTER ================= */}
+        {/*  FOOTER  */}
         <div className="flex justify-end gap-3 mt-4">
           <button
             onClick={onClose}
@@ -366,7 +286,7 @@ onClick={addSlot}
   );
 }
 
-/* ================= SMALL COMPONENTS ================= */
+/*  COMPONENTS  */
 interface SectionLabelProps {
   children: React.ReactNode;
 }
@@ -427,39 +347,3 @@ const TextArea = ({ label, value, onChange }: TextAreaProps) => (
   </div>
 );
 
-interface ModeButtonsProps {
-  mode: "weekly" | "specific" | null;
-  setMode: (mode: "weekly" | "specific") => void;
-  onResetDates: () => void;
-  onResetDays: () => void;
-}
-const ModeButtons = ({
-  mode,
-  setMode,
-  onResetDates,
-  onResetDays,
-}: ModeButtonsProps) => (
-  <div className="flex gap-3 my-2">
-    <button
-      onClick={() => {
-        setMode("weekly");
-        onResetDates();
-      }}
-      className={`px-3 py-1 rounded-md border ${
-        mode === "weekly" ? "bg-primary text-white" : "bg-gray-100"
-      }`}>
-      {i18next.language === "en" ? "Weekly" : "اسبوعيا"}
-    </button>
-
-    <button
-      onClick={() => {
-        setMode("specific");
-        onResetDays();
-      }}
-      className={`px-3 py-1 rounded-md border ${
-        mode === "specific" ? "bg-primary text-white" : "bg-gray-100"
-      }`}>
-        {i18next.language === "en" ? "Specific Dates" :"تواريخ محددة"} 
-    </button>
-  </div>
-);

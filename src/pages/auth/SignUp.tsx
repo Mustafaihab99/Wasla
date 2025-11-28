@@ -10,14 +10,13 @@ import type { signData } from "../../types/auth/authData";
 export default function SignUp() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
   const { mutateAsync: signup, isPending: mutationLoading } = useSignUp();
 
   const initialValues = {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "",
+    roleId: "",
   };
 
   const { data } = useRoles();
@@ -38,7 +37,7 @@ const validationSchema = Yup.object({
     .oneOf([Yup.ref("password")], t("login.passwordsMustMatch"))
     .required(t("login.Confirm password is required")),
 
-  role: Yup.string().required(t("login.rolereq")),
+  roleId: Yup.string().required(t("login.rolereq")),
 });
 
   const handleSubmit = async (
@@ -46,8 +45,9 @@ const validationSchema = Yup.object({
     { setSubmitting }: FormikHelpers<typeof initialValues>
   ) => {
     try {
+      const selectedRole = roles.find(r => r.id === values.roleId);
       await signup(values as signData);
-      navigate("/auth/verify-email", { state: { email: values.email , role: values.role } });
+      navigate("/auth/verify-email", { state: { email: values.email , role: selectedRole?.value} });
     } catch (err) {
       console.error("Signup failed:", err);
     } finally {
@@ -127,18 +127,18 @@ const validationSchema = Yup.object({
 
             {/* Role Selection */}
             <div className="flex flex-col">
-              <label htmlFor="role" className="font-medium mb-1 text-foreground">
+              <label htmlFor="roleId" className="font-medium mb-1 text-foreground">
                 {t("login.role")}
               </label>
               <Field
                 as="select"
-                name="role"
-                id="role"
+                name="roleId"
+                id="roleId"
                 className="p-3 border border-primary rounded-lg bg-background text-gray-500 font-semibold focus:outline-none focus:ring-2 focus:ring-primary appearance-none cursor-pointer"
               >
                 <option value="">{t("login.chooseRole")}</option>
                 {roles.map((role) => (
-                  <option key={role.id} value={role.value}>
+                  <option key={role.id} value={role.id}>
                     {role.roleName}
                   </option>
                 ))}
