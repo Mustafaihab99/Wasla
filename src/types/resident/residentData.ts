@@ -20,3 +20,15 @@ export interface doctorsToResidentData{
     imageUrl: string,
     cvUrl: string
 }
+
+export interface myBookingDoctor{
+    id: number,
+    start: string,
+    end: string,
+    day: string,
+    date: string,
+    serviceProviderName: string,
+    serviceProviderProfilePhoto: string,
+    serviceName: string,
+    price: number
+}

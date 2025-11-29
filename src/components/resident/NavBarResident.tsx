@@ -33,7 +33,7 @@ export default function ResidentNavBar() {
 
   const navItems = [
     { label: t("nav.home"), link: "/dashboard" },
-    { label: t("resident.service"), link: "/resident/services" },
+    { label: t("resident.service"), link: "/resident/service" },
     { label: t("resident.inbox"), link: "/resident/inbox" },
   ];
 

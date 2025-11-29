@@ -29,7 +29,10 @@ export default function DoctorServiceManage() {
 
   // Map doctorServiceData -> doctorServiceedit
   const mapDataToAdd = (service: doctorServiceData): doctorServiceEdit => ({
-    serviceName: { english: service.serviceNameEnglish, arabic: service.serviceNameArabic },
+    serviceName: {
+      english: service.serviceNameEnglish,
+      arabic: service.serviceNameArabic,
+    },
     description: {
       english: service.descriptionEnglish || "",
       arabic: service.descriptionArabic || "",
@@ -57,8 +60,7 @@ export default function DoctorServiceManage() {
           mt-2 mb-6
           justify-center md:justify-between
         "
-        style={{direction:"ltr"}}
-      >
+        style={{ direction: "ltr" }}>
         <motion.p
           className="text-muted-foreground text-center md:text-left"
           initial={{ opacity: 0 }}
@@ -102,7 +104,9 @@ export default function DoctorServiceManage() {
               <tr className="bg-border text-primary">
                 <th className="p-3 text-left">{t("doctor.ServiceName")}</th>
                 <th className="p-3 text-left">{t("doctor.Price")}</th>
-                <th className="p-3 text-left">{t("doctor.Days")} & {t("doctor.TimeSlots")}</th>
+                <th className="p-3 text-left">
+                  {t("doctor.Days")} & {t("doctor.TimeSlots")}
+                </th>
                 <th className="p-3 text-center">{t("doctor.Actions")}</th>
               </tr>
             </thead>
@@ -116,35 +120,49 @@ export default function DoctorServiceManage() {
                   transition={{ delay: i * 0.05 }}
                   className="border-b hover:bg-canceled transition">
                   <td className="p-3 font-medium">
-                    {i18next.language === "en" ? service.serviceNameEnglish : service.serviceNameArabic}
-                    </td>
+                    {i18next.language === "en"
+                      ? service.serviceNameEnglish
+                      : service.serviceNameArabic}
+                  </td>
                   <td className="p-3">
                     {service.price} {t("doctor.EGP")}
                   </td>
 
                   {/* Days & times */}
                   <td className="p-3">
-  <div className="flex flex-col">
-    {service.serviceDays.map(day=>(
-      <details key={day.dayOfWeek} className="mb-1 bg-primary/5 rounded p-2">
-        <summary className="cursor-pointer font-semibold text-primary">
-          {[
-            t("doctor.Sat"),t("doctor.Sun"),t("doctor.Mon"),
-            t("doctor.Tue"),t("doctor.Wed"),t("doctor.Thu"),t("doctor.Fri")
-          ][day.dayOfWeek]}
-        </summary>
+                    <div className="flex flex-col">
+                      {service.serviceDays.map((day) => (
+                        <details
+                          key={day.dayOfWeek}
+                          className="mb-1 bg-primary/5 rounded p-2">
+                          <summary className="cursor-pointer font-semibold text-primary">
+                            {
+                              [
+                                t("doctor.Sat"),
+                                t("doctor.Sun"),
+                                t("doctor.Mon"),
+                                t("doctor.Tue"),
+                                t("doctor.Wed"),
+                                t("doctor.Thu"),
+                                t("doctor.Fri"),
+                              ][day.dayOfWeek]
+                            }
+                          </summary>
 
-        <div className="mt-2 flex flex-wrap gap-1">
-          {day.timeSlots.map(ti=>(
-            <span key={ti.id} className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
-              {ti.start.slice(0,5)} {t("doctor.to")} {ti.end.slice(0,5)}
-            </span>
-          ))}
-        </div>
-      </details>
-    ))}
-  </div>
-</td>
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {day.timeSlots.map((ti) => (
+                              <span
+                                key={ti.id}
+                                className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                                {ti.start.slice(0, 5)} {t("doctor.to")}{" "}
+                                {ti.end.slice(0, 5)}
+                              </span>
+                            ))}
+                          </div>
+                        </details>
+                      ))}
+                    </div>
+                  </td>
 
                   {/* Actions */}
                   <td className="p-3 flex justify-center items-center gap-2">
@@ -195,7 +213,11 @@ export default function DoctorServiceManage() {
           isOpen={isDeleteOpen}
           onClose={() => setIsDeleteOpen(false)}
           serviceId={deletingService?.id}
-          serviceName={i18next.language === "en" ? deletingService?.serviceNameEnglish : deletingService?.serviceNameArabic}
+          serviceName={
+            i18next.language === "en"
+              ? deletingService?.serviceNameEnglish
+              : deletingService?.serviceNameArabic
+          }
         />
       )}
     </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import useBookService from "../../../hooks/resident/useBookService";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface BookServiceModalProps {
   serviceId: number;
@@ -20,7 +21,7 @@ export default function BookServiceModal({
 }: BookServiceModalProps) {
 
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [bookingType, setBookingType] = useState<1 | 2>(1);
@@ -126,7 +127,7 @@ const handleSubmit = async () => {
 
     await mutation(formData);
     onClose();
-
+    navigate("/resident/profile")
   } catch {
     toast.error(t("doctor.error.bookingFailed"));
   }

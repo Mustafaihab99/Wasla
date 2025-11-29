@@ -194,7 +194,8 @@
     "popular" : "Popular Categories",
     "Dermatology" : "Dermatology",
     "technican" : "Technican",
-    "Fitness" : "Fitness Training"
+    "Fitness" : "Fitness Training",
+    "myBooking" : "My Booking"
   },
   "doctor" : {
     "ViewCV" : "View CV",
