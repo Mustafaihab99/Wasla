@@ -21,6 +21,7 @@ const ResidentProfile = lazy(() => import ("../components/resident/ResidentProfi
 const ResidentServices = lazy(() => import ("../components/resident/ResidentServices"));
 const ServiceBookDoctor = lazy(() => import ("../pages/resident/ServiceBookDoctor"));
 const DoctorViewDetailes = lazy(() => import ("../pages/resident/DoctorViewDetailes"));
+const ResidentMyBooking = lazy(() => import ("../pages/resident/ResidentMyBooking"));
 // doctor dashboard
 const DoctorDashboard = lazy(() => import ("../components/serviceDashboards/DoctorDashboard"));
 const DoctorHomeDashboard = lazy(() => import ("../components/doctor/DoctorHomeDahboard"));
@@ -53,7 +54,8 @@ export default function AppRoutes() {
         {/* resident Dashboard */}
         <Route element={<ProtectedRoute allowedRoles={["resident"]} />}>
           <Route path="/resident" element={<ResidentDashboard />}>
-            <Route path="profile" element={<ResidentProfile />} /> 
+            <Route path="profile" element={<ResidentProfile />} />
+            <Route path="profile/my-bookings" element={<ResidentMyBooking />} />
             <Route path="service" element={<ResidentServices />} /> 
             <Route path="service/doctors" element={<ServiceBookDoctor />} /> 
             <Route path="service/doctors/:doctorId" element={<DoctorViewDetailes />} /> 

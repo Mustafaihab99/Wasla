@@ -63,7 +63,7 @@ export default function ResidentHome() {
   return (
     <div className="pt-24 px-4 lg:px-20 space-y-16">
       {/* HERO */}
-      <section className="text-center relative">
+      <section className="relative text-center">
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,7 +79,9 @@ export default function ResidentHome() {
         </motion.p>
 
         {/* Search */}
-        <div className="max-w-xl mx-auto flex items-center backdrop-blur-md border border-dried rounded-full p-4 mt-8 shadow-xl hover:shadow-2xl transition-all duration-300">
+        <div 
+        onClick={() => navigate("/resident/service")}
+        className="max-w-xl mx-auto flex items-center hover:cursor-pointer backdrop-blur-md border border-dried rounded-full p-4 mt-8 shadow-xl hover:shadow-2xl transition-all duration-300">
           <input
             type="text"
             placeholder={t("resident.look")}
@@ -94,12 +96,12 @@ export default function ResidentHome() {
       {/* Gallery */}
       <ResidentGallery />
 
-      {/* Services */}
+      {/* Services Section */}
       <section>
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-3xl md:text-4xl font-bold mb-8">
+          className="text-3xl md:text-4xl font-bold mb-8 text-center">
           {t("resident.servicesWeOffer")}
         </motion.h2>
 
@@ -108,7 +110,7 @@ export default function ResidentHome() {
             <motion.div
               key={i}
               whileHover={{ scale: 1.08 }}
-              className="group relative p-6 rounded-2xl shadow-xl cursor-pointer bg-gradient-to-br hover:from-white/70 hover:to-white/20 transition-all duration-300"
+              className={`group relative p-6 rounded-2xl shadow-xl cursor-pointer bg-gradient-to-br hover:from-white/70 hover:to-white/20 transition-all duration-300`}
               onClick={() => navigate(s.link)}>
               <div
                 className={`w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-gradient-to-br ${s.color} text-white text-3xl mb-4 group-hover:scale-110 transition-all duration-300`}>
@@ -122,31 +124,24 @@ export default function ResidentHome() {
         </div>
       </section>
 
-     {/* Health Tip */}
-<section className="relative p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden group cursor-pointer bg-white/10 backdrop-blur-2xl border border-white/20">
-  {/* Gradient Overlay modern */}
-  <div className="absolute inset-0 bg-gradient-to-r from-cyan-300 via-teal-200 to-green-200 opacity-60 rounded-3xl animate-gradient-x"></div>
-
-  {/* Floating subtle shapes */}
-  <div className="absolute -top-4 -right-4 w-20 sm:w-24 h-20 sm:h-24 bg-cyan-300/40 rounded-full blur-3xl animate-pulse"></div>
-  <div className="absolute -bottom-6 -left-6 w-28 sm:w-32 h-28 sm:h-32 bg-green-200/30 rounded-full blur-3xl animate-pulse delay-300"></div>
-
-  {/* Overlay subtle */}
-  <div className="absolute inset-0 bg-black/10 rounded-3xl"></div>
-
-  {/* Content */}
-  <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6">
-    <div className="flex items-center gap-2 md:gap-3 mb-4 justify-center">
-      <div className="text-lg md:text-4xl animate-bounce">💡</div>
-      <h3 className="text-lg  md:text-4xl font-extrabold text-black drop-shadow-md">
-        {t("resident.tips")}
-      </h3>
-    </div>
-    <p className="text-base sm:text-lg md:text-xl text-gray-800 leading-relaxed max-w-full sm:max-w-xl md:max-w-2xl">
-      {t(tip)}
-    </p>
-  </div>
-</section>
+      {/* Health Tips */}
+      <section className="relative p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden group cursor-pointer bg-white/10 backdrop-blur-2xl border border-white/20">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-300 via-teal-200 to-green-200 opacity-60 rounded-3xl animate-gradient-x"></div>
+        <div className="absolute -top-4 -right-4 w-20 sm:w-24 h-20 sm:h-24 bg-cyan-300/40 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-6 -left-6 w-28 sm:w-32 h-28 sm:h-32 bg-green-200/30 rounded-full blur-3xl animate-pulse delay-300"></div>
+        <div className="absolute inset-0 bg-black/10 rounded-3xl"></div>
+        <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6">
+          <div className="flex items-center gap-2 md:gap-3 mb-4 justify-center">
+            <div className="text-lg md:text-4xl animate-bounce">💡</div>
+            <h3 className="text-lg md:text-4xl font-extrabold text-black drop-shadow-md">
+              {t("resident.tips")}
+            </h3>
+          </div>
+          <p className="text-base sm:text-lg md:text-xl text-gray-800 leading-relaxed max-w-full sm:max-w-xl md:max-w-2xl">
+            {t(tip)}
+          </p>
+        </div>
+      </section>
 
       {/* Popular Categories */}
       <section>

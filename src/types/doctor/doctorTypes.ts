@@ -87,3 +87,18 @@ export interface doctorChartsData{
   totalAmount : number,
   years: yearsData[]
 }
+// booking list for doctor
+export interface doctorBookingListData{
+      bookingId: number,
+      serviceName: string,
+      userName: string,
+      userImage: string,
+      date: string,
+      start: string,
+      end: string,
+      day: number,
+      bookingType: number,
+      phone: string,
+      price: number,
+      bookingImages: string[]
+}

@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { doctorChartsData, doctorProfileData, doctorServiceAdd, doctorServiceData, doctorServiceEdit } from "../../types/doctor/doctorTypes";
+import { doctorBookingListData, doctorChartsData, doctorProfileData, doctorServiceAdd, doctorServiceData, doctorServiceEdit } from "../../types/doctor/doctorTypes";
 
 // profile
 export async function getDoctorProfile(id :string) : Promise<doctorProfileData> {
@@ -83,6 +83,22 @@ export async function DeleteDoctorService(serviceID : number) {
 export async function fetchChartsData(id :string) : Promise<doctorChartsData> {
     try{
     const response = await axiosInstance.get(`Doctor/GetDoctorChart/${id}`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
+}
+// bookingList 
+export async function fetchBookingList(id :string , type:number) : Promise<doctorBookingListData[]> {
+    try{
+    const response = await axiosInstance.get(`Doctor/GetAllBookingsOfDoctor/${id}/${type}`);
     return response.data.data;
     }
     catch (error: unknown) {

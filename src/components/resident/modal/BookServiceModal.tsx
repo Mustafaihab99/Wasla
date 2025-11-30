@@ -118,7 +118,6 @@ const handleSubmit = async () => {
     formData.append("price", price.toString());
     formData.append("serviceProviderType", "1");
     formData.append("bookingType", bookingType.toString());
-    formData.append("day", selectedDay);
     formData.append("bookingDate", bookingDateStr);
 
     if (bookingType === 2) {

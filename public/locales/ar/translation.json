@@ -195,7 +195,9 @@
     "Dermatology" : "الجلدية",
     "technican" : "فني",
     "Fitness" : "تمارين اللياقة",
-    "myBooking" : "حجوزاتى"
+    "myBooking" : "حجوزاتى",
+    "usageStats" : "نشاطات الحجوزات",
+    "myFavorites" : "قائمة المفضلة"
   },
   "doctor" : {
     "dashboard" : "لوحة تحكم الدكتور",
@@ -259,6 +261,16 @@
     "Total" : "مجموع الارباح", 
     "overview" : "نظرة على لوحة التحكم",
     "renevue" : "الارباح الشهرية",
+    "bookingsList" : "قائمة حاجزين خدماتك",
+    "upcoming" : "القادمة",
+    "completed" : "المكتملة",
+    "all" : "الكل",
+    "noBookingsFound" : "ليس لديك حجوزات حتى الان.",
+    "date" : "التاريخ",
+    "time" : "الوقت",
+    "hideImages" : "اخفاء الصوره",
+    "showImages" : "عرض الصوره",
+    "pname" : "اسم المريض",
     "error" : {
       "namEreq" : "اسم الخدمه بالانجليزيه مطلوب",
       "namAreq" : "اسم الحدمه بالعربيه مطلوب",
