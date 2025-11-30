@@ -12,8 +12,7 @@ export interface doctorProfileData{
     description: string,
     image: string,
     cv: string;
-}
-        
+}        
 // service data
 export interface serviceDays{
     dayOfWeek:number,
@@ -71,4 +70,20 @@ export interface doctorServiceEdit{
   price: number,
   serviceDays: serviceDays[],
   timeSlots: timeSlots[]
+}
+// doctor charts data
+export interface monthData{
+  month : number,
+  amount: number
+}
+export interface yearsData{
+  year: number,
+  months: monthData[]
+}
+export interface doctorChartsData{
+  numOfPatients : number,
+  numOfBookings : number,
+  numOfCompletedBookings : number,
+  totalAmount : number,
+  years: yearsData[]
 }

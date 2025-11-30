@@ -253,6 +253,12 @@
   "book" : "Book",
   "booking..." : "Booking...",
   "uploadImages" : "upload images",
+  "Patients" : "Patients",
+  "Bookings" : "no of Bookings",
+  "Completed" : "Completed Bookings",
+  "Total" : "Total Revenue", 
+  "overview" : "Dashboard Overview",
+  "renevue" : "Monthly Revenue",
   "error" : {
     "namEreq" : "Service Name (EN) is required",
     "namAreq" : "Service Name (Ar) is required",

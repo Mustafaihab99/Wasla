@@ -25,7 +25,7 @@ export default function ResidentProfile() {
 
   const handleLogout = () => {
     sessionStorage.clear();
-    window.location.href = "/login";
+    window.location.href = "/auth/login";
   };
 
   return (

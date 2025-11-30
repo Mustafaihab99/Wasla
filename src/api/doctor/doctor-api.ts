@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { doctorProfileData, doctorServiceAdd, doctorServiceData, doctorServiceEdit } from "../../types/doctor/doctorTypes";
+import { doctorChartsData, doctorProfileData, doctorServiceAdd, doctorServiceData, doctorServiceEdit } from "../../types/doctor/doctorTypes";
 
 // profile
 export async function getDoctorProfile(id :string) : Promise<doctorProfileData> {
@@ -76,6 +76,22 @@ export async function DeleteDoctorService(serviceID : number) {
     const errorMessage =
       axiosError.response?.data?.message || "Added failed";
     toast.error(errorMessage);
+    throw error;
+  }
+}
+// charts data 
+export async function fetchChartsData(id :string) : Promise<doctorChartsData> {
+    try{
+    const response = await axiosInstance.get(`Doctor/GetDoctorChart/${id}`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
     throw error;
   }
 }
