@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { doctorsToResidentData, myBookingDoctor, residentProfile } from "../../types/resident/residentData";
+import { doctorsToResidentData, myBookingDoctor, residentChartsData, residentProfile } from "../../types/resident/residentData";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
 
@@ -56,6 +56,22 @@ export async function bookService(formData: FormData) {
 export async function showMyBooking(id :string) : Promise<myBookingDoctor[]> {
     try{
     const response = await axiosInstance.get(`Book/GetBookingDetailsForUser?userId=${id}`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+    }
+}
+// resident charts
+export async function fetchResidentCharts(id :string) : Promise<residentChartsData> {
+    try{
+    const response = await axiosInstance.get(`Resident/resident-chart?residentId=${id}`);
     return response.data.data;
     }
     catch (error: unknown) {

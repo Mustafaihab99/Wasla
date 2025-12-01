@@ -197,7 +197,9 @@
     "Fitness" : "تمارين اللياقة",
     "myBooking" : "حجوزاتى",
     "usageStats" : "نشاطات الحجوزات",
-    "myFavorites" : "قائمة المفضلة"
+    "myFavorites" : "قائمة المفضلة",
+    "allBooking" : "كل الحجوزات",
+    "reneve" : "اجمالى المدفوعات"
   },
   "doctor" : {
     "dashboard" : "لوحة تحكم الدكتور",

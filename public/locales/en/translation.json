@@ -197,7 +197,9 @@
     "Fitness": "Fitness Training",
     "myBooking": "My Booking",
     "usageStats" : "My Activity of Booking",
-    "myFavorites" : "My Favorites"
+    "myFavorites" : "My Favorites",
+    "allBooking" : "All Bookings",
+    "reneve" : "Payments"
   },
   "doctor": {
     "ViewCV": "View CV",

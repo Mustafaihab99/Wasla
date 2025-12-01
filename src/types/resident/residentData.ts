@@ -32,3 +32,18 @@ export interface myBookingDoctor{
     serviceName: string,
     price: number
 }
+// charts resident
+export interface monthResData{
+    month: number,
+    bookings: number,
+    amount: number
+}
+export interface yearsResData{
+    year: number,
+    months: monthResData[]
+}
+export interface residentChartsData{
+    numOfBookings: number,
+    totalAmount: number,
+    years: yearsResData[]
+}

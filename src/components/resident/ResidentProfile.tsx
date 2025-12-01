@@ -5,24 +5,8 @@ import ChangePasswordModal from "../common/ChangePasswordModal";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { FaSignOutAlt, FaEdit, FaLock, FaCalendarAlt, FaHeart } from "react-icons/fa";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useNavigate } from "react-router-dom";
-
-// Placeholder chart data
-const staticChartData = [
-  { name: "Jan", amount: 50 },
-  { name: "Feb", amount: 80 },
-  { name: "Mar", amount: 45 },
-  { name: "Apr", amount: 70 },
-  { name: "May", amount: 100 },
-  { name: "Jun", amount: 60 },
-  { name: "Jul", amount: 90 },
-  { name: "Aug", amount: 40 },
-  { name: "Sep", amount: 75 },
-  { name: "Oct", amount: 55 },
-  { name: "Nov", amount: 95 },
-  { name: "Dec", amount: 85 },
-];
+import ResidentCharts from "./ResidentCharts";
 
 export default function ResidentProfile() {
   const id = sessionStorage.getItem("user_id")!;
@@ -93,28 +77,7 @@ export default function ResidentProfile() {
   </div>
 </motion.div>
 
-
-      {/* ===== Chart Section ===== */}
-      <div className="w-full max-w-6xl mx-auto border border-primary rounded-2xl p-6 shadow-lg bg-white/10 backdrop-blur-xl">
-        <h2 className="text-2xl font-bold mb-4 text-primary">{t("resident.usageStats")}</h2>
-        <div className="w-full h-[300px] md:h-[360px] rounded-xl overflow-hidden">
-          <ResponsiveContainer width="100%" height="100%" minHeight={260}>
-            <AreaChart data={staticChartData} margin={{ top: 10, right: 15, left: -10, bottom: 5 }}>
-              <defs>
-                <linearGradient id="rev" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.8} />
-                  <stop offset="85%" stopColor="var(--primary)" stopOpacity={0.1} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="name" stroke="#888" tick={{ fontSize: 12 }} />
-              <YAxis domain={[0, (dataMax) => Math.ceil(dataMax / 10) * 10]} />
-              <CartesianGrid strokeDasharray="3 3" opacity={0.25} />
-              <Tooltip />
-              <Area dataKey="amount" stroke="var(--primary)" fill="url(#rev)" strokeWidth={3} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+     <ResidentCharts residentId={id} />
 
       <div className="w-full max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
         <motion.div whileHover={{ scale: 1.05 }} className="p-6 bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/20 rounded-2xl shadow-lg cursor-pointer flex items-center justify-between"
