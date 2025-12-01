@@ -126,7 +126,7 @@ const handleSubmit = async () => {
 
     await mutation(formData);
     onClose();
-    navigate("/resident/profile")
+    navigate("/resident/profile/my-bookings")
   } catch {
     toast.error(t("doctor.error.bookingFailed"));
   }
