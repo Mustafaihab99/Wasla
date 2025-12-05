@@ -33,9 +33,10 @@ export default function NavBar() {
   ];
 
   const nav = [
+    { label: t("nav.home"), link: "home" },
     { label: t("nav.about"), link: "about" },
     { label: t("nav.service"), link: "services" },
-    { label: t("nav.home"), link: "home" },
+    { label: t("landing.contact"), link: "contact" },
   ];
 
   useEffect(() => {
