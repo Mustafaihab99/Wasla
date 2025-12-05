@@ -103,7 +103,7 @@ export default function FooterSection() {
       {/* Bottom Line */}
       <div className="relative mt-12 border-t border-border pt-3 text-center text-sm text-muted-foreground">
         <p>
-          © {new Date().getFullYear()}{" "}
+          © {new Date().getFullYear()} 
           <span className="text-primary font-semibold">Wasla</span> — {t("footer.All rights reserved")}
         </p>
       </div>

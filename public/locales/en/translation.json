@@ -212,7 +212,9 @@
       "namereq": "Full name is required",
       "hosreq": "Hospital Name is required",
       "hos": "Hospital Name",
-      "enterhos": "Enter Hospital Name"
+      "enterhos": "Enter Hospital Name",
+      "edit" : "Edit Profile",
+      "close" : "Close"
     },
     "resident": {
       "natmin": "National ID should at least 14 digits",
@@ -290,6 +292,7 @@
     "week": "(Weekly)",
     "specific": "(Select specific days)",
     "to": "to",
+    "day" : "Day",
     "EGP": "EGP",
     "Sat": "Sat",
     "Sun": "Sun",
@@ -335,6 +338,17 @@
     "hideImages" : "hide Images",
     "showImages" : "show Images",
     "pname" : "Patient Name",
+    "canceled" : "Canceled",
+    "cancelBooking" : "Cancel Booking",
+    "cancelmess" : "Are you sure to cancel this book?",
+    "conf" : "Confirm",
+    "editBooking" : "Edit Booking",
+    "should" : "You should choose new date and new time",
+    "newDate" : "New Date",
+    "start" : "Start Time",
+    "end" : "End Time",
+    "pending" : "Pending",
+    "canceling" : "canceling...",
     "error": {
       "namEreq": "Service Name (EN) is required",
       "namAreq": "Service Name (Ar) is required",

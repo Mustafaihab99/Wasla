@@ -23,14 +23,14 @@ export default function ResidentGallery() {
   return (
     <section 
     style={{direction:"ltr"}}
-    className="mb-14">
+    className="mb-14 h-[700px]">
       <Swiper
         modules={[Pagination, Autoplay]}
         pagination={{ clickable: true }}
         autoplay={{ delay: 2500 }}
         spaceBetween={15}
         slidesPerView={1}
-        className="rounded-xl h-[450px]"
+        className="rounded-xl h-[660px]"
       >
         {slides.map((slide, i) => (
           <SwiperSlide key={i}>
@@ -38,7 +38,7 @@ export default function ResidentGallery() {
               <img
                 src={slide.img}
                 alt={slide.title}
-                className="w-full h-[400px] object-fill"
+                className="w-full h-[600px] object-cover"
                 loading="lazy"
               />
 

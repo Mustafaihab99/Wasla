@@ -13,6 +13,20 @@ export interface doctorProfileData{
     image: string,
     cv: string;
 }        
+// edit doctor profile
+export interface editdoctorProfileData{
+    userId : string,
+    fullName: string,
+    phone: string,
+    birthDay: string,
+    experienceYears: number,
+    universityName: string,
+    graduationYear: number,
+    hospitalname: string,
+    specializationId: string,
+    profilePhoto: string,
+    cv: string;
+}        
 // service data
 export interface serviceDays{
     dayOfWeek:number,
@@ -101,4 +115,12 @@ export interface doctorBookingListData{
       phone: string,
       price: number,
       bookingImages: string[]
+}
+// update time for book
+export interface doctorUpdateBookData{
+  bookingId: number,
+  newDayOfWeek: number,
+  newStart: string,
+  newEnd: string,
+  bookingDate: string
 }

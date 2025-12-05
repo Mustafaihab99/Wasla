@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { doctorBookingListData, doctorChartsData, doctorProfileData, doctorServiceAdd, doctorServiceData, doctorServiceEdit } from "../../types/doctor/doctorTypes";
+import { doctorBookingListData, doctorChartsData, doctorProfileData, doctorServiceAdd, doctorServiceData, doctorServiceEdit, doctorUpdateBookData } from "../../types/doctor/doctorTypes";
 
 // profile
 export async function getDoctorProfile(id :string) : Promise<doctorProfileData> {
@@ -108,6 +108,47 @@ export async function fetchBookingList(id :string , type:number) : Promise<docto
     } else {
       toast.error("Unexpected error occurred");
     }
+    throw error;
+  }
+}
+// Edit Profile
+export async function EditDoctorProfile(formData: FormData) {
+   try {
+    const response = await axiosInstance.put(`Doctor/UpdateDoctorProfile`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    toast.success(response.data.message || "profile Updated successfully!");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "Updated failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// cancel Book
+export async function cancelDoctorBook(bookingId: number) {
+   try {
+    const response = await axiosInstance.put(`Book/UpdateBookingStatus?bookingId=${bookingId}&status=3`);
+    toast.success(response.data.message || "Book Canceled successfully");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "canceled failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// update time Book
+export async function updateDoctorBook(updataData: doctorUpdateBookData) {
+   try {
+    const response = await axiosInstance.put(`Book/UpdateBooking` , updataData);
+    toast.success(response.data.message || "Book Updated successfully");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "updated failed";
+    toast.error(errorMessage);
     throw error;
   }
 }

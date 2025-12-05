@@ -29,13 +29,13 @@ export default function ContactSection() {
         transition={{ duration: 0.6 }}
         viewport={{ once: true }}
         className="max-w-3xl mx-auto">
-        {" "}
+         
         <h3 className="text-3xl font-bold text-center mb-2">
-          {t("landing.contact")}{" "}
-        </h3>{" "}
+          {t("landing.contact")} 
+        </h3> 
         <p className="text-muted-foreground text-center mb-6">
-          {t("landing.reply")}{" "}
-        </p>{" "}
+          {t("landing.reply")} 
+        </p> 
         <form onSubmit={handleSubmit} className="grid gap-4">
           <motion.input
             initial={{ opacity: 0, y: 10 }}
@@ -80,11 +80,11 @@ export default function ContactSection() {
                 isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-primary"
               }`}
               disabled={isSubmitting}>
-              {t("landing.sendMes")}{" "}
+              {t("landing.sendMes")} 
             </button>
-          </motion.div>{" "}
+          </motion.div> 
         </form>
-      </motion.div>{" "}
+      </motion.div> 
     </SectionWrapper>
   );
 }

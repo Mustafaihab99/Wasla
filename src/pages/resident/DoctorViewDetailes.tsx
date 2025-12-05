@@ -21,13 +21,20 @@ import { useState } from "react";
 export default function DoctorViewDetailes() {
   const { doctorId } = useParams();
   const { t } = useTranslation();
-const [selectedService, setSelectedService] = useState<null | {
-  serviceId: number;
-  serviceProviderId: string;
-  price: number;
-  serviceDays: { dayOfWeek: number; timeSlots: { id:number , start: string; end: string , isBooking:boolean }[] }[];
-}> (null);
-
+  const [selectedService, setSelectedService] = useState<null | {
+    serviceId: number;
+    serviceProviderId: string;
+    price: number;
+    serviceDays: {
+      dayOfWeek: number;
+      timeSlots: {
+        id: number;
+        start: string;
+        end: string;
+        isBooking: boolean;
+      }[];
+    }[];
+  }>(null);
 
   const { data: profile, isLoading: loadingProfile } = useGetDoctorProfile(
     doctorId!
@@ -80,7 +87,7 @@ const [selectedService, setSelectedService] = useState<null | {
             <p className="flex gap-2 items-center">
               <span>
                 <FaUniversity className="text-blue-400 inline" />
-              </span>{" "}
+              </span>
               {profile?.universityName}
             </p>
             <p className="flex gap-2 items-center">
@@ -211,42 +218,40 @@ const [selectedService, setSelectedService] = useState<null | {
 
                 <button
                   className="mt-4 w-full py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90"
-                  onClick={()=> setSelectedService({
-  serviceId: service.id,
-  serviceProviderId: doctorId!,
-  price: service.price,
-  serviceDays: service.serviceDays.map(d => ({
-    dayOfWeek: d.dayOfWeek,
-    timeSlots: d.timeSlots || [],
-  })),
-})
-}                  >
+                  onClick={() =>
+                    setSelectedService({
+                      serviceId: service.id,
+                      serviceProviderId: doctorId!,
+                      price: service.price,
+                      serviceDays: service.serviceDays.map((d) => ({
+                        dayOfWeek: d.dayOfWeek,
+                        timeSlots: d.timeSlots || [],
+                      })),
+                    })
+                  }>
                   {t("resident.bookNow")}
                 </button>
               </div>
             ))}
           </div>
         ) : (
-           <div className="flex justify-center mt-10">
-          <img src={noData} alt="no data found" className="opacity-80" />
-        </div>
+          <div className="flex justify-center mt-10">
+            <img src={noData} alt="no data found" className="opacity-80" />
+          </div>
         )}
       </div>
-{selectedService && (
-  <BookServiceModal
-    serviceId={selectedService.serviceId}
-    serviceProviderId={selectedService.serviceProviderId}
-    price={selectedService.price}
-    availableDays={
-      selectedService.serviceDays.map(day => ({
-        dayOfWeek: day.dayOfWeek,
-        timeSlots: day.timeSlots || [],
-      }))
-    }
-    onClose={() => setSelectedService(null)}
-  />
-)}
-
+      {selectedService && (
+        <BookServiceModal
+          serviceId={selectedService.serviceId}
+          serviceProviderId={selectedService.serviceProviderId}
+          price={selectedService.price}
+          availableDays={selectedService.serviceDays.map((day) => ({
+            dayOfWeek: day.dayOfWeek,
+            timeSlots: day.timeSlots || [],
+          }))}
+          onClose={() => setSelectedService(null)}
+        />
+      )}
     </div>
   );
 }

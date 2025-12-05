@@ -30,6 +30,7 @@ export interface myBookingDoctor{
     serviceProviderName: string,
     serviceProviderProfilePhoto: string,
     serviceName: string,
+    status : number,
     price: number
 }
 // charts resident

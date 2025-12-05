@@ -60,7 +60,7 @@ export default function AboutSection() {
             className="space-y-8 text-center lg:text-left max-w-xl mx-auto"
           >
             <h2 className="text-4xl sm:text-5xl font-extrabold text-foreground leading-tight">
-              {t("about.building")}{" "}
+              {t("about.building")} 
               <span className="text-primary">{t("about.Smarter Communities")}</span>
             </h2>
 

@@ -67,19 +67,19 @@ export default function TechsSection() {
                 boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
               }}
               className="bg-background relative overflow-hidden border border-border p-6 rounded-2xl shadow-sm flex items-start gap-4">
-              {" "}
+               
               <div className="p-3 bg-primary/10 text-primary rounded-lg text-2xl">
                 {f.icon}
-              </div>{" "}
+              </div> 
               <div>
-                {" "}
-                <h4 className="font-semibold text-lg">{f.title}</h4>{" "}
-                <p className="text-sm text-muted-foreground mt-1">{f.desc}</p>{" "}
+                 
+                <h4 className="font-semibold text-lg">{f.title}</h4> 
+                <p className="text-sm text-muted-foreground mt-1">{f.desc}</p> 
               </div>
             </motion.div>
           ))}
         </motion.div>
-      </motion.div>{" "}
+      </motion.div> 
     </SectionWrapper>
   );
 }

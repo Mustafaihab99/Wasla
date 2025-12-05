@@ -5,7 +5,7 @@ const isLocal = window.location.hostname === "localhost";
 
 const axiosInstance = axios.create({
   baseURL: isLocal
-    ? "http://wasla1.runasp.net/api/"
+    ? "http://waslammka.runasp.net/api/"
     : "/api/",
   headers: {
     "Content-Type": "application/json",

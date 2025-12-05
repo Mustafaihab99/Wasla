@@ -21,7 +21,9 @@ export default function DeleteConfirmModal({ isOpen, onClose, serviceId, service
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/30"
+    style={{marginTop: "0"}}
+    >
       <div className="bg-white rounded-lg shadow-lg w-full text-black max-w-sm p-6 text-center">
         <FaTrash className="mx-auto text-red-500 text-4xl mb-4"/>
         <h2 className="text-lg font-bold">{t("doctor.sure?")}</h2>

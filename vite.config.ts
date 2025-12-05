@@ -6,11 +6,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://wasla1.runasp.net",
+        target: "http://waslammka.runasp.net",
         changeOrigin: true
       },
       "/assets": {
-        target: "http://wasla1.runasp.net",
+        target: "http://waslammka.runasp.net",
         changeOrigin: true
       }
     }

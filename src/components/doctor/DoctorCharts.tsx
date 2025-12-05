@@ -113,7 +113,7 @@ export default function DoctorCharts() {
               />
 
               <CartesianGrid strokeDasharray="3 3" opacity={0.25} />
-              <Tooltip />
+              <Tooltip contentStyle={{backgroundColor: "var(--background)", border:"1px solid var(--primary)"}} />
               <Area
                 dataKey="amount"
                 stroke="var(--primary)"

@@ -157,7 +157,7 @@ const validationSchema = Yup.object({
 
             {/* Go to Login */}
             <p className="text-center text-sm text-muted-foreground mt-2">
-              {t("login.have")}{" "}
+              {t("login.have")} 
               <Link to="/auth/login" className="text-primary hover:underline font-medium">
                 {t("login.Login")}
               </Link>

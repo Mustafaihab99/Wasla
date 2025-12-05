@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useGetDoctorProfile from "../../hooks/doctor/useDoctorProfile";
 import ChangePasswordModal from "../common/ChangePasswordModal";
-import EditDoctorProfileModal from "../common/EditProfileModal";
+import EditDoctorProfileModal from "./modals/EditDoctorProfile";
 import { FaEdit, FaLock } from "react-icons/fa";
 import DoctorProfileSkeleton from "./DoctorProfileSkeleton";
 import { useTranslation } from "react-i18next";
@@ -16,7 +16,12 @@ export default function DoctorProfile() {
   const [openPass, setOpenPass] = useState(false);
 
   if (isLoading) return <DoctorProfileSkeleton />;
-  if (!data) return <div><img src={noData} alt="nodata" /></div>;
+  if (!data)
+    return (
+      <div>
+        <img src={noData} alt="nodata" />
+      </div>
+    );
 
   return (
     <>
@@ -56,7 +61,7 @@ export default function DoctorProfile() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 }}
           />
-        <div className="flex-1">
+          <div className="flex-1">
             <motion.h2
               className="text-3xl font-bold text-primary"
               initial={{ opacity: 0, x: -15 }}
@@ -72,7 +77,7 @@ export default function DoctorProfile() {
               transition={{ delay: 0.25 }}>
               {data.specializationName}
             </motion.p>
-        
+
             <motion.div
               className="flex gap-3 mt-4 flex-col md:flex-row"
               initial={{ opacity: 0 }}
@@ -115,7 +120,10 @@ export default function DoctorProfile() {
             title={t("profile.doctor.University")}
             value={data.universityName}
           />
-          <ProfileItem title={t("profile.doctor.hos")} value={data.hospitalname} />
+          <ProfileItem
+            title={t("profile.doctor.hos")}
+            value={data.hospitalname}
+          />
           <ProfileItem
             title={t("profile.doctor.Graduation")}
             value={data.graduationYear}
@@ -128,7 +136,10 @@ export default function DoctorProfile() {
             title={t("profile.doctor.Birthday")}
             value={data.birthDay?.split("T")[0]}
           />
-          <ProfileItem title={t("profile.doctor.age")} value={new Date().getFullYear() - Number(data.birthDay.slice(0,4))}/>
+          <ProfileItem
+            title={t("profile.doctor.age")}
+            value={new Date().getFullYear() - Number(data.birthDay.slice(0, 4))}
+          />
           <div className="md:col-span-2">
             <ProfileItem title={t("doctor.Bio")} value={data.description} />
           </div>
@@ -154,9 +165,7 @@ export default function DoctorProfile() {
           <EditDoctorProfileModal
             isOpen={openEdit}
             onClose={() => setOpenEdit(false)}
-            fullname={data.fullName}
-            phoneNumber={data.phone}
-            userId={id}
+            data={data}
           />
         )}
 
