@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import useGetResidentCharts from "../../hooks/resident/useGetResidentCharts";
 
@@ -18,6 +18,14 @@ export default function ResidentCharts({ residentId }: { residentId: string }) {
   const { data, isLoading } = useGetResidentCharts(residentId);
 
   const [year, setYear] = useState<number | null>(null);
+  const [filter, setFilter] = useState<"all" | "bookings" | "amount">("all");
+
+  useEffect(() => {
+    if (data?.years && data.years.length > 0) {
+      const years = data.years.map((y) => y.year);
+      setYear(years[years.length - 1]);
+    }
+  }, [data]);
 
   const { availableYears, chartData } = useMemo(() => {
     if (!data?.years) return { availableYears: [], chartData: [] };
@@ -68,28 +76,41 @@ export default function ResidentCharts({ residentId }: { residentId: string }) {
       </div>
 
       <div className="border border-primary rounded-xl p-6 shadow space-y-4">
-        <div className="flex justify-between flex-col md:flex-row gap-2  items-center">
+        <div className="flex justify-between flex-col md:flex-row gap-2 items-center">
           <h2 className="text-xl font-bold">{t("resident.usageStats")}</h2>
 
-          <select
-            value={year ?? ""}
-            onChange={(e) => setYear(Number(e.target.value))}
-            className="border bg-background border-primary px-3 py-2 rounded-lg">
-            {availableYears.map((yr) => (
-              <option key={yr} value={yr}>
-                {yr}
-              </option>
-            ))}
-          </select>
+          <div className="flex gap-3">
+            <select
+              value={filter}
+              onChange={(e) =>
+                setFilter(e.target.value as "all" | "bookings" | "amount")
+              }
+              className="border bg-background border-primary px-3 py-2 rounded-lg">
+              <option value="all">{t("doctor.all")}</option>
+              <option value="bookings">{t("resident.allBooking")}</option>
+              <option value="amount">{t("resident.reneve")}</option>
+            </select>
+
+            {/* ⬅️ اختيار السنة */}
+            <select
+              value={year ?? ""}
+              onChange={(e) => setYear(Number(e.target.value))}
+              className="border bg-background border-primary px-3 py-2 rounded-lg">
+              {availableYears.map((yr) => (
+                <option key={yr} value={yr}>
+                  {yr}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div
-          className="w-full h-[300px] md:h-[360px]"
-          style={{ direction: "ltr" }}>
+        <div className="w-full h-[300px] md:h-[360px]" style={{ direction: "ltr" }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={chartData}
               margin={{ top: 10, right: 15, left: -10, bottom: 5 }}>
+
               <defs>
                 <linearGradient id="amountG" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#00c853" stopOpacity="0.8" />
@@ -114,29 +135,33 @@ export default function ResidentCharts({ residentId }: { residentId: string }) {
                 }}
               />
 
-              <Area
-                type="monotone"
-                className="mt-5"
-                dataKey="amount"
-                stroke="#00c853"
-                fill="url(#amountG)"
-                strokeWidth={3}
-                name={t("resident.reneve")}
-              />
-              <Area
-                type="monotone"
-                dataKey="bookings"
-                stroke="var(--primary)"
-                fill="url(#bookingsG)"
-                strokeWidth={3}
-                name={t("resident.allBooking")}
-              />
+              {(filter === "all" || filter === "amount") && (
+                <Area
+                  type="monotone"
+                  dataKey="amount"
+                  stroke="#00c853"
+                  fill="url(#amountG)"
+                  strokeWidth={3}
+                  name={t("resident.reneve")}
+                />
+              )}
+
+              {(filter === "all" || filter === "bookings") && (
+                <Area
+                  type="monotone"
+                  dataKey="bookings"
+                  stroke="var(--primary)"
+                  fill="url(#bookingsG)"
+                  strokeWidth={3}
+                  name={t("resident.allBooking")}
+                />
+              )}
 
               <Legend />
             </AreaChart>
           </ResponsiveContainer>
         </div>
       </div>
-    </div>
+/    </div>
   );
 }

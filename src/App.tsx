@@ -1,17 +1,26 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import AppRoutes from "./routes/AppRoutes"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AppRoutes from "./routes/AppRoutes";
 import { Toaster } from "sonner";
+import useBookingHub from "./utils/singlr/useBookingHub";
+import useServiceHub from "./utils/singlr/useServiceHub";
+
+const queryClient = new QueryClient();
 
 function App() {
-const queryClient = new QueryClient();
+  const token = sessionStorage.getItem("auth_token") ?? "";
+
   return (
-    <>
     <QueryClientProvider client={queryClient}>
-    <AppRoutes />
-    <Toaster richColors position="top-center"/>
+      <SignalRListener token={token} />
+      <AppRoutes />
+      <Toaster richColors position="top-center" />
     </QueryClientProvider>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;
+function SignalRListener({ token }: { token: string }) {
+  useBookingHub(token);
+  useServiceHub(token);
+  return null; 
+}
