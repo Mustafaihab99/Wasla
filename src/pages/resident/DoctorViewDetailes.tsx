@@ -17,9 +17,11 @@ import {
 import noData from "../../assets/images/nodata.webp";
 import BookServiceModal from "../../components/resident/modal/BookServiceModal";
 import { useState } from "react";
+import ReviewSection from "../../components/resident/ReviewSection";
 
 export default function DoctorViewDetailes() {
   const { doctorId } = useParams();
+  const userId = sessionStorage.getItem("user_id");
   const { t } = useTranslation();
   const [selectedService, setSelectedService] = useState<null | {
     serviceId: number;
@@ -107,11 +109,11 @@ export default function DoctorViewDetailes() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 text-center">
         {[
           {
             icon: FaStar,
-            value: profile?.experienceYears,
+            value: profile?.rating,
             label: t("resident.rating"),
             color: "text-yellow-400",
           },
@@ -127,12 +129,12 @@ export default function DoctorViewDetailes() {
             label: t("resident.patients"),
             color: "text-green-400",
           },
-          {
-            icon: FaStar,
-            value: 0,
-            label: t("resident.reviews"),
-            color: "text-blue-400",
-          },
+          // {
+          //   icon: FaStar,
+          //   value: 0,
+          //   label: t("resident.reviews"),
+          //   color: "text-blue-400",
+          // },
         ].map((stat, idx) => {
           const Icon = stat.icon;
           return (
@@ -153,7 +155,7 @@ export default function DoctorViewDetailes() {
       {/* Bio */}
       {profile?.description && (
         <div className="p-6 rounded-2xl border space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-3 md:flex-row md:gap-0 items-center justify-between">
             <h2 className="text-2xl font-bold">{t("doctor.Bio")}</h2>
 
             {/* CV Button */}
@@ -240,6 +242,11 @@ export default function DoctorViewDetailes() {
           </div>
         )}
       </div>
+      {/* reviews */}
+      <ReviewSection
+        doctorId={doctorId!}
+        currentUserId={userId!}
+        />
       {selectedService && (
         <BookServiceModal
           serviceId={selectedService.serviceId}

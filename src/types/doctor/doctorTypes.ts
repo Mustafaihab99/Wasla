@@ -12,6 +12,7 @@ export interface doctorProfileData{
     description: string,
     image: string,
     cv: string;
+    rating: number
 }        
 // edit doctor profile
 export interface editdoctorProfileData{

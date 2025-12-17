@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { doctorsToResidentData, myBookingDoctor, residentChartsData, residentProfile } from "../../types/resident/residentData";
+import { doctorsToResidentData, myBookingDoctor, residentChartsData, residentProfile, reviewAddData, reviewEditData, reviewGet } from "../../types/resident/residentData";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
 
@@ -72,6 +72,62 @@ export async function showMyBooking(id :string) : Promise<myBookingDoctor[]> {
 export async function fetchResidentCharts(id :string) : Promise<residentChartsData> {
     try{
     const response = await axiosInstance.get(`Resident/resident-chart?residentId=${id}`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+    }
+}
+// add review
+export async function addReview(data: reviewAddData) {
+  try {
+    const response = await axiosInstance.post("Review/AddReview", data);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// edit review
+export async function editReview(updataData: reviewEditData) {
+   try {
+    const response = await axiosInstance.put(`Review/UpdateReview` , updataData);
+    toast.success(response.data.message || "review Updated successfully");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "updated failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// delete review
+export async function deleteReview(reviewID : number) {
+ try {
+    const response = await axiosInstance.delete(`Review/rating/${reviewID}`);
+      toast.success(response?.data?.message || "delete successfully");
+    return response;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "deleted failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// get review for specific serviceProvider
+export async function getReview(id :string) : Promise<reviewGet[]> {
+    try{
+    const response = await axiosInstance.get(`Review/service-provider/${id}`);
     return response.data.data;
     }
     catch (error: unknown) {

@@ -48,3 +48,24 @@ export interface residentChartsData{
     totalAmount: number,
     years: yearsResData[]
 }
+// reviews
+export interface reviewAddData{
+    content: string,
+    rating: number,
+    userId: string,
+    serviceProviderId: string
+}
+export interface reviewEditData{
+    reviewId: number
+    content: string,
+    rating: number,
+}
+export interface reviewGet{
+    reviewId: number,
+    reviewerName: string,
+    userImageUrl: string,
+    rating: number,
+    comment: string,
+    createdAt: string,
+    userId : string
+}

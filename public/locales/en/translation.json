@@ -263,7 +263,16 @@
     "usageStats" : "My Activity of Booking",
     "myFavorites" : "My Favorites",
     "allBooking" : "All Bookings",
-    "reneve" : "Payments"
+    "reneve" : "Payments",
+    "addRev" : "Add your review",
+    "write" : "Write your experience here...",
+    "Sending..." : "Sending...",
+    "publish" : "Publish Review",
+    "Edit" : "Edit",
+    "Delete" : "Delete",
+    "Save" : "Save",
+    "Cancel" : "Cancel",
+    "longRev" : "Too Long Comment"
   },
   "doctor": {
     "ViewCV": "View CV",

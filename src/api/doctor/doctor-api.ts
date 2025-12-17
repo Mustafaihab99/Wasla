@@ -74,7 +74,7 @@ export async function DeleteDoctorService(serviceID : number) {
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     const errorMessage =
-      axiosError.response?.data?.message || "Added failed";
+      axiosError.response?.data?.message || "deleted failed";
     toast.error(errorMessage);
     throw error;
   }

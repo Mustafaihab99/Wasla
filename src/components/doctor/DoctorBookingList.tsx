@@ -29,7 +29,6 @@ export default function DoctorBookingList() {
     null
   );
 
-  // State للمودال تعديل الحجز
   const [showEditModal, setShowEditModal] = useState(false);
   const [editBookingData, setEditBookingData] = useState<{
     bookingId: number;
