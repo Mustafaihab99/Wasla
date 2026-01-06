@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaPhone, FaTrashAlt } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
 import noData from "../../assets/images/nodata.webp";
@@ -68,7 +68,6 @@ export default function ResidentMyFavourites() {
               </div>
 
               {/* Info */}
-              {/* Info */}
               <div className="flex-1 ml-0 sm:ml-6 mt-4 sm:mt-0 flex flex-col justify-between">
                 <div>
                   {/* Name */}
@@ -86,7 +85,8 @@ export default function ResidentMyFavourites() {
                   </div>
 
                   {/* Phone */}
-                  <p className="text-dried text-sm mt-2">
+                  <p className="flex gap-2 items-center text-dried text-sm mt-2">
+                    <FaPhone className="text-green-500"/>
                     {fav.serviceProviderPhone}
                   </p>
                 </div>
