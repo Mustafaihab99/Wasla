@@ -272,7 +272,10 @@
     "Delete" : "Delete",
     "Save" : "Save",
     "Cancel" : "Cancel",
-    "longRev" : "Too Long Comment"
+    "longRev" : "Too Long Comment",
+    "removeFavourite" : "removeFavourite",
+    "noFavourites" : "No Favourites have been added",
+    "myFavourites" : "My Favourites"
   },
   "doctor": {
     "ViewCV": "View CV",

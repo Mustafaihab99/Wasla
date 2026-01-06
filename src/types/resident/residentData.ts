@@ -69,3 +69,13 @@ export interface reviewGet{
     createdAt: string,
     userId : string
 }
+// fav
+export interface FavouriteResponse{
+    id: number,
+    residentId: string,
+    serviceProviderName: string,
+    serviceProviderProfilePhoto: string,
+    serviceProviderPhone: string,
+    serviceProviderType: string,
+    serviceProviderId: string
+}
