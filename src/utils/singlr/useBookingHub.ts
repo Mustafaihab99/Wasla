@@ -9,7 +9,7 @@ export default function useBookingHub(token: string) {
     if (!token) return;
 
     const connection = createHubConnection(
-      import.meta.env.BASE_URL + "bookingHub",
+    "https://waslammka.runasp.net/bookingHub",
       token
     );
 
