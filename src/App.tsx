@@ -3,6 +3,7 @@ import AppRoutes from "./routes/AppRoutes";
 import { Toaster } from "sonner";
 import useBookingHub from "./utils/singlr/useBookingHub";
 import useServiceHub from "./utils/singlr/useServiceHub";
+import useReviewHub from "./utils/singlr/useReviewHub";
 
 const queryClient = new QueryClient();
 
@@ -22,5 +23,6 @@ export default App;
 function SignalRListener({ token }: { token: string }) {
   useBookingHub(token);
   useServiceHub(token);
+  useReviewHub(token);
   return null; 
 }
