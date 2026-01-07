@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/api/:path*", "destination": "http://waslammka.runasp.net/api/:path*" },
-    { "source": "/assets/:path*", "destination": "http://waslammka.runasp.net/assets/:path*" },
+    { "source": "/api/:path*", "destination": "https://waslammka.runasp.net/api/:path*" },
+    { "source": "/assets/:path*", "destination": "https://waslammka.runasp.net/assets/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

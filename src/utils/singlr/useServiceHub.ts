@@ -9,7 +9,7 @@ export default function useServiceHub(token: string) {
     if (!token) return;
 
     const connection = createHubConnection(
-      "http://waslammka.runasp.net/serviceHub",
+      import.meta.env.BASE_URL + "serviceHub",
       token
     );
 

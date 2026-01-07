@@ -1,12 +1,8 @@
 import axios from "axios";
 import i18n from "../i18n";
 
-const isLocal = window.location.hostname === "localhost";
-
 const axiosInstance = axios.create({
-  baseURL: isLocal
-    ? "http://waslammka.runasp.net/api/"
-    : "/api/",
+  baseURL: import.meta.env.VITE_API ,
   headers: {
     "Content-Type": "application/json",
   },
