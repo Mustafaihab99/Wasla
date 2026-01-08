@@ -55,6 +55,7 @@ export default function Login() {
         // success login
         toast.success(t("login.Logged in successfully!"));
         sessionStorage.setItem("auth_token", data.token);
+        sessionStorage.setItem("refresh_token", data.refreshToken);
         sessionStorage.setItem("role", role);
         sessionStorage.setItem("user_id", userId);
         return navigate("/dashboard");

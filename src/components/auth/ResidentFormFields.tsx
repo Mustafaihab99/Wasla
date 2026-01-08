@@ -28,7 +28,13 @@ export default function ResidentFormFields({ email }: { email: string }) {
     NationalId: Yup.string().min(14 , t("profile.resident.natmin"))
       .required(t("profile.resident.nationalreq"))
       .matches(/^\d+$/, t("profile.resident.nationalnum")),
-    BirthDay: Yup.string().required(t("profile.doctor.birthreq")),
+      BirthDay: Yup.date()
+          .required(t("profile.doctor.birthreq"))
+          .max(new Date(), t("profile.doctor.birthFuture"))
+          .min(
+            new Date(new Date().setFullYear(new Date().getFullYear() - 100)),
+            t("profile.doctor.birthFuture")
+          ),
     Phone: Yup.string().min(11,t("profile.doctor.phonemin")).max(11,t("profile.doctor.phonemin")).required(t("profile.doctor.phonereq")),
     Image: Yup.mixed().required(t("profile.doctor.imgreq")),
   });

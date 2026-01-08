@@ -219,6 +219,7 @@ hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-[2p
       </div>
       {openImage.show && (
         <div
+          style={{marginTop:0}}
           className="fixed inset-0 bg-black/90 flex items-center justify-center z-[999]"
           onClick={() => setOpenImage({ show: false, img: null })}>
           <img

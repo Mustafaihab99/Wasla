@@ -70,7 +70,9 @@ export default function HeroSection() {
                 </p>
 
                 <div className="flex justify-center gap-3 mt-6">
-                  <button className="px-5 py-2.5 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-all font-medium text-base">
+                  <button 
+                  className="px-5 py-2.5 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-all font-medium text-base"
+                  >
                     {t("hero.explore")}
                   </button>
                   <button 

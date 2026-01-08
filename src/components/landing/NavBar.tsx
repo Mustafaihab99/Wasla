@@ -18,7 +18,7 @@ export default function NavBar() {
   const { theme, setTheme } = useContext(ThemeContext);
   const { t, i18n } = useTranslation();
   const location = useLocation();
-
+  const token = sessionStorage.getItem("auth_token");
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
 
@@ -99,7 +99,7 @@ export default function NavBar() {
       {/* Actions */}
       <div className="flex items-center gap-3 relative">
         {/* Desktop Login Button */}
-        {!isAuthPage && (
+        {!isAuthPage && !token &&(
           <motion.button
             className="hidden md:block px-4 py-2 rounded-lg bg-primary text-white font-semibold hover:opacity-90 transition-all"
             initial={{ opacity: 0, scale: 0.9 }}
@@ -218,6 +218,8 @@ export default function NavBar() {
                     </motion.a>
                   ))}
                 </div>
+                {
+                  !token ?
                 <motion.button
                   className="mt-10 py-2 rounded-lg bg-primary text-white font-semibold hover:opacity-90 transition-all absolute bottom-4 w-[80%]"
                   initial={{ opacity: 0, y: 10 }}
@@ -226,7 +228,21 @@ export default function NavBar() {
                   onClick={() => navigate("/auth/login")}>
                   {t('nav.login')}
                 </motion.button>
-                
+                :
+                <motion.button
+                  className="mt-10 py-2 rounded-lg bg-red-500 text-white font-semibold hover:opacity-90 transition-all absolute bottom-4 w-[80%]"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  onClick={() =>{ 
+                    navigate("/");
+                    sessionStorage.removeItem("auth_token");
+                    sessionStorage.removeItem("role");
+                    sessionStorage.removeItem("user_id");
+                  }}>
+                  {t('nav.Logout')}
+                </motion.button>
+                }
               </motion.div>
             </motion.div>
           )}

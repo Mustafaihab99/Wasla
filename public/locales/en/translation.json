@@ -214,6 +214,7 @@
       "hos": "Hospital Name",
       "enterhos": "Enter Hospital Name",
       "edit" : "Edit Profile",
+      "birthFuture" : "Enter a valid birth date",
       "close" : "Close"
     },
     "resident": {
