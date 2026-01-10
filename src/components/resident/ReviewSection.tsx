@@ -18,7 +18,7 @@ export default function ReviewSection({ doctorId, currentUserId }: Props) {
   const { data: reviews, isLoading } = useGetReviews(doctorId);
   const { mutate: addReview, isPending } = useAddReviews();
   const { mutate: updateReview, isPending: isUpdating } = useEditReview();
-  const { mutate: deleteReview } = useDeleteReview();
+  const { mutate: deleteReview , isPending : isDeleting } = useDeleteReview();
 
   const [content, setContent] = useState("");
   const [rating, setRating] = useState(5);
@@ -202,6 +202,7 @@ export default function ReviewSection({ doctorId, currentUserId }: Props) {
 
                           <button
                             onClick={() => deleteReview(review.reviewId)}
+                            disabled={isDeleting}
                             className="text-red-500 text-sm flex items-center gap-1 hover:underline">
                             <FaTrash /> {t("resident.Delete")}
                           </button>

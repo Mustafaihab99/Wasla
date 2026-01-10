@@ -9,6 +9,7 @@ export default function useDeleteReview() {
     mutationFn: (reviewID: number) => deleteReview(reviewID),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allreviews"] });
+      queryClient.invalidateQueries({ queryKey: ["doctorProfile"] });
     },
   });
 }

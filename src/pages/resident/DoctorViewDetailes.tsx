@@ -113,7 +113,7 @@ export default function DoctorViewDetailes() {
         {[
           {
             icon: FaStar,
-            value: profile?.rating,
+            value: profile?.rating.toFixed(1),
             label: t("resident.rating"),
             color: "text-yellow-400",
           },

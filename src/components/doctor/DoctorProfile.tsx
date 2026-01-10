@@ -2,7 +2,7 @@ import { useState } from "react";
 import useGetDoctorProfile from "../../hooks/doctor/useDoctorProfile";
 import ChangePasswordModal from "../common/ChangePasswordModal";
 import EditDoctorProfileModal from "./modals/EditDoctorProfile";
-import { FaEdit, FaLock } from "react-icons/fa";
+import { FaEdit, FaLock, FaStar } from "react-icons/fa";
 import DoctorProfileSkeleton from "./DoctorProfileSkeleton";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
@@ -132,6 +132,13 @@ export default function DoctorProfile() {
             title={t("profile.doctor.Experience")}
             value={`${data.experienceYears} ${t("profile.doctor.Years")}`}
           />
+          <div className="flex items-end">
+          <ProfileItem
+            title={t("resident.rating")}
+            value={data.rating.toFixed(1)}
+          />
+          <FaStar className="text-yellow-300 mb-[5px]" />
+          </div>
           <ProfileItem
             title={t("profile.doctor.Birthday")}
             value={data.birthDay?.split("T")[0]}
@@ -139,6 +146,10 @@ export default function DoctorProfile() {
           <ProfileItem
             title={t("profile.doctor.age")}
             value={new Date().getFullYear() - Number(data.birthDay.slice(0, 4))}
+          />
+          <ProfileItem
+            title={t("resident.patients")}
+            value={data.numberOfpatients}
           />
           <div className="md:col-span-2">
             <ProfileItem title={t("doctor.Bio")} value={data.description} />

@@ -8,6 +8,7 @@ export default function useEditReview(){
         mutationFn: editReview,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["allreviews"], exact: false });
+            queryClient.invalidateQueries({ queryKey: ["doctorProfile"], exact: false });
     },
     })
 }
