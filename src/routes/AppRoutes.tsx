@@ -28,6 +28,7 @@ const DoctorDashboard = lazy(() => import ("../components/serviceDashboards/Doct
 const DoctorHomeDashboard = lazy(() => import ("../components/doctor/DoctorHomeDahboard"));
 const DoctorServiceManage = lazy(() => import ("../components/doctor/DoctorServiceManage"));
 const DoctorProfile = lazy(() => import ("../components/doctor/DoctorProfile"));
+const DoctorReviews = lazy(() => import ("../components/doctor/DoctorReviews"));
 
 export default function AppRoutes() {
   return (
@@ -73,6 +74,7 @@ export default function AppRoutes() {
           <Route path="manage-dashboard" element={<DoctorHomeDashboard />} />
           <Route path="manage-service" element={<DoctorServiceManage />} />
           <Route path="profile" element={<DoctorProfile />} />
+          <Route path="reviews" element={<DoctorReviews />} />
         </Route>
       </Route> 
         {/* end resident Dashboard */}

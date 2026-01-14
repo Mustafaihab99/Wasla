@@ -80,12 +80,15 @@ export default function DoctorViewDetailes() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 text-dried text-sm space-y-1">
-            <p className="flex gap-2 items-center">
+            <button 
+            onClick={()=>window.open(`https://wa.me/${profile?.phone}`)}
+            className="flex gap-2 items-center"
+            >
               <span>
                 <FaPhoneAlt className="text-red-700 inline" />
               </span>
               {profile?.phone}
-            </p>
+            </button>
             <p className="flex gap-2 items-center">
               <span>
                 <FaUniversity className="text-blue-400 inline" />
@@ -129,12 +132,6 @@ export default function DoctorViewDetailes() {
             label: t("resident.patients"),
             color: "text-green-400",
           },
-          // {
-          //   icon: FaStar,
-          //   value: 0,
-          //   label: t("resident.reviews"),
-          //   color: "text-blue-400",
-          // },
         ].map((stat, idx) => {
           const Icon = stat.icon;
           return (

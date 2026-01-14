@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
 import { doctorBookingListData, doctorChartsData, doctorProfileData, doctorServiceAdd, doctorServiceData, doctorServiceEdit, doctorUpdateBookData } from "../../types/doctor/doctorTypes";
+import { reviewGet } from "../../types/resident/residentData";
 
 // profile
 export async function getDoctorProfile(id :string) : Promise<doctorProfileData> {
@@ -151,4 +152,21 @@ export async function updateDoctorBook(updataData: doctorUpdateBookData) {
     toast.error(errorMessage);
     throw error;
   }
+}
+
+// get doctor reviews
+export async function getDoctorReview(id :string , rating: number) : Promise<reviewGet[]> {
+    try{
+    const response = await axiosInstance.get(`Review/ratings/${rating}/service-providers/${id}`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+    }
 }

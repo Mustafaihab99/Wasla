@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { FaUser, FaUserDoctor } from "react-icons/fa6";
 import { SiGooglemessages } from "react-icons/si";
-import { MdMedicalServices } from "react-icons/md";
+import { MdMedicalServices , MdComment } from "react-icons/md";
 import logo from "../../assets/images/icons/app-logo.png";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -70,6 +70,7 @@ export default function DoctorDashboardLayout() {
       link: "/doctor/inbox",
       icon: <SiGooglemessages />,
     },
+    { label: t("doctor.reviews"), link: "/doctor/reviews", icon: <MdComment /> },
     { label: t("doctor.profile"), link: "/doctor/profile", icon: <FaUser /> },
   ];
 

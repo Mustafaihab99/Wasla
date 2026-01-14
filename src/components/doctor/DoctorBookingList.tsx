@@ -5,6 +5,7 @@ import useFetchDoctorBookingList from "../../hooks/doctor/useFetchDoctorBookingL
 import useCancelDoctorBook from "../../hooks/doctor/useCancelBook";
 import ConfirmationModal from "./modals/CancelBookPopup";
 import EditBookingModal from "./modals/UpdateBookModal";
+import { FaPhone } from "react-icons/fa";
 
 export default function DoctorBookingList() {
   const { t } = useTranslation();
@@ -137,8 +138,11 @@ hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-[2p
                   <p>
                     <b>{t("doctor.pname")}:</b> {b.userName}
                   </p>
-                  <p>
-                    <b>{t("profile.doctor.Phone")}:</b> {b.phone}
+                  <p
+                  className="cursor-pointer underline flex items-center gap-1"
+                  onClick={()=>window.open(`https://wa.me/${b.phone}`)}
+                  >
+                    <b>{t("profile.doctor.Phone")}:</b> {b.phone} <FaPhone className="text-green-500 rotate-90" />
                   </p>
                   <p>
                     <b>{t("doctor.ServiceName")}:</b> {b.serviceName}

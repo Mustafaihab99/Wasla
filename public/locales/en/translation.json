@@ -183,7 +183,7 @@
     "Saving...": "Saving...",
     "doctor": {
       "saveDoc": "Save Doctor Profile",
-      "uploadcv": "Upload CV",
+      "uploadcv": "Upload your certificates in one doc",
       "descripe": "Describe your experience...",
       "Description": "Description",
       "Phone": "Phone",
@@ -196,7 +196,7 @@
       "Specialization": "Specialization",
       "entername": "Enter your full name",
       "name": "Full Name",
-      "cvreq": "CV file required",
+      "cvreq": "your certificates file required",
       "imgreq": "Profile image required",
       "descreq": "Description required",
       "phonereq": "Phone is required",
@@ -362,6 +362,9 @@
     "end" : "End Time",
     "pending" : "Pending",
     "canceling" : "canceling...",
+    "reviews" : "My Reviews",
+    "All" : "All",
+    "noRev" : "No reviews yet ⭐",
     "error": {
       "namEreq": "Service Name (EN) is required",
       "namAreq": "Service Name (Ar) is required",
