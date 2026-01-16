@@ -4,7 +4,6 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import i18n from "../i18n";
-import { jwtDecode, JwtPayload } from "jwt-decode";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API as string,
@@ -41,24 +40,11 @@ i18n.on("languageChanged", (lng: string) => {
 });
 
 axiosInstance.interceptors.request.use(
-  async (config: InternalAxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     const token = sessionStorage.getItem("auth_token");
 
     if (token) {
-      const decoded = jwtDecode<JwtPayload>(token);
-      const currentTime = Date.now() / 1000;
-
-      if (decoded.exp && decoded.exp - currentTime < 60) {
-        try {
-          await refreshAccessToken();
-        } catch {
-          sessionStorage.clear();
-          window.location.href = "/auth/login";
-        }
-      }
-
-      config.headers.Authorization =
-        `Bearer ${sessionStorage.getItem("auth_token")}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     const lang = i18n.language || "en";
@@ -98,13 +84,11 @@ axiosInstance.interceptors.response.use(
 
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(originalRequest);
-
       } catch (err) {
         processQueue(err, null);
         sessionStorage.clear();
         window.location.href = "/auth/login";
         return Promise.reject(err);
-
       } finally {
         isRefreshing = false;
       }
@@ -114,7 +98,6 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// refresh
 async function refreshAccessToken(): Promise<string> {
   const refreshToken = sessionStorage.getItem("refresh_token");
   if (!refreshToken) throw new Error("No refresh token");
@@ -125,8 +108,8 @@ async function refreshAccessToken(): Promise<string> {
   );
 
   const newAccessToken = res.data.data.token;
-  sessionStorage.setItem("auth_token", newAccessToken);
 
+  sessionStorage.setItem("auth_token", newAccessToken);
   axiosInstance.defaults.headers.common.Authorization =
     `Bearer ${newAccessToken}`;
 

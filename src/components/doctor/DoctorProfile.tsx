@@ -181,10 +181,13 @@ export default function DoctorProfile() {
         )}
 
         {/* Change Password Modal */}
+        { data &&
         <ChangePasswordModal
           isOpen={openPass}
           onClose={() => setOpenPass(false)}
+          email={data.email}
         />
+        }
       </motion.div>
     </>
   );

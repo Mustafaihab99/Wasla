@@ -140,7 +140,7 @@ hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-[2p
                   </p>
                   <p
                   className="cursor-pointer underline flex items-center gap-1"
-                  onClick={()=>window.open(`https://wa.me/${b.phone}`)}
+                  onClick={()=>window.open(`https://wa.me/+20${b.phone}`)}
                   >
                     <b>{t("profile.doctor.Phone")}:</b> {b.phone} <FaPhone className="text-green-500 rotate-90" />
                   </p>

@@ -87,7 +87,7 @@ export default function EditBookingModal({
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
           >
-            <h2 className="text-xl font-bold mb-4">{t("doctor.editBooking")}</h2>
+            <h2 className="text-xl text-foreground font-bold mb-4">{t("doctor.editBooking")}</h2>
             <div className="mb-4 flex flex-col gap-3 text-sm">
               <div>
                 <label className="font-semibold mb-1 block">{t("doctor.newDate")}</label>

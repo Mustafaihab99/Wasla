@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 
 function App() {
   const token = sessionStorage.getItem("auth_token") ?? "";
-
+  
   return (
     <QueryClientProvider client={queryClient}>
       <SignalRListener token={token} />

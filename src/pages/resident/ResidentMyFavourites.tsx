@@ -6,11 +6,12 @@ import noData from "../../assets/images/nodata.webp";
 import { useGetFavourites } from "../../hooks/resident/favourites/useGetFavourite";
 import { useRemoveFavourite } from "../../hooks/resident/favourites/useRemoveFavourite";
 import { FavouriteResponse } from "../../types/resident/residentData";
+import { useNavigate } from "react-router-dom";
 
 export default function ResidentMyFavourites() {
   const { t } = useTranslation();
   const residentId = sessionStorage.getItem("user_id")!;
-
+  const navigate = useNavigate();
   const { data: favourites = [], isLoading } = useGetFavourites(residentId);
   const { mutate: removeFav, isPending } = useRemoveFavourite(residentId);
 
@@ -45,7 +46,9 @@ export default function ResidentMyFavourites() {
               key={fav.id}
               style={{direction:"ltr"}}
               whileHover={{ scale: 1.03, y: -3 }}
-              className="relative flex flex-col sm:flex-row p-6 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg transition-all">
+              className="relative flex flex-col sm:flex-row p-6 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg transition-all cursor-pointer"
+              onClick={()=> navigate(`/resident/service/doctors/${fav.serviceProviderId}`) }
+              >
               {/* Remove Button */}
               <button
                 disabled={isPending}

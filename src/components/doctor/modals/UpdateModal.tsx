@@ -167,9 +167,9 @@ const deleteSlot = (i:number)=>{
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-3">
+    <div className="fixed inset-0 z-50 bg-black/40 flex items-center text-black justify-center p-3">
       <div className="bg-white p-6 rounded-xl w-full max-w-xl shadow-xl overflow-y-auto max-h-[90vh]">
-        <h2 className="text-xl font-semibold mb-4">{t("doctor.updateServ")}</h2>
+        <h2 className="text-xl text-black font-semibold mb-4">{t("doctor.updateServ")}</h2>
         {/* NAME */}
         <TwoColumn>
           <Input

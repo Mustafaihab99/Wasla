@@ -98,7 +98,7 @@ export default function ResidentProfile() {
 
       {/* Modals  */}
       {data && <EditProfileModal isOpen={openEdit} onClose={()=>setOpenEdit(false)} fullname={data.fullname} phoneNumber={data.phoneNumber} userId={id}/> }
-      <ChangePasswordModal isOpen={openPass} onClose={()=>setOpenPass(false)} />
+      {data && <ChangePasswordModal isOpen={openPass} onClose={()=>setOpenPass(false)} email={data!.email} />}
     </div>
   );
 }

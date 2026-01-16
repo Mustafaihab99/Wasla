@@ -7,7 +7,7 @@ import useChangePassword from "../../hooks/auth/useChangePassword";
 interface ChangePasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
-  email?: string;
+  email: string;
 }
 
 export default function ChangePasswordModal({
@@ -19,9 +19,6 @@ export default function ChangePasswordModal({
   const changePassMutation = useChangePassword();
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email(t("login.Invalid email"))
-      .required(t("login.Email is required")),
     currentPassword: Yup.string()
       .min(8, t("login.least"))
       .required(t("login.Password is required")),
@@ -35,16 +32,18 @@ export default function ChangePasswordModal({
 
   const formik = useFormik({
     initialValues: {
-      email: email || "",
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      const { email, currentPassword, newPassword } = values;
       changePassMutation.mutate(
-        { email, currentPassword, newPassword },
+        {
+          email,
+          currentPassword: values.currentPassword,
+          newPassword: values.newPassword,
+        },
         {
           onSuccess: () => {
             onClose();
@@ -58,22 +57,6 @@ export default function ChangePasswordModal({
     <Modal isOpen={isOpen} onClose={onClose}>
       <h3 className="text-2xl font-bold mb-6 text-center">{t("resident.change")}</h3>
       <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
-        {/* Email */}
-        <div>
-          <label className="text-sm font-medium mb-1 block">{t("login.Email")}</label>
-          <input
-            type="email"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="border border-border p-3 rounded-lg w-full text-primary bg-input"
-          />
-          {formik.touched.email && formik.errors.email && (
-            <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
-          )}
-        </div>
-
         {/* Current Password */}
         <div>
           <label className="text-sm font-medium mb-1 block">{t("resident.oldPassword")}</label>

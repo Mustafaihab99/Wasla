@@ -81,7 +81,7 @@ export default function DoctorViewDetailes() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 text-dried text-sm space-y-1">
             <button 
-            onClick={()=>window.open(`https://wa.me/${profile?.phone}`)}
+            onClick={()=>window.open(`https://wa.me/+20${profile?.phone}`)}
             className="flex gap-2 items-center"
             >
               <span>
