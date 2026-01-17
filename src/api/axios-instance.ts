@@ -1,39 +1,13 @@
-import axios, {
-  AxiosError,
-  AxiosResponse,
-  InternalAxiosRequestConfig,
-} from "axios";
+import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import i18n from "../i18n";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API as string,
+  withCredentials: true, 
   headers: {
     "Content-Type": "application/json",
   },
 });
-
-interface FailedRequest {
-  resolve: (token: string) => void;
-  reject: (error: unknown) => void;
-}
-
-interface RetryableRequest extends InternalAxiosRequestConfig {
-  _retry?: boolean;
-}
-
-let isRefreshing = false;
-let failedQueue: FailedRequest[] = [];
-
-const processQueue = (error: unknown, token: string | null = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else if (token) {
-      prom.resolve(token);
-    }
-  });
-  failedQueue = [];
-};
 
 i18n.on("languageChanged", (lng: string) => {
   axiosInstance.defaults.headers.common["Accept-Language"] = lng;
@@ -41,14 +15,13 @@ i18n.on("languageChanged", (lng: string) => {
 
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = sessionStorage.getItem("auth_token");
+    const lang = i18n.language || "en";
+    config.headers["Accept-Language"] = lang;
 
+      const token = localStorage.getItem("auth_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
-    const lang = i18n.language || "en";
-    config.headers["Accept-Language"] = lang;
 
     if (config.url && !config.url.includes("lan=")) {
       const separator = config.url.includes("?") ? "&" : "?";
@@ -60,33 +33,39 @@ axiosInstance.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error)
 );
 
+let isRefreshing = false;
+let failedQueue: (() => void)[] = [];
+
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as RetryableRequest;
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
-        return new Promise<string>((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        }).then((token) => {
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-          return axiosInstance(originalRequest);
-        });
+        return new Promise<void>((resolve) => {
+          failedQueue.push(resolve);
+        }).then(() => axiosInstance(originalRequest));
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-        const newToken = await refreshAccessToken();
-        processQueue(null, newToken);
+        await axios.post(
+          `${import.meta.env.VITE_API}/Account/refresh-token`,
+          {},
+          { withCredentials: true }
+        );
 
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        failedQueue.forEach((cb) => cb());
+        failedQueue = [];
+
         return axiosInstance(originalRequest);
       } catch (err) {
-        processQueue(err, null);
-        sessionStorage.clear();
+        failedQueue = [];
         window.location.href = "/auth/login";
         return Promise.reject(err);
       } finally {
@@ -97,23 +76,5 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-async function refreshAccessToken(): Promise<string> {
-  const refreshToken = sessionStorage.getItem("refresh_token");
-  if (!refreshToken) throw new Error("No refresh token");
-
-  const res = await axios.post<{ data: { token: string } }>(
-    `${import.meta.env.VITE_API}/Account/refresh-token`,
-    { refreshToken }
-  );
-
-  const newAccessToken = res.data.data.token;
-
-  sessionStorage.setItem("auth_token", newAccessToken);
-  axiosInstance.defaults.headers.common.Authorization =
-    `Bearer ${newAccessToken}`;
-
-  return newAccessToken;
-}
 
 export default axiosInstance;

@@ -9,6 +9,7 @@
     "cold": "cold",
     "login": "Login",
     "Logout": "Logout",
+    "logged..." : "Logging out...",
     "profile": "Profile"
   },
   "hero": {

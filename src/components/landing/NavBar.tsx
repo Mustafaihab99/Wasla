@@ -13,14 +13,16 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/icons/app-logo.png";
+import useLogout from "../../hooks/auth/useLogout";
 
 export default function NavBar() {
   const { theme, setTheme } = useContext(ThemeContext);
   const { t, i18n } = useTranslation();
   const location = useLocation();
-  const token = sessionStorage.getItem("auth_token");
+  const token = localStorage.getItem("auth_token");
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
+  const { mutate: logout, isPending } = useLogout();
 
   const isAuthPage = location.pathname.includes("auth");
   const navigate = useNavigate();
@@ -234,13 +236,9 @@ export default function NavBar() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  onClick={() =>{ 
-                    navigate("/");
-                    sessionStorage.removeItem("auth_token");
-                    sessionStorage.removeItem("role");
-                    sessionStorage.removeItem("user_id");
-                  }}>
-                  {t('nav.Logout')}
+                  onClick={() => logout()}
+                  disabled={isPending}>
+                  {isPending ? t("nav.logged...") : t('nav.Logout')}
                 </motion.button>
                 }
               </motion.div>

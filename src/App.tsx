@@ -8,7 +8,7 @@ import useReviewHub from "./utils/singlr/useReviewHub";
 const queryClient = new QueryClient();
 
 function App() {
-  const token = sessionStorage.getItem("auth_token") ?? "";
+  const token = localStorage.getItem("auth_token") ?? "";
   
   return (
     <QueryClientProvider client={queryClient}>

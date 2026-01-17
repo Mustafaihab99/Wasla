@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 export default function ProtectedRoute({ allowedRoles }: { allowedRoles?: string[] }) {
-  const token = sessionStorage.getItem("auth_token");
+  const token = localStorage.getItem("auth_token");
   const role = sessionStorage.getItem("role"); 
 
   if (!token) {

@@ -16,7 +16,7 @@ export async function loginApi(credentials: loginData) {
   try {
     const response = await axiosInstance.post(`/Account/login`, credentials);
     if (response.status === 200) {
-      sessionStorage.setItem("auth_token", response.data?.data?.token);
+      localStorage.setItem("auth_token", response.data?.data?.token);
     }
 
     return response;
@@ -133,4 +133,20 @@ export async function changePassApi(formData: changePassData) {
     toast.error(errorMessage);
     throw error;
   }
+}
+
+// logouut
+export async function logout() {
+  try{
+    const response = await axiosInstance.post("Account/logout");
+    if(response?.status === 201)
+      toast.success(response?.data?.message || "Logged out Successful");
+    return response;
+  }catch(error){
+    const axiosError = error as AxiosError<{message?: string}>;
+    const errorMessage = axiosError.response?.data?.message || "Logged out Failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+
 }

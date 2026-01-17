@@ -16,6 +16,7 @@ import logo from "../../assets/images/icons/app-logo.png";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
+import useLogout from "../../hooks/auth/useLogout";
 
 export default function DoctorDashboardLayout() {
   const { t, i18n } = useTranslation();
@@ -23,6 +24,7 @@ export default function DoctorDashboardLayout() {
 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { mutate: logout, isPending } = useLogout();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("appTheme");
@@ -50,8 +52,7 @@ export default function DoctorDashboardLayout() {
   };
 
   const handleLogout = () => {
-    sessionStorage.clear();
-    window.location.href = "/auth/login";
+    logout();
   };
 
   const navItems = [
@@ -167,9 +168,10 @@ export default function DoctorDashboardLayout() {
 
           <button
             onClick={handleLogout}
+            disabled={isPending}
             className="flex items-center gap-2 p-2 rounded-md hover:bg-red-500/10 transition-colors text-red-500">
             <SlLogout />
-            {sidebarOpen && <span>{t("nav.Logout")}</span>}
+            {sidebarOpen && <span>{isPending ? t("nav.logged...") : t("nav.Logout")}</span>}
           </button>
 
           <button

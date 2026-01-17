@@ -14,6 +14,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/icons/app-logo.png";
+import useLogout from "../../hooks/auth/useLogout";
 
 export default function ResidentNavBar() {
   const { theme, setTheme } = useContext(ThemeContext);
@@ -21,7 +22,7 @@ export default function ResidentNavBar() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeOpen, setThemeOpen] = useState(false);
-
+  const { mutate: logout, isPending } = useLogout();
   const navigate = useNavigate();
 
   const themes = [
@@ -67,8 +68,7 @@ export default function ResidentNavBar() {
   };
 
   const handleLogout = () => {
-    sessionStorage.clear();
-    navigate("/auth/login");
+    logout();
   };
 
   return (
@@ -234,8 +234,9 @@ export default function ResidentNavBar() {
                 {/* Logout */}
                 <button
                   onClick={handleLogout}
+                  disabled={isPending}
                   className="flex items-center justify-center gap-2 p-3 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition-all w-full">
-                  {t("nav.Logout")}
+                  {isPending ? t("nav.logged...") : t("nav.Logout")}
                 </button>
               </div>
 

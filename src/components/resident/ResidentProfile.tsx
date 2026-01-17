@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { FaSignOutAlt, FaEdit, FaLock, FaCalendarAlt, FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ResidentCharts from "./ResidentCharts";
+import useLogout from "../../hooks/auth/useLogout";
 
 export default function ResidentProfile() {
   const id = sessionStorage.getItem("user_id")!;
@@ -15,10 +16,10 @@ export default function ResidentProfile() {
   const navigate = useNavigate();
   const [openEdit, setOpenEdit] = useState(false);
   const [openPass, setOpenPass] = useState(false);
+  const { mutate: logout, isPending } = useLogout();
 
   const handleLogout = () => {
-    sessionStorage.clear();
-    window.location.href = "/auth/login";
+    logout();
   };
 
   return (
@@ -69,9 +70,10 @@ export default function ResidentProfile() {
 
       <button
         onClick={handleLogout}
+        disabled={isPending}
         className="flex items-center gap-2 px-11 md:px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-2xl shadow-lg transition transform hover:-translate-y-1 text-lg"
       >
-        <FaSignOutAlt /> {t("nav.Logout")}
+        <FaSignOutAlt /> {isPending ? t("nav.logged...") : t("nav.Logout")}
       </button>
     </div>
   </div>
