@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ResidentDashboard from "../../components/serviceDashboards/ResidentDashboard";
 import { toast } from "sonner";
 import DoctorWelcomeScreen from "../../components/serviceDashboards/WelcomeScreenDoctor";
+import AdminWelcomeScreen from "../../components/serviceDashboards/AdminWelcomeScreen";
 
 export default function MainDashboard() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function MainDashboard() {
   const roleComponents: Record<string, React.FC> = {
     doctor: DoctorWelcomeScreen,
     resident: ResidentDashboard,
+    admin: AdminWelcomeScreen,
     // restaurant: RestaurantDashboard,
     // technician: TechnicianDashboard,
   };

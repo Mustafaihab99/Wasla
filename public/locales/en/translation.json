@@ -412,5 +412,10 @@
     "activeTransport": "Use public transport, walk, or cycle to reduce stress and stay active.",
     "reusableBottle": "Keep a reusable water bottle with you to remind yourself to hydrate.",
     "laughOften": "Laugh often—it boosts mood and strengthens your immune system."
+  },
+  "admin" : {
+    "welcome" : "Welcome Admin,",
+    "welcome2" : "Your dashboard is being prepared...",
+    "panel" : "Admin Panel"
   }
 }

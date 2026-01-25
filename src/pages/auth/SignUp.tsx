@@ -138,9 +138,12 @@ const validationSchema = Yup.object({
               >
                 <option value="">{t("login.chooseRole")}</option>
                 {roles.map((role) => (
+                  role.roleName !== "admin" ?
                   <option key={role.id} value={role.id}>
                     {role.roleName}
                   </option>
+                  :
+                  <></>
                 ))}
               </Field>
               <ErrorMessage name="role" component="div" className="text-red-500 text-sm mt-1" />
