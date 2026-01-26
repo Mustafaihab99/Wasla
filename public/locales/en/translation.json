@@ -416,6 +416,10 @@
   "admin" : {
     "welcome" : "Welcome Admin,",
     "welcome2" : "Your dashboard is being prepared...",
-    "panel" : "Admin Panel"
+    "panel" : "Admin Panel",
+    "reports" : "reports",
+    "reportsDesc": "Messages sent by users from the contact form",
+    "noReports": "No messages yet",
+    "somethingWrong": "Something went wrong"
   }
 }

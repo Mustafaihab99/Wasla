@@ -79,3 +79,9 @@ export interface FavouriteResponse{
     serviceProviderType: string,
     serviceProviderId: string
 }
+// contact us
+export interface contactUsData{
+    fullName : string,
+    email: string,
+    message: string
+}

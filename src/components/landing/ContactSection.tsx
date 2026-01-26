@@ -3,23 +3,30 @@ import { motion } from "framer-motion";
 import { SectionWrapper } from "./SectionWrapper";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import useAddContactUs from "../../hooks/resident/useAddContactUs";
 
 export default function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const { t } = useTranslation();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {mutateAsync: sendMessage , isPending} = useAddContactUs();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast.success(t("landing.soon"));
-      setForm({ name: "", email: "", message: "" });
-    }, 1000);
-  };
+  try {
+    await sendMessage({
+      fullName: form.name,
+      email: form.email,
+      message: form.message,
+    });
+
+    toast.success(t("landing.soon"));
+    setForm({ name: "", email: "", message: "" });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    toast.error(t("landing.error"));
+  }
+};
 
   return (
     <SectionWrapper id="contact">
@@ -77,9 +84,9 @@ export default function ContactSection() {
             <button
               type="submit"
               className={`px-6 py-3 rounded-xl font-semibold text-white ${
-                isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-primary"
+                isPending ? "bg-gray-400 cursor-not-allowed" : "bg-primary"
               }`}
-              disabled={isSubmitting}>
+              disabled={isPending}>
               {t("landing.sendMes")} 
             </button>
           </motion.div> 

@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { doctorsToResidentData, myBookingDoctor, residentChartsData, residentProfile, reviewAddData, reviewEditData, reviewGet } from "../../types/resident/residentData";
+import { contactUsData, doctorsToResidentData, myBookingDoctor, residentChartsData, residentProfile, reviewAddData, reviewEditData, reviewGet } from "../../types/resident/residentData";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
 
@@ -139,4 +139,17 @@ export async function getReview(id :string) : Promise<reviewGet[]> {
     }
     throw error;
     }
+}
+// add contact us
+export async function addContactUs(data: contactUsData) {
+  try {
+    const response = await axiosInstance.post("Admin/AddContact", data);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
 }
