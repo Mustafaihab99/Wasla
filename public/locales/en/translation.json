@@ -420,6 +420,7 @@
     "reports" : "reports",
     "reportsDesc": "Messages sent by users from the contact form",
     "noReports": "No messages yet",
-    "somethingWrong": "Something went wrong"
+    "somethingWrong": "Something went wrong",
+    "users" : "User Management"
   }
 }

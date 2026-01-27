@@ -32,6 +32,7 @@ const DoctorReviews = lazy(() => import ("../components/doctor/DoctorReviews"));
 // Admin dashboard
 const AdminDashboard = lazy(() => import ("../components/serviceDashboards/AdminDashboard"));
 const AdminReports = lazy(() => import ("../components/admin/AdminReports"));
+const AdminManageUsers = lazy(() => import ("../components/admin/AdminManageUsers"));
 
 export default function AppRoutes() {
   return (
@@ -89,7 +90,7 @@ export default function AppRoutes() {
           <Route index element={<Navigate to="manage-dashboard" replace />} />
           <Route path="manage-dashboard" element={<DoctorHomeDashboard />} />
           <Route path="reports" element={<AdminReports />} />
-
+          <Route path="manage-users" element={<AdminManageUsers />} />
         </Route>
       </Route> 
         {/* end resident Dashboard */}
