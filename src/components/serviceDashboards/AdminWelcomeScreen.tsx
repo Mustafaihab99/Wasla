@@ -13,7 +13,7 @@ export default function AdminWelcomeScreen() {
     const timer = setTimeout(() => {
       setVisible(false);
       setTimeout(() => {
-        navigate("/admin/manage-dashboard");
+        navigate("/admin/overview");
       }, 600);
     }, 5000);
 
