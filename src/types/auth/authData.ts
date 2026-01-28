@@ -3,7 +3,7 @@ export interface loginData{
     password: string;
 }
 export interface roleData{
-    id : string;
+    id : string | undefined;
     roleName: string;
     value: string;
 }

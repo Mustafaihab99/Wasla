@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAdminUsers } from "../../api/admin/admin-api";
 
-export default function useGetUsersByRole(roleName: string, pageNumber: number, pageSize: number) {
+export default function useGetUsersByRole(roleId: string | undefined, pageNumber: number, pageSize: number) {
     return useQuery({
-        queryKey: ["admin-users", roleName, pageNumber, pageSize],
-        queryFn: () => getAdminUsers(roleName, pageNumber, pageSize),
+        queryKey: ["admin-users", roleId, pageNumber, pageSize],
+        queryFn: () => getAdminUsers(roleId, pageNumber, pageSize),
         retry: 2,
         refetchOnWindowFocus: false,
-        enabled: !!roleName, 
+        enabled: !!roleId, 
     });
 }

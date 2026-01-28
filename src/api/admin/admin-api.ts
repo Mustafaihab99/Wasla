@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { AdminUsersResponse, ReportsData } from "../../types/admin/adminTypes";
+import { AdminOverviewData, AdminUsersResponse, ReportsData } from "../../types/admin/adminTypes";
 
 // reports
 export async function getAdminReports() : Promise<ReportsData[]> {
@@ -21,9 +21,9 @@ export async function getAdminReports() : Promise<ReportsData[]> {
 }
 
 // pagination users
-export async function getAdminUsers(roleName:string , pageNumber: number , pageSize: number) : Promise<AdminUsersResponse> {
+export async function getAdminUsers(roleId:string | undefined , pageNumber: number , pageSize: number) : Promise<AdminUsersResponse> {
     try{
-    const response = await axiosInstance.get(`Admin/UserApprove?roleName=${roleName}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
+    const response = await axiosInstance.get(`Admin/UserApprove?roleId=${roleId}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
     return response.data.data;
     }
     catch (error: unknown) {
@@ -53,4 +53,20 @@ export async function changeUserStatus(params:changeUserData) {
     toast.error(errorMessage);
     throw error;
   }
+}
+// admin overview
+export async function getAdminOverview() : Promise<AdminOverviewData> {
+    try{
+    const response = await axiosInstance.get(`Admin/CollectedCountBookings/2`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message || "fetch failed";
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+    }
 }

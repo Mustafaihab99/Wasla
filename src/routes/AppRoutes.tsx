@@ -33,6 +33,7 @@ const DoctorReviews = lazy(() => import ("../components/doctor/DoctorReviews"));
 const AdminDashboard = lazy(() => import ("../components/serviceDashboards/AdminDashboard"));
 const AdminReports = lazy(() => import ("../components/admin/AdminReports"));
 const AdminManageUsers = lazy(() => import ("../components/admin/AdminManageUsers"));
+const AdminOverview = lazy(() => import ("../components/admin/AdminOverview"));
 
 export default function AppRoutes() {
   return (
@@ -87,8 +88,8 @@ export default function AppRoutes() {
         <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
         {/* aDmin layout */}
         <Route path="/admin" element={<AdminDashboard />}>
-          <Route index element={<Navigate to="manage-dashboard" replace />} />
-          <Route path="manage-dashboard" element={<DoctorHomeDashboard />} />
+          <Route index element={<Navigate to="overview" replace />} />
+          <Route path="overview" element={<AdminOverview />} />
           <Route path="reports" element={<AdminReports />} />
           <Route path="manage-users" element={<AdminManageUsers />} />
         </Route>

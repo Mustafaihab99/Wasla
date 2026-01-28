@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import useGetUsersByRole from "../../hooks/admin/useGetUsersByRole";
 import useChangeStatusUser from "../../hooks/admin/useChangeStatusUser";
@@ -7,6 +7,7 @@ import { roleData } from "../../types/auth/authData";
 import { adminUsersData } from "../../types/admin/adminTypes";
 import { FaUsers, FaFilter, FaUserCheck, FaUserSlash, FaSpinner } from "react-icons/fa";
 import { RiUserStarFill } from "react-icons/ri";
+import { useTranslation } from "react-i18next";
 
 enum UserStatus {
   Active = 0,
@@ -15,20 +16,6 @@ enum UserStatus {
   Deleted = 3,
 }
 
-const statusLabel = (status: number) => {
-  switch (status) {
-    case UserStatus.Active:
-      return "Active";
-    case UserStatus.Suspended:
-      return "Suspended";
-    case UserStatus.NotApproved:
-      return "Pending";
-    case UserStatus.Deleted:
-      return "Deleted";
-    default:
-      return "Unknown";
-  }
-};
 
 const statusColor = (status: number) => {
   switch (status) {
@@ -73,37 +60,43 @@ const statusColor = (status: number) => {
 const PAGE_SIZE = 10;
 
 export default function AdminManageUsers() {
-  const [role, setRole] = useState<string>("doctor");
+  const [role, setRole] = useState<roleData>({
+      id : "930439bf-c727-4ebc-9b5b-f86a61dde13b",
+      roleName : "doctor",
+      value: "doctor"
+  });
   const [page, setPage] = useState(1);
+  const {t} = useTranslation();
 
-  // Get roles
+  const statusLabel = (status: number) => {
+    switch (status) {
+      case UserStatus.Active:
+        return t("admin.Active");
+      case UserStatus.Suspended:
+        return t("admin.Suspended");
+      case UserStatus.NotApproved:
+        return t("admin.Pending");
+      case UserStatus.Deleted:
+        return t("admin.Deleted");
+      default:
+        return t("admin.Unknown");
+    }
+  };
+  
   const { data: roles, isLoading: rolesLoading } = useRoles();
   
-  // Get users by role
   const { 
     data, 
     isLoading, 
     refetch,
-    error 
-  } = useGetUsersByRole(role, page, PAGE_SIZE);
+  } = useGetUsersByRole(role?.id, page, PAGE_SIZE);
   
-  // Change status mutation
   const { mutate: changeStatus, isPending: isChanging } = useChangeStatusUser();
 
-  // Debug logging
-  useEffect(() => {
-    console.log("Current role:", role);
-    console.log("Page:", page);
-    console.log("API Response:", data);
-    console.log("Error:", error);
-  }, [role, page, data, error]);
-  // التصحيح هنا - الـ API بترجع data.data
   const users =  data?.data || [];
   const totalCount = data?.totalCount || 0;
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
-  console.log("length" , users.length) 
-
-  // حساب الإحصائيات
+  
   const stats = {
     total: users.length,
     active: users.filter(u => u.status === UserStatus.Active).length,
@@ -111,19 +104,16 @@ export default function AdminManageUsers() {
     suspended: users.filter(u => u.status === UserStatus.Suspended).length,
   };
 
-  // تغيير الفلتر
-  const handleRoleChange = (newRole: string) => {
+  const handleRoleChange = (newRole: roleData) => {
     setRole(newRole);
     setPage(1);
   };
 
-  // تغيير حالة المستخدم
   const handleStatusChange = (userId: string, status: number) => {
     changeStatus(
       { userId, status },
       {
         onSuccess: () => {
-          // إعادة جلب البيانات
           refetch();
         },
         onError: (err) => {
@@ -135,9 +125,6 @@ export default function AdminManageUsers() {
 
   return (
     <div className="space-y-6 p-4 md:p-6">
-      {/* =======================
-          Header
-      ======================= */}
       <motion.div 
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -149,18 +136,18 @@ export default function AdminManageUsers() {
               <FaUsers className="text-xl md:text-2xl text-primary" />
             </div>
             <div>
-              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground">User Management</h1>
+              <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground">{t("admin.users")}</h1>
               <p className="text-sm md:text-base text-muted-foreground mt-1">
-                Manage and monitor all user accounts
+                {t("admin.manage")}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">
-              Viewing:
+              {t("admin.view")}
             </span>
             <span className="px-3 py-1 rounded-full bg-primary/20 text-primary font-medium text-sm md:text-base">
-              {role.charAt(0).toUpperCase() + role.slice(1)}
+              {role.roleName.charAt(0).toUpperCase() + role.roleName.slice(1)}
             </span>
             {isLoading && (
               <FaSpinner className="animate-spin text-primary ml-2" />
@@ -169,14 +156,11 @@ export default function AdminManageUsers() {
         </div>
       </motion.div>
 
-      {/* =======================
-          Stats Cards
-      ======================= */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <div className="bg-card border border-border rounded-xl p-3 md:p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm text-muted-foreground">Total Users</p>
+              <p className="text-xs md:text-sm text-muted-foreground">{t("admin.totalUsers")}</p>
               <p className="text-xl md:text-2xl lg:text-3xl font-bold mt-1">{stats.total}</p>
             </div>
             <div className="p-2 md:p-3 rounded-full bg-primary/10">
@@ -184,14 +168,14 @@ export default function AdminManageUsers() {
             </div>
           </div>
           <div className="text-xs text-muted-foreground mt-1 md:mt-2">
-            Current role
+            {t("admin.currole")}
           </div>
         </div>
 
         <div className="bg-card border border-green-500/20 rounded-xl p-3 md:p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm text-muted-foreground">Active</p>
+              <p className="text-xs md:text-sm text-muted-foreground">{t("admin.Active")}</p>
               <p className="text-xl md:text-2xl lg:text-3xl font-bold mt-1 text-green-600">{stats.active}</p>
             </div>
             <div className="p-2 md:p-3 rounded-full bg-green-500/10">
@@ -199,14 +183,14 @@ export default function AdminManageUsers() {
             </div>
           </div>
           <div className="text-xs text-green-600/70 mt-1 md:mt-2">
-            {stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0}% of total
+            {stats.total > 0 ? Math.round((stats.active / stats.total) * 100) : 0}{t("admin.% of total")}
           </div>
         </div>
 
         <div className="bg-card border border-yellow-500/20 rounded-xl p-3 md:p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm text-muted-foreground">Pending</p>
+              <p className="text-xs md:text-sm text-muted-foreground">{t("admin.Pending")}</p>
               <p className="text-xl md:text-2xl lg:text-3xl font-bold mt-1 text-yellow-600">{stats.pending}</p>
             </div>
             <div className="p-2 md:p-3 rounded-full bg-yellow-500/10">
@@ -214,14 +198,14 @@ export default function AdminManageUsers() {
             </div>
           </div>
           <div className="text-xs text-yellow-600/70 mt-1 md:mt-2">
-            Awaiting approval
+            {t("admin.await")}
           </div>
         </div>
 
         <div className="bg-card border border-red-500/20 rounded-xl p-3 md:p-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs md:text-sm text-muted-foreground">Suspended</p>
+              <p className="text-xs md:text-sm text-muted-foreground">{t("admin.Suspended")}</p>
               <p className="text-xl md:text-2xl lg:text-3xl font-bold mt-1 text-red-600">{stats.suspended}</p>
             </div>
             <div className="p-2 md:p-3 rounded-full bg-red-500/10">
@@ -229,26 +213,22 @@ export default function AdminManageUsers() {
             </div>
           </div>
           <div className="text-xs text-red-600/70 mt-1 md:mt-2">
-            Temporarily disabled
+            {t("admin.disabled")}
           </div>
         </div>
       </div>
 
-      {/* =======================
-          Roles Filter
-      ======================= */}
       <div className="bg-card border border-border rounded-xl p-4 md:p-5">
         <div className="flex items-center justify-between mb-3 md:mb-4">
           <div className="flex items-center gap-2 md:gap-3">
             <FaFilter className="text-primary text-base md:text-lg" />
             <h3 className="font-semibold text-foreground text-base md:text-lg">
-              Filter by Role
+              {t("admin.filter")}
             </h3>
           </div>
           {isLoading && (
             <div className="flex items-center gap-2 text-sm text-primary">
               <FaSpinner className="animate-spin text-xs md:text-sm" />
-              <span className="text-xs md:text-sm">Loading...</span>
             </div>
           )}
         </div>
@@ -266,12 +246,12 @@ export default function AdminManageUsers() {
           ) : (
             <div className="flex flex-wrap gap-2 md:gap-3">
               {roles?.map((r: roleData) => {
-                const active = role === r.roleName;
+                const active = role?.roleName === r.roleName;
                 
                 return (
                   <button
                     key={r.id}
-                    onClick={() => handleRoleChange(r.roleName)}
+                    onClick={() => handleRoleChange(r)}
                     className={`px-4 md:px-6 py-2 md:py-3 rounded-xl font-medium transition-all duration-300 border flex items-center gap-2 md:gap-3 text-sm md:text-base
                       ${active 
                         ? "border-primary bg-primary text-white shadow-lg" 
@@ -292,29 +272,26 @@ export default function AdminManageUsers() {
         </div>
       </div>
 
-      {/* =======================
-          Users Table
-      ======================= */}
       <div className="bg-card border border-border rounded-xl overflow-hidden shadow-lg">
         <div className="overflow-x-auto">
           <div className="min-w-[800px]">
-            <table className="w-full">
+            <table className="w-full" style={{direction:"ltr"}}>
               <thead className="bg-muted/30">
                 <tr>
                   <th className="p-3 md:p-4 font-semibold text-foreground text-left text-sm md:text-base">
-                    User
+                    {t("admin.User")}
                   </th>
                   <th className="p-3 md:p-4 font-semibold text-foreground text-left text-sm md:text-base">
-                    Email
+                    {t("admin.Email")}
                   </th>
                   <th className="p-3 md:p-4 font-semibold text-foreground text-left text-sm md:text-base">
-                    Status
+                    {t("admin.Status")}
                   </th>
                   <th className="p-3 md:p-4 font-semibold text-foreground text-left text-sm md:text-base">
-                    Joined
+                    {t("admin.Joined")}
                   </th>
                   <th className="p-3 md:p-4 font-semibold text-foreground text-right text-sm md:text-base">
-                    Actions
+                    {t("admin.Actions")}
                   </th>
                 </tr>
               </thead>
@@ -326,7 +303,7 @@ export default function AdminManageUsers() {
                       <div className="flex flex-col items-center justify-center gap-3">
                         <div className="inline-block animate-spin rounded-full h-8 w-8 md:h-10 md:w-10 border-4 border-primary border-t-transparent"></div>
                         <p className="text-muted-foreground text-sm md:text-base">
-                          Loading {role} users...
+                          {t("admin.Loading")} {role?.roleName} {t("admin.users...")}
                         </p>
                       </div>
                     </td>
@@ -337,10 +314,10 @@ export default function AdminManageUsers() {
                       <div className="flex flex-col items-center justify-center gap-3">
                         <div className="text-3xl md:text-4xl lg:text-5xl mb-2">👤</div>
                         <p className="text-base md:text-lg font-medium text-foreground">
-                          No users found
+                          {t("admin.nouser")}
                         </p>
                         <p className="text-xs md:text-sm text-muted-foreground">
-                          No {role} users available in the system
+                          {t("admin.No")} {role?.roleName} {t("admin.system")}
                         </p>
                         <button
                           onClick={() => refetch()}
@@ -410,7 +387,7 @@ export default function AdminManageUsers() {
                                 className="px-3 py-1.5 md:px-4 md:py-2 rounded-lg bg-primary text-white font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed shadow text-xs md:text-sm flex items-center gap-1 md:gap-2"
                               >
                                 {isChanging ? <FaSpinner className="animate-spin" /> : <FaUserCheck />}
-                                <span className="hidden sm:inline">Approve</span>
+                                <span className="hidden sm:inline">{t("admin.Approve")}</span>
                               </button>
                             )}
 
@@ -421,7 +398,7 @@ export default function AdminManageUsers() {
                                 className="px-3 py-1.5 md:px-4 md:py-2 rounded-lg bg-red-500 text-white font-medium hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed shadow text-xs md:text-sm flex items-center gap-1 md:gap-2"
                               >
                                 {isChanging ? <FaSpinner className="animate-spin" /> : <FaUserSlash />}
-                                <span className="hidden sm:inline">Suspend</span>
+                                <span className="hidden sm:inline">{t("admin.Suspend")}</span>
                               </button>
                             )}
 
@@ -432,7 +409,7 @@ export default function AdminManageUsers() {
                                 className="px-3 py-1.5 md:px-4 md:py-2 rounded-lg bg-green-600 text-white font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed shadow text-xs md:text-sm flex items-center gap-1 md:gap-2"
                               >
                                 {isChanging ? <FaSpinner className="animate-spin" /> : <RiUserStarFill />}
-                                <span className="hidden sm:inline">Activate</span>
+                                <span className="hidden sm:inline">{t("admin.Activate")}</span>
                               </button>
                             )}
                           </div>
@@ -447,13 +424,10 @@ export default function AdminManageUsers() {
         </div>
       </div>
 
-      {/* =======================
-          Pagination
-      ======================= */}
       {totalPages > 1 && !isLoading && users.length > 0 && (
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 md:gap-4 p-3 md:p-5 bg-card border border-border rounded-xl">
           <span className="text-xs md:text-sm text-muted-foreground text-center sm:text-left">
-            Page {page} of {totalPages} • {totalCount} total {role} users
+            {t("admin.Page")} {page} {t("admin.of")} {totalPages} • {totalCount} {t("admin.total")} {role?.roleName} {t("admin.Users")}
           </span>
 
           <div className="flex flex-wrap justify-center sm:justify-end items-center gap-1.5 md:gap-2">
@@ -462,7 +436,7 @@ export default function AdminManageUsers() {
               onClick={() => setPage(1)}
               className="px-3 py-1.5 md:px-4 md:py-2 border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs md:text-sm"
             >
-              First
+              {t("admin.First")}
             </button>
 
             <button
@@ -470,7 +444,7 @@ export default function AdminManageUsers() {
               onClick={() => setPage(p => p - 1)}
               className="px-3 py-1.5 md:px-4 md:py-2 border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs md:text-sm"
             >
-              Prev
+              {t("admin.Prev")}
             </button>
 
             <div className="flex items-center gap-1">
@@ -507,7 +481,7 @@ export default function AdminManageUsers() {
               onClick={() => setPage(p => p + 1)}
               className="px-3 py-1.5 md:px-4 md:py-2 border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs md:text-sm"
             >
-              Next
+              {t("admin.Next")}
             </button>
 
             <button
@@ -515,7 +489,7 @@ export default function AdminManageUsers() {
               onClick={() => setPage(totalPages)}
               className="px-3 py-1.5 md:px-4 md:py-2 border border-border rounded-lg hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs md:text-sm"
             >
-              Last
+              {t("admin.Last")}
             </button>
           </div>
         </div>

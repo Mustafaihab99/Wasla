@@ -17,3 +17,20 @@ export interface AdminUsersResponse {
   totalCount: number;
   data: adminUsersData[];
 }
+
+export interface AdminOverviewData{
+    completedBookingsCount: number,
+    canceledBookingsCount: number,
+    countOfUsers: number,
+    years: [
+    {
+        year: number,
+        months: [
+        {
+            month: number,
+            amount: number
+        }
+        ]
+    }
+    ]
+}

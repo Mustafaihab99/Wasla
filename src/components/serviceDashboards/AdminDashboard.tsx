@@ -12,8 +12,6 @@ import {
 import {
   FaUserShield,
   FaUsers,
-  FaChartLine,
-  FaC,
 } from "react-icons/fa6";
 import { MdDashboard, MdReport } from "react-icons/md";
 import logo from "../../assets/images/icons/app-logo.png";
@@ -60,7 +58,7 @@ export default function AdminDashboard() {
   const navItems = [
     {
       label: t("admin.dashboard"),
-      link: "/admin/manage-dashboard",
+      link: "/admin/overview",
       icon: <MdDashboard />,
     },
     {
@@ -72,16 +70,6 @@ export default function AdminDashboard() {
       label: t("admin.reports"),
       link: "/admin/reports",
       icon: <MdReport />,
-    },
-    {
-      label: t("admin.analytics"),
-      link: "/admin/analytics",
-      icon: <FaChartLine />,
-    },
-    {
-      label: t("admin.settings"),
-      link: "/admin/settings",
-      icon: <FaC />,
     },
   ];
 
