@@ -472,6 +472,14 @@
     "RevenueAnalytics" : "Revenue Analytics",
     "EGP" : "EGP",
     "monthlyRevenue": "Monthly revenue overview",
-    "revenue": "Revenue"
+    "revenue": "Revenue",
+    "viewDe" : "View Details",
+    "userdet" : "User Details",
+    "Back" : "Back",
+    "photo" : "Profile Photo",
+    "resDet" : "Resident Details",
+    "docDet" : "Doctor Details" ,
+    "CV" : "CV",
+    "basicInfo" : "basic Info"
   }
 }

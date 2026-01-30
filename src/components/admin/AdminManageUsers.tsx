@@ -6,8 +6,10 @@ import useRoles from "../../hooks/auth/useRoles";
 import { roleData } from "../../types/auth/authData";
 import { adminUsersData } from "../../types/admin/adminTypes";
 import { FaUsers, FaFilter, FaUserCheck, FaUserSlash, FaSpinner } from "react-icons/fa";
+import { HiDotsVertical } from "react-icons/hi";
 import { RiUserStarFill } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 enum UserStatus {
   Active = 0,
@@ -67,6 +69,7 @@ export default function AdminManageUsers() {
   });
   const [page, setPage] = useState(1);
   const {t} = useTranslation();
+  const navigate = useNavigate();
 
   const statusLabel = (status: number) => {
     switch (status) {
@@ -249,6 +252,9 @@ export default function AdminManageUsers() {
                 const active = role?.roleName === r.roleName;
                 
                 return (
+                  r.roleName === "admin" || r.roleName === "مشرف" ? 
+                  <></>
+                  :    
                   <button
                     key={r.id}
                     onClick={() => handleRoleChange(r)}
@@ -265,6 +271,7 @@ export default function AdminManageUsers() {
                       <FaSpinner className="animate-spin text-xs md:text-sm ml-1" />
                     )}
                   </button>
+              
                 );
               })}
             </div>
@@ -292,6 +299,9 @@ export default function AdminManageUsers() {
                   </th>
                   <th className="p-3 md:p-4 font-semibold text-foreground text-right text-sm md:text-base">
                     {t("admin.Actions")}
+                  </th>
+                  <th className="p-3 md:p-4 font-semibold text-foreground text-right text-sm md:text-base">
+                    {t("admin.viewDe")}
                   </th>
                 </tr>
               </thead>
@@ -331,7 +341,6 @@ export default function AdminManageUsers() {
                 ) : (
                   users.map((user: adminUsersData) => {
                     const statusColors = statusColor(user.status);
-                    
                     return (
                       <tr
                         key={user.id}
@@ -412,6 +421,12 @@ export default function AdminManageUsers() {
                                 <span className="hidden sm:inline">{t("admin.Activate")}</span>
                               </button>
                             )}
+                          </div>
+                        </td>
+                        <td className="p-3 md:p-4 flex justify-center cursor-pointer" 
+                        onClick={() => navigate(`/admin/manage-users/${user.id}`)}>
+                          <div className="text-foreground text-sm md:text-base mt-4 truncate max-w-[150px] md:max-w-[200px] lg:max-w-none">
+                            <HiDotsVertical />
                           </div>
                         </td>
                       </tr>

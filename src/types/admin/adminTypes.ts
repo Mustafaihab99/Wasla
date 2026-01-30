@@ -34,3 +34,36 @@ export interface AdminOverviewData{
     }
     ]
 }
+
+export interface UserBase {
+  phone: string;
+  birthDay: string;
+  profilePhoto: string;
+}
+export interface ResidentDetails {
+  nationalId: string;
+}
+export interface DoctorDetails {
+  experienceYears: number;
+  universityName: string;
+  graduationYear: number;
+  hospitalName: string;
+  description: string;
+  cv: string;
+}
+export type UserDetailsData =
+  | {
+      role: "resident";
+      userBase: UserBase;
+      details: ResidentDetails;
+    }
+  | {
+      role: "doctor";
+      userBase: UserBase;
+      details: DoctorDetails;
+    };
+export interface GetUserDetailsResponse {
+  success: boolean;
+  message: string;
+  data: UserDetailsData;
+}

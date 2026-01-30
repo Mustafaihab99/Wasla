@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { AdminOverviewData, AdminUsersResponse, ReportsData } from "../../types/admin/adminTypes";
+import { AdminOverviewData, AdminUsersResponse, GetUserDetailsResponse, ReportsData } from "../../types/admin/adminTypes";
 
 // reports
 export async function getAdminReports() : Promise<ReportsData[]> {
@@ -69,4 +69,23 @@ export async function getAdminOverview() : Promise<AdminOverviewData> {
     }
     throw error;
     }
+}
+// view detaailes
+export async function getAdminUserDetails(
+  userId: string,
+): Promise<GetUserDetailsResponse> {
+  try {
+    const response = await axiosInstance.get(
+      `Admin/GetUserDetails?userId=${userId}`
+    );
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message || "fetch failed";
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
 }
