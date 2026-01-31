@@ -57,7 +57,7 @@ export async function changeUserStatus(params:changeUserData) {
 // admin overview
 export async function getAdminOverview() : Promise<AdminOverviewData> {
     try{
-    const response = await axiosInstance.get(`Admin/CollectedCountBookings/2`);
+    const response = await axiosInstance.get(`Admin/CollectedCountBookings`);
     return response.data.data;
     }
     catch (error: unknown) {
