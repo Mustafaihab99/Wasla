@@ -90,13 +90,11 @@ export default function DoctorDashboardLayout() {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar Desktop */}
       <aside
         className={`border-r border-border flex flex-col justify-between transition-all duration-300 ${
           sidebarOpen ? "w-64" : "w-20"
         } hidden md:flex`}>
         <div className="flex flex-col">
-          {/* Logo */}
           <div className="flex items-center gap-3 p-4">
             <img
               src={logo}
@@ -108,7 +106,6 @@ export default function DoctorDashboardLayout() {
             )}
           </div>
 
-          {/* Nav Links */}
           <nav className="flex flex-col mt-6 gap-2 px-3">
             {navItems.map((item, i) => (
               <NavLink
@@ -128,12 +125,10 @@ export default function DoctorDashboardLayout() {
           }
         `
                 }>
-                {/* Icon Animation */}
                 <span className="text-xl transition-transform duration-300 group-hover:scale-110">
                   {item.icon}
                 </span>
 
-                {/* Label */}
                 <span
                   className={`
           transition-all duration-300 
@@ -150,7 +145,6 @@ export default function DoctorDashboardLayout() {
           </nav>
         </div>
 
-        {/* Bottom Actions */}
         <div className="flex flex-col gap-2 p-4">
           <button
             onClick={toggleLanguage}
@@ -182,7 +176,6 @@ export default function DoctorDashboardLayout() {
         </div>
       </aside>
 
-      {/* Sidebar Mobile */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -197,7 +190,6 @@ export default function DoctorDashboardLayout() {
               exit={{ x: "100%" }}
               className="w-3/4 sm:w-1/2 bg-background h-full shadow-xl p-6 border-l border-border flex flex-col justify-between"
               onClick={(e) => e.stopPropagation()}>
-              {/* Top */}
               <div>
                 <button
                   className="absolute top-4 right-4 text-xl"
@@ -221,7 +213,6 @@ export default function DoctorDashboardLayout() {
                 </div>
               </div>
 
-              {/* Bottom */}
               <div className="flex flex-col gap-4 border-t border-border pt-6">
                 <button
                   onClick={toggleLanguage}
@@ -251,14 +242,12 @@ export default function DoctorDashboardLayout() {
         )}
       </AnimatePresence>
 
-      {/* Mobile Menu Button */}
       <button
         className="md:hidden fixed top-4 left-4 z-50 text-2xl text-foreground"
         onClick={() => setMobileOpen(true)}>
         <FaBars />
       </button>
 
-      {/* Main Content */}
       <main className="flex-1 overflow-auto p-6">
         <Outlet />
       </main>

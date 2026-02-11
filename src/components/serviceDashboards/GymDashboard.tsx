@@ -8,19 +8,19 @@ import {
   FaBars,
   FaTimes,
   FaSnowflake,
-} from "react-icons/fa";
-import {
-  FaUserShield,
+  FaDumbbell,
   FaUsers,
-} from "react-icons/fa6";
-import { MdDashboard, MdReport } from "react-icons/md";
+  FaUserTie
+} from "react-icons/fa";
+import { MdDashboard, MdFitnessCenter, MdComment } from "react-icons/md";
+import { FaUser } from "react-icons/fa6";
 import logo from "../../assets/images/icons/app-logo.png";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import useLogout from "../../hooks/auth/useLogout";
 
-export default function AdminDashboard() {
+export default function GymDashboard() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useContext(ThemeContext);
 
@@ -57,23 +57,38 @@ export default function AdminDashboard() {
 
   const navItems = [
     {
-      label: t("admin.dashboard"),
-      link: "/admin/overview",
+      label: t("gym.dashboard"),
+      link: "/gym/dashboard",
       icon: <MdDashboard />,
     },
     {
-      label: t("admin.users"),
-      link: "/admin/manage-users",
+      label: t("gym.services"),
+      link: "/gym/services",
+      icon: <MdFitnessCenter />,
+    },
+    {
+      label: t("gym.trainers"),
+      link: "/gym/trainers",
+      icon: <FaUserTie />,
+    },
+    {
+      label: t("gym.members"),
+      link: "/gym/members",
       icon: <FaUsers />,
     },
     {
-      label: t("admin.reports"),
-      link: "/admin/reports",
-      icon: <MdReport />,
+      label: t("gym.messages"),
+      link: "/gym/messages",
+      icon: <MdComment />,
+    },
+    {
+      label: t("gym.profile"),
+      link: "/gym/profile",
+      icon: <FaUser />,
     },
   ];
 
-  const themeIcon = (th : string) => {
+  const themeIcon = (th: string) => {
     switch (th) {
       case "dark":
         return <FaMoon />;
@@ -102,8 +117,8 @@ export default function AdminDashboard() {
             />
             {sidebarOpen && (
               <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <FaUserShield className="text-primary" />
-                {t("admin.panel")}
+                <FaDumbbell className="text-primary" />
+                {t("gym.panel")}
               </h3>
             )}
           </div>
@@ -119,7 +134,7 @@ export default function AdminDashboard() {
                   ${
                     isActive
                       ? sidebarOpen
-                        ? "bg-primary text-white font-semibold"
+                        ? "bg-primary text-white font-semibold shadow-sm"
                         : "bg-primary text-white w-10 h-10"
                       : "text-foreground hover:bg-primary/10 hover:text-primary"
                   }
@@ -129,6 +144,7 @@ export default function AdminDashboard() {
                 <span className="text-xl group-hover:scale-110 transition-transform">
                   {item.icon}
                 </span>
+
                 <span
                   className={`transition-all duration-300 ${
                     sidebarOpen
@@ -205,8 +221,8 @@ export default function AdminDashboard() {
                 </button>
 
                 <div className="flex items-center gap-2 mb-10 mt-6">
-                  <img src={logo} className="w-10 h-10" />
-                  <h3 className="text-lg font-semibold">{t("admin.panel")}</h3>
+                  <FaDumbbell className="text-primary text-2xl" />
+                  <h3 className="text-lg font-semibold">{t("gym.panel")}</h3>
                 </div>
 
                 <div className="flex flex-col gap-6">
@@ -228,7 +244,7 @@ export default function AdminDashboard() {
                   onClick={toggleLanguage}
                   className="flex items-center gap-3 p-3 rounded-lg border hover:bg-primary/10"
                 >
-                  <FaGlobe className="text-primary" />
+                  <FaGlobe />
                   {i18n.language.toUpperCase()}
                 </button>
 
@@ -260,7 +276,7 @@ export default function AdminDashboard() {
         <FaBars />
       </button>
 
-      <main className="flex-1 overflow-auto p-6">
+      <main className="flex-1 overflow-auto p-6 bg-background">
         <Outlet />
       </main>
     </div>

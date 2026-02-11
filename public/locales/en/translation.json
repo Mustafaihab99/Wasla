@@ -225,6 +225,28 @@
       "national": "National ID",
       "enternational": "Enter your National ID",
       "saveResident": "Save Resident Profile"
+    },
+     "gym": {
+      "businessName": "Gym Name",
+      "businessPlaceholder": "Ex: Gold Gym",
+      "ownerName": "owner name",
+      "ownerPlaceholder": "Ahmed Ail",
+      "description": "Description",
+      "phones": "Contact Numbers",
+      "addPhone": "Add phone",
+      "gallery": "Gym Gallery",
+      "save": "Save Gym Profile",
+      "saving": "Saving...",
+      "businessReq": "Gym name is required",
+      "businessMin": "Gym name must be at least 3 characters",
+      "ownerReq": "Owner name is required",
+      "ownerMin": "Owner name must be at least 3 characters",
+      "descReq": "Description is required",
+      "descMin": "Description must be at least 10 characters",
+      "phoneReq": "Phone is required",
+      "phoneInvalid": "Invalid phone number",
+      "phoneAtLeast": "Enter at least one phone number",
+      "photoReq": "Main photo is required"
     }
   },
   "resident": {
@@ -481,5 +503,16 @@
     "docDet" : "Doctor Details" ,
     "CV" : "CV",
     "basicInfo" : "basic Info"
+  },
+    "gym": {
+    "welcome": "Welcome to your Gym Dashboard",
+    "welcome2": "Let’s start managing your fitness business and grow your members",
+    "panel": "Gym Panel",
+    "dashboard": "Dashboard",
+    "services": "Services",
+    "trainers": "Trainers",
+    "members": "Members",
+    "messages": "Messages",
+    "profile": "Profile"
   }
 }

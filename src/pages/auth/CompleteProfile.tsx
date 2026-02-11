@@ -5,6 +5,7 @@ import DoctorFormFields from "../../components/auth/DoctorFormFields";
 import NavBar from "../../components/landing/NavBar";
 import FooterSection from "../../components/landing/Footer";
 import ResidentFormFields from "../../components/auth/ResidentFormFields";
+import GymFormFields from "../../components/auth/GymFormFields";
 
 export default function CompleteProfile() {
   const location = useLocation();
@@ -13,6 +14,7 @@ export default function CompleteProfile() {
 
   const email = location.state?.email;
   const role = location.state?.role;
+  
 
   if (!email || !role) {
     navigate("/auth/signup");
@@ -22,6 +24,7 @@ export default function CompleteProfile() {
   const roleComponents: Record<string, React.FC<{ email: string }>> = {
     doctor: DoctorFormFields,
     resident: ResidentFormFields,
+    Gym: GymFormFields,
     // restaurant: RestaurantFormFields,
     // technician: TechnicianFormFields,
   };

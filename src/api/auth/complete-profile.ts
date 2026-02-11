@@ -44,3 +44,19 @@ export async function setResidentProfile(formData: FormData) {
     throw error;
   }
 }
+
+export async function setGymProfile(formData: FormData) {
+  try {
+    const response = await axiosInstance.post("Gym/CompleteRegister", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    toast.success(response.data.message || "Gym profile completed successfully!");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "Registration failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
