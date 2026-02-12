@@ -12,7 +12,7 @@ export async function getDoctorProfile(id :string) : Promise<doctorProfileData> 
     }
     catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      const message = error.response?.data?.message || "Login failed";
+      const message = error.response?.data?.message || "fetched failed";
       toast.error(message);
     } else {
       toast.error("Unexpected error occurred");

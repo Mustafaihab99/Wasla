@@ -28,7 +28,7 @@ const DoctorDashboard = lazy(() => import ("../components/serviceDashboards/Doct
 const DoctorHomeDashboard = lazy(() => import ("../components/doctor/DoctorHomeDahboard"));
 const DoctorServiceManage = lazy(() => import ("../components/doctor/DoctorServiceManage"));
 const DoctorProfile = lazy(() => import ("../components/doctor/DoctorProfile"));
-const DoctorReviews = lazy(() => import ("../components/doctor/DoctorReviews"));
+const ServiceProviderReviews = lazy(() => import ("../components/common/ServiceProviderReviews"));
 // Admin dashboard
 const AdminDashboard = lazy(() => import ("../components/serviceDashboards/AdminDashboard"));
 const AdminReports = lazy(() => import ("../components/admin/AdminReports"));
@@ -37,6 +37,7 @@ const AdminOverview = lazy(() => import ("../components/admin/AdminOverview"));
 const AdminViewDetails = lazy(() => import ("../components/admin/AdminViewDetails"));
 // gym dashboard
 const GymDashboard = lazy(() => import ("../components/serviceDashboards/GymDashboard"));
+const GymProfile = lazy(() => import ("../components/gym/GymProfile"));
 
 export default function AppRoutes() {
   return (
@@ -82,7 +83,7 @@ export default function AppRoutes() {
           <Route path="manage-dashboard" element={<DoctorHomeDashboard />} />
           <Route path="manage-service" element={<DoctorServiceManage />} />
           <Route path="profile" element={<DoctorProfile />} />
-          <Route path="reviews" element={<DoctorReviews />} />
+          <Route path="reviews" element={<ServiceProviderReviews />} />
         </Route>
       </Route> 
         {/* end doctor Dashboard */}
@@ -106,9 +107,8 @@ export default function AppRoutes() {
         <Route path="/gym" element={<GymDashboard />}>
           <Route index element={<Navigate to="manage-dashboard" replace />} />
           <Route path="manage-dashboard" element={<DoctorHomeDashboard />} />
-          <Route path="manage-service" element={<DoctorServiceManage />} />
-          <Route path="profile" element={<DoctorProfile />} />
-          <Route path="reviews" element={<DoctorReviews />} />
+          <Route path="profile" element={<GymProfile />} />
+          <Route path="reviews" element={<ServiceProviderReviews />} />
         </Route>
       </Route> 
         {/* end doctor Dashboard */}

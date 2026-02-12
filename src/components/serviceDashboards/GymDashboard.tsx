@@ -10,7 +10,6 @@ import {
   FaSnowflake,
   FaDumbbell,
   FaUsers,
-  FaUserTie
 } from "react-icons/fa";
 import { MdDashboard, MdFitnessCenter, MdComment } from "react-icons/md";
 import { FaUser } from "react-icons/fa6";
@@ -19,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import useLogout from "../../hooks/auth/useLogout";
+import { SiGooglemessages } from "react-icons/si";
 
 export default function GymDashboard() {
   const { t, i18n } = useTranslation();
@@ -67,11 +67,6 @@ export default function GymDashboard() {
       icon: <MdFitnessCenter />,
     },
     {
-      label: t("gym.trainers"),
-      link: "/gym/trainers",
-      icon: <FaUserTie />,
-    },
-    {
       label: t("gym.members"),
       link: "/gym/members",
       icon: <FaUsers />,
@@ -79,6 +74,11 @@ export default function GymDashboard() {
     {
       label: t("gym.messages"),
       link: "/gym/messages",
+      icon: <SiGooglemessages />,
+    },
+    {
+      label: t("gym.reviews"),
+      link: "/gym/reviews",
       icon: <MdComment />,
     },
     {
