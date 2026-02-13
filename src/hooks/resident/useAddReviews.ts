@@ -9,6 +9,7 @@ export default function useAddReviews(){
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["allreviews"], exact: false });
             queryClient.invalidateQueries({ queryKey: ["doctorProfile"], exact: false });
+            queryClient.invalidateQueries({ queryKey: ["Gym-profile"], exact: false });
     },
     })
 }

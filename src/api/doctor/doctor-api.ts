@@ -23,7 +23,7 @@ export async function getDoctorProfile(id :string) : Promise<doctorProfileData> 
 // get service
 export async function getDoctorServices(id :string) : Promise<doctorServiceData[]> {
     try{
-    const response = await axiosInstance.get(`Service/GetServices/${id}`);
+    const response = await axiosInstance.get(`DoctorService/GetServices/${id}`);
     return response.data.data;
     }
     catch (error: unknown) {
@@ -40,7 +40,7 @@ export async function getDoctorServices(id :string) : Promise<doctorServiceData[
 // add service
 export async function addDoctorService(params: doctorServiceAdd) {
   try{
-      const response = await axiosInstance.post("Service/AddService" , params);
+      const response = await axiosInstance.post("DoctorService/AddService" , params);
       toast.success(response?.data?.message || "Added successfully");
     return response;
   } catch (error) {
@@ -55,7 +55,7 @@ export async function addDoctorService(params: doctorServiceAdd) {
 // update service
 export async function UpdateDoctorService(payload: doctorServiceEdit) {
   try {
-    const response = await axiosInstance.put(`Service/UpdateService`, payload);
+    const response = await axiosInstance.put(`DoctorService/UpdateService`, payload);
     toast.success(response?.data?.message || "updated successfully");
     return response;
   } catch (error) {
@@ -69,7 +69,7 @@ export async function UpdateDoctorService(payload: doctorServiceEdit) {
 // delete service
 export async function DeleteDoctorService(serviceID : number) {
  try {
-    const response = await axiosInstance.delete(`Service/DeleteService/${serviceID}`);
+    const response = await axiosInstance.delete(`DoctorService/DeleteService/${serviceID}`);
       toast.success(response?.data?.message || "delete successfully");
     return response;
   } catch (error) {
@@ -130,7 +130,7 @@ export async function EditDoctorProfile(formData: FormData) {
 // cancel Book
 export async function cancelDoctorBook(bookingId: number) {
    try {
-    const response = await axiosInstance.put(`Book/UpdateBookingStatus?bookingId=${bookingId}&status=3`);
+    const response = await axiosInstance.put(`DoctorBook/UpdateBookingStatus?bookingId=${bookingId}&status=3`);
     toast.success(response.data.message || "Book Canceled successfully");
     return response.data;
   } catch (error) {
@@ -143,7 +143,7 @@ export async function cancelDoctorBook(bookingId: number) {
 // update time Book
 export async function updateDoctorBook(updataData: doctorUpdateBookData) {
    try {
-    const response = await axiosInstance.put(`Book/UpdateBooking` , updataData);
+    const response = await axiosInstance.put(`DoctorBook/UpdateBooking` , updataData);
     toast.success(response.data.message || "Book Updated successfully");
     return response.data;
   } catch (error) {

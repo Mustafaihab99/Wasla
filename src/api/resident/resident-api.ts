@@ -39,7 +39,7 @@ export async function fetchDoctorsToResident(specialid :string) : Promise<doctor
 // book a service
 export async function bookService(formData: FormData) {
   try {
-    const response = await axiosInstance.post("Book/BookService", formData, {
+    const response = await axiosInstance.post("DoctorBook/BookService", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
@@ -55,7 +55,7 @@ export async function bookService(formData: FormData) {
 // show my booking
 export async function showMyBooking(id :string) : Promise<myBookingDoctor[]> {
     try{
-    const response = await axiosInstance.get(`Book/GetBookingDetailsForUser?userId=${id}`);
+    const response = await axiosInstance.get(`DoctorBook/GetBookingDetailsForUser?userId=${id}`);
     return response.data.data;
     }
     catch (error: unknown) {

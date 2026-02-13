@@ -299,7 +299,10 @@
     "longRev": "Too Long Comment",
     "removeFavourite": "removeFavourite",
     "noFavourites": "No Favourites have been added",
-    "myFavourites": "My Favourites"
+    "myFavourites": "My Favourites",
+    "gyms" : "All Gyms",
+    "Prev" : "Prev",
+    "Next" : "Next"
   },
   "doctor": {
     "ViewCV": "View CV",
@@ -525,6 +528,33 @@
     "rating": "Rating",
     "reviews": "Reviews",
     "photos": "Photos",
-    "contacts": "Contacts"
+    "contacts": "Contacts",
+    "namereq" : "Name is required (Arabic & English)",
+    "descreq" : "Description is required",
+    "pricereq" : "Price must be greater than 0",
+    "durationreq" : "Duration must be greater than 0",
+    "disreq" : "Discount percentage is required",
+    "disneg" : "Discount cannot be negative",
+    "dismax" : "Discount cannot exceed 100%",
+    "add" : "Add Service",
+    "editser" : "Edit Service",
+    "arname" : "Arabic Name",
+    "enname" : "English Name",
+    "ardesc" : "Arabic Description",
+    "endesc" : "English Description",
+    "Price" : "Price",
+    "month" : "Duration (months)",
+    "Package" : "Package",
+    "Offer" : "Offer",
+    "disc" : "Discount %",
+    "Cancel" : "Cancel",
+    "Save" : "Save",
+    "Saving..." : "Saving...",
+    "delete?" : "Delete this service?",
+    "Delete" : "Delete",
+    "gymserv" : "Gym Services",
+    "mo" : "months",
+    "aboutGym" : "About Gym",
+    "Gallery" : "Gallery"
   }
 }

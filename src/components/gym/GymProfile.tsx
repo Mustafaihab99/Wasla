@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import noData from "../../assets/images/nodata.webp";
 import { useTranslation } from "react-i18next";
 import GymProfileSkeleton from "./GymProfileSkeleton";
+import EditGymProfileModal from "./Modal/UpdateGymModal";
 
 export default function GymProfile() {
   const id = sessionStorage.getItem("user_id")!;
@@ -42,9 +43,9 @@ export default function GymProfile() {
         <div className="h-32 bg-primary/10"></div>
         <div className="p-8">
           {/* Header */}
-          <div className="flex flex-col md:flex-row gap-8 items-center -mt-20"
-          style={{direction:"ltr"}}
-          >
+          <div
+            className="flex flex-col md:flex-row gap-8 items-center -mt-20"
+            style={{ direction: "ltr" }}>
             <img
               src={import.meta.env.VITE_GYM_IMAGE + data.profilePhoto}
               className="w-40 h-40 rounded-xl object-cover border-4 border-background shadow-lg"
@@ -120,7 +121,6 @@ export default function GymProfile() {
             </div>
           </div>
 
-          {/* Gallery */}
           {data.photos.length > 0 && (
             <>
               <div className="border-t border-border my-8"></div>
@@ -141,9 +141,20 @@ export default function GymProfile() {
         </div>
 
         <ChangePasswordModal
-          isOpen={openPass && openEdit}
+          isOpen={openPass}
           onClose={() => setOpenPass(false)}
-          email=""
+          email={data.email}
+        />
+        <EditGymProfileModal
+          isOpen={openEdit}
+          onClose={() => setOpenEdit(false)}
+          data={{
+            businessName: data.businessName,
+            ownerName: data.ownerName,
+            description: data.description,
+            gmail: data.email,
+            phones: data.phones,
+          }}
         />
       </motion.div>
     </>

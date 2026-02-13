@@ -23,6 +23,8 @@ const ServiceBookDoctor = lazy(() => import ("../pages/resident/ServiceBookDocto
 const DoctorViewDetailes = lazy(() => import ("../pages/resident/DoctorViewDetailes"));
 const ResidentMyBooking = lazy(() => import ("../pages/resident/ResidentMyBooking"));
 const ResidentMyFavourites = lazy(() => import ("../pages/resident/ResidentMyFavourites"));
+const ServiceBookGyms = lazy(() => import ("../pages/resident/ServiceBookGyms"));
+const GymViewDetailes = lazy(() => import ("../pages/resident/GymViewDetails"));
 // doctor dashboard
 const DoctorDashboard = lazy(() => import ("../components/serviceDashboards/DoctorDashboard"));
 const DoctorHomeDashboard = lazy(() => import ("../components/doctor/DoctorHomeDahboard"));
@@ -38,6 +40,7 @@ const AdminViewDetails = lazy(() => import ("../components/admin/AdminViewDetail
 // gym dashboard
 const GymDashboard = lazy(() => import ("../components/serviceDashboards/GymDashboard"));
 const GymProfile = lazy(() => import ("../components/gym/GymProfile"));
+const GymServicesPage = lazy(() => import ("../components/gym/GymServicePage"));
 
 export default function AppRoutes() {
   return (
@@ -71,6 +74,8 @@ export default function AppRoutes() {
             <Route path="service" element={<ResidentServices />} /> 
             <Route path="service/doctors" element={<ServiceBookDoctor />} /> 
             <Route path="service/doctors/:doctorId" element={<DoctorViewDetailes />} /> 
+            <Route path="service/gyms" element={<ServiceBookGyms />} /> 
+            <Route path="service/gyms/:gymId" element={<GymViewDetailes />} /> 
           </Route>
         </Route>  
         {/* end resident Dashboard */}
@@ -107,6 +112,7 @@ export default function AppRoutes() {
         <Route path="/gym" element={<GymDashboard />}>
           <Route index element={<Navigate to="manage-dashboard" replace />} />
           <Route path="manage-dashboard" element={<DoctorHomeDashboard />} />
+          <Route path="services" element={<GymServicesPage />} />
           <Route path="profile" element={<GymProfile />} />
           <Route path="reviews" element={<ServiceProviderReviews />} />
         </Route>

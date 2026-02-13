@@ -10,6 +10,7 @@ export default function useDeleteReview() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allreviews"] });
       queryClient.invalidateQueries({ queryKey: ["doctorProfile"] });
+      queryClient.invalidateQueries({ queryKey: ["Gym-profile"] });
     },
   });
 }

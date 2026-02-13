@@ -88,7 +88,6 @@ export default function GymFormFields({ email }: { email: string }) {
       >
         {({ values, isSubmitting, setFieldValue }) => (
           <Form className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-            {/* Hidden Email */}
             <Field type="hidden" name="Email" value={email} />
 
             {/* Main Image */}
