@@ -32,6 +32,11 @@ export default function useBookingHub(token: string) {
       queryClient.invalidateQueries({ queryKey: ["mybooking"] });
     });
 
+    connection.on("PackageBooked", () => {
+      queryClient.invalidateQueries({ queryKey: ["gym-book-list"] });
+      queryClient.invalidateQueries({ queryKey: ["gym-booking"] });
+    });
+
     connection.on("ServiceDayBooked", () => {
       queryClient.invalidateQueries({ queryKey: ["doctor-book-list"] });
     });

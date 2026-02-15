@@ -1,6 +1,9 @@
 import axios, { AxiosError } from "axios";
 import {
+  gymBookData,
+  GymChartsData,
   GymProfileData,
+  GymResidentBookingData,
   gymServiceData,
   showAllGymData,
 } from "../../types/gym/gym-types";
@@ -126,6 +129,65 @@ export async function fetchAllGym(
     const errorMessage =
       axiosError.response?.data?.message || "Failed to fetch gyms";
     toast.error(errorMessage);
+    throw error;
+  }
+}
+// booking for resident
+export async function getGymResidnetBooking(residentId: string): Promise<GymResidentBookingData[]> {
+  try {
+    const response = await axiosInstance.get(`GymBooking/resident/${residentId}`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message || "Fetched failed";
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
+}
+// cancel book
+export async function cancelGymBook(bookingId: number) {
+   try {
+    const response = await axiosInstance.put(`GymBooking/cancel/${bookingId}`);
+    toast.success(response.data.message || "Book Canceled successfully");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "canceled failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// booking y status for gym
+export async function getGymAdminBooking(gymId: string , status: number): Promise<gymBookData[]> {
+  try {
+    const response = await axiosInstance.get(`GymBooking/gym/${gymId}/status/${status}`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message || "Fetched failed";
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
+}
+// charts
+export async function fetchChartsGymData(gymId :string) : Promise<GymChartsData> {
+    try{
+    const response = await axiosInstance.get(`GymBooking/Charts/${gymId}`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
     throw error;
   }
 }

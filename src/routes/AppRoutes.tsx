@@ -41,6 +41,7 @@ const AdminViewDetails = lazy(() => import ("../components/admin/AdminViewDetail
 const GymDashboard = lazy(() => import ("../components/serviceDashboards/GymDashboard"));
 const GymProfile = lazy(() => import ("../components/gym/GymProfile"));
 const GymServicesPage = lazy(() => import ("../components/gym/GymServicePage"));
+const GymHomeDashboard = lazy(() => import ("../components/gym/GymHomeDashboard"));
 
 export default function AppRoutes() {
   return (
@@ -110,8 +111,8 @@ export default function AppRoutes() {
         <Route element={<ProtectedRoute allowedRoles={["Gym"]} />}>
         {/* Doctor layout */}
         <Route path="/gym" element={<GymDashboard />}>
-          <Route index element={<Navigate to="manage-dashboard" replace />} />
-          <Route path="manage-dashboard" element={<DoctorHomeDashboard />} />
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<GymHomeDashboard />} />
           <Route path="services" element={<GymServicesPage />} />
           <Route path="profile" element={<GymProfile />} />
           <Route path="reviews" element={<ServiceProviderReviews />} />

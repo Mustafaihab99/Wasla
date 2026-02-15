@@ -35,3 +35,44 @@ export interface showAllGymData{
     rating: number,
     imageUrl: string
 }
+export interface GymResidentBookingData{
+    bookingId: number,
+    gymName: string,
+    imageUrl: string,
+    bookingTime: string,
+    durationInMonths: 2,
+    serviceName: {
+        english: string,
+        arabic: string
+    },
+    bookingStatus: number
+}
+export interface GymChartsData{
+    numberOfBookings: number,
+    numberOfTrainees: number,
+    totalAmount: number,
+    years: [
+      {
+        year: number,
+        months: [
+          {
+            month: number,
+            amount: number
+          }
+        ]
+      }
+    ]
+}
+export interface gymBookData{
+    bookingId: number,
+    name: string,
+    imageUrl: string,
+    bookingTime: string,
+    durationInMonths:number,
+    serviceName: {
+        english: string,
+        arabic: string
+    },
+    price: number,
+    bookingStatus: number
+}

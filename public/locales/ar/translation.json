@@ -301,6 +301,8 @@
     "noFavourites": "لم يتم الاضافة الى المفضله بعد",
     "myFavourites": "المفضلة",
     "gyms": "كل الجيمات",
+    "doctors": "كل حجوزات الدكاترة",
+    "gymsb": "كل حجوزات الجيم",
     "Prev": "السابق",
     "Next": "التالى"
   },
@@ -555,6 +557,24 @@
     "gymserv": "خدمات الجيم",
     "mo": "شهر",
     "aboutGym": "حول الجيم",
-    "Gallery": "المعرض"
+    "Gallery": "المعرض",
+    "active": "نشط",
+    "bookingsList": "قائمة الاشتراكات",
+    "completed": "المكتملة",
+    "canceled": "الملغية",
+    "noBookings": "لا توجد حجوزات",
+    "user": "الاسم",
+    "service": "الخدمة",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "duration": "المدة",
+    "months": "شهر",
+    "price": "السعر",
+    "EGP": "جنيه",
+    "cancelBooking": "إلغاء الاشتراك",
+    "canceling": "جاري الإلغاء...",
+    "bookings" : "عدد الاشتراكات",
+    "trainees" : "المتدربين",
+    "totalRevenue" : "مجموع الايرادات"
   }
 }
