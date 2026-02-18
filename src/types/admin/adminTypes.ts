@@ -51,6 +51,13 @@ export interface DoctorDetails {
   description: string;
   cv: string;
 }
+export interface GymDetails{
+      businessName: string,
+      email: string,
+      description: string,
+      phones: string[],
+      images: string[]
+}
 export type UserDetailsData =
   | {
       role: "resident";
@@ -61,7 +68,13 @@ export type UserDetailsData =
       role: "doctor";
       userBase: UserBase;
       details: DoctorDetails;
-    };
+    }
+  | {
+      role: "Gym";
+      userBase: UserBase;
+      details: GymDetails;
+    }  
+    ;
 export interface GetUserDetailsResponse {
   success: boolean;
   message: string;

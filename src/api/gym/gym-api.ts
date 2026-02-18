@@ -5,6 +5,7 @@ import {
   GymProfileData,
   GymResidentBookingData,
   gymServiceData,
+  memberData,
   showAllGymData,
 } from "../../types/gym/gym-types";
 import axiosInstance from "../axios-instance";
@@ -184,6 +185,36 @@ export async function fetchChartsGymData(gymId :string) : Promise<GymChartsData>
     catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
+}
+// book with gym
+export async function bookGymService(gymId : string , serviceId : number , residentId: string) {
+  try {
+    const response = await axiosInstance.post("GymBooking/book" , {
+      gymId , serviceId , residentId
+    });
+    toast.success(response.data.message || "Gym Service Booked successfully!");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "Booked failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// get members
+export async function getGymServiceMembers(serviceId: string): Promise<memberData[]> {
+  try {
+    const response = await axiosInstance.get(`GymBooking/GetMembers/${serviceId}`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message || "Fetched failed";
       toast.error(message);
     } else {
       toast.error("Unexpected error occurred");

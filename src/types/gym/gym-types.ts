@@ -76,3 +76,9 @@ export interface gymBookData{
     price: number,
     bookingStatus: number
 }
+export interface memberData{
+    name: string,
+    email: string,
+    phone: string,
+    image: string
+}

@@ -459,6 +459,7 @@
     "totalUsers": "Total Users",
     "currole": "Current role",
     "% of total": "% of total",
+    "gymDetails": "Gym Details",
     "await": "Awaiting approval",
     "disabled": "Temporarily disabled",
     "filter": "Filter by Role",
@@ -575,6 +576,12 @@
     "canceling": "canceling...",
     "bookings" : "no of Bookings",
     "trainees" : "Trainees",
-    "totalRevenue" : "Total Revenue"
+    "totalRevenue" : "Total Revenue",
+    "bookingSuccess": "Booking Confirmed!",
+    "qrInstruction": "Please show this QR code at the gym reception to activate your subscription. You can download it for later use.",
+    "downloadQR": "Download QR",
+    "close": "Close",
+    "loading": "Processing...",
+    "membersByService" : "Members By Service"
   }
 }

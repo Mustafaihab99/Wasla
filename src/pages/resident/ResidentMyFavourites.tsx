@@ -47,7 +47,13 @@ export default function ResidentMyFavourites() {
               style={{direction:"ltr"}}
               whileHover={{ scale: 1.03, y: -3 }}
               className="relative flex flex-col sm:flex-row p-6 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg transition-all cursor-pointer"
-              onClick={()=> navigate(`/resident/service/doctors/${fav.serviceProviderId}`) }
+              onClick={()=>
+                fav.serviceProviderType === "Doctor" ?
+                navigate(`/resident/service/doctors/${fav.serviceProviderId}`)
+                :
+                navigate(`/resident/service/gyms/${fav.serviceProviderId}`
+                )
+                 }
               >
               {/* Remove Button */}
               <button
@@ -62,6 +68,10 @@ export default function ResidentMyFavourites() {
               <div className="flex-shrink-0">
                 <img
                   src={
+                    fav.serviceProviderType === 'Gym' ? 
+                    import.meta.env.VITE_GYM_IMAGE +
+                    fav.serviceProviderProfilePhoto
+                    :
                     import.meta.env.VITE_USER_IMAGE +
                     fav.serviceProviderProfilePhoto
                   }

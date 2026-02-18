@@ -13,7 +13,7 @@ export default function GymWelcomeScreen() {
     const timer = setTimeout(() => {
       setVisible(false);
       setTimeout(() => {
-        navigate("/gym/manage-dashboard");
+        navigate("/gym/dashboard");
       }, 600);
     }, 5000);
 

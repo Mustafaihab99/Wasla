@@ -159,6 +159,64 @@ export default function AdminManageUsers() {
         </div>
       </motion.div>
 
+<div className="bg-card border border-border rounded-xl p-4 md:p-5">
+        <div className="flex items-center justify-between mb-3 md:mb-4">
+          <div className="flex items-center gap-2 md:gap-3">
+            <FaFilter className="text-primary text-base md:text-lg" />
+            <h3 className="font-semibold text-foreground text-base md:text-lg">
+              {t("admin.filter")}
+            </h3>
+          </div>
+          {isLoading && (
+            <div className="flex items-center gap-2 text-sm text-primary">
+              <FaSpinner className="animate-spin text-xs md:text-sm" />
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-wrap gap-2 md:gap-3">
+          {rolesLoading ? (
+            <div className="flex gap-2 md:gap-3">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="h-10 md:h-12 w-20 md:w-32 rounded-xl bg-muted animate-pulse"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2 md:gap-3">
+              {roles?.map((r: roleData) => {
+                const active = role?.roleName === r.roleName;
+                
+                return (
+                  r.roleName === "admin" || r.roleName === "مشرف" ? 
+                  <></>
+                  :    
+                  <button
+                    key={r.id}
+                    onClick={() => handleRoleChange(r)}
+                    className={`px-4 md:px-6 py-2 md:py-3 rounded-xl font-medium transition-all duration-300 border flex items-center gap-2 md:gap-3 text-sm md:text-base
+                      ${active 
+                        ? "border-primary bg-primary text-white shadow-lg" 
+                        : "border-border text-foreground hover:border-primary/50 hover:bg-primary/5"
+                      }`}
+                    disabled={isLoading}
+                  >
+                    <span className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${active ? "bg-white" : "bg-primary"}`} />
+                    {r.roleName}
+                    {active && isLoading && (
+                      <FaSpinner className="animate-spin text-xs md:text-sm ml-1" />
+                    )}
+                  </button>
+              
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+      
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <div className="bg-card border border-border rounded-xl p-3 md:p-5">
           <div className="flex items-center justify-between">
@@ -218,64 +276,6 @@ export default function AdminManageUsers() {
           <div className="text-xs text-red-600/70 mt-1 md:mt-2">
             {t("admin.disabled")}
           </div>
-        </div>
-      </div>
-
-      <div className="bg-card border border-border rounded-xl p-4 md:p-5">
-        <div className="flex items-center justify-between mb-3 md:mb-4">
-          <div className="flex items-center gap-2 md:gap-3">
-            <FaFilter className="text-primary text-base md:text-lg" />
-            <h3 className="font-semibold text-foreground text-base md:text-lg">
-              {t("admin.filter")}
-            </h3>
-          </div>
-          {isLoading && (
-            <div className="flex items-center gap-2 text-sm text-primary">
-              <FaSpinner className="animate-spin text-xs md:text-sm" />
-            </div>
-          )}
-        </div>
-
-        <div className="flex flex-wrap gap-2 md:gap-3">
-          {rolesLoading ? (
-            <div className="flex gap-2 md:gap-3">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="h-10 md:h-12 w-20 md:w-32 rounded-xl bg-muted animate-pulse"
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-wrap gap-2 md:gap-3">
-              {roles?.map((r: roleData) => {
-                const active = role?.roleName === r.roleName;
-                
-                return (
-                  r.roleName === "admin" || r.roleName === "مشرف" ? 
-                  <></>
-                  :    
-                  <button
-                    key={r.id}
-                    onClick={() => handleRoleChange(r)}
-                    className={`px-4 md:px-6 py-2 md:py-3 rounded-xl font-medium transition-all duration-300 border flex items-center gap-2 md:gap-3 text-sm md:text-base
-                      ${active 
-                        ? "border-primary bg-primary text-white shadow-lg" 
-                        : "border-border text-foreground hover:border-primary/50 hover:bg-primary/5"
-                      }`}
-                    disabled={isLoading}
-                  >
-                    <span className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full ${active ? "bg-white" : "bg-primary"}`} />
-                    {r.roleName}
-                    {active && isLoading && (
-                      <FaSpinner className="animate-spin text-xs md:text-sm ml-1" />
-                    )}
-                  </button>
-              
-                );
-              })}
-            </div>
-          )}
         </div>
       </div>
 

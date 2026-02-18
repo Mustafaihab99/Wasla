@@ -40,6 +40,7 @@ const AdminViewDetails = lazy(() => import ("../components/admin/AdminViewDetail
 // gym dashboard
 const GymDashboard = lazy(() => import ("../components/serviceDashboards/GymDashboard"));
 const GymProfile = lazy(() => import ("../components/gym/GymProfile"));
+const GymMembers = lazy(() => import ("../components/gym/GymMembers"));
 const GymServicesPage = lazy(() => import ("../components/gym/GymServicePage"));
 const GymHomeDashboard = lazy(() => import ("../components/gym/GymHomeDashboard"));
 
@@ -115,6 +116,7 @@ export default function AppRoutes() {
           <Route path="dashboard" element={<GymHomeDashboard />} />
           <Route path="services" element={<GymServicesPage />} />
           <Route path="profile" element={<GymProfile />} />
+          <Route path="members" element={<GymMembers />} />
           <Route path="reviews" element={<ServiceProviderReviews />} />
         </Route>
       </Route> 

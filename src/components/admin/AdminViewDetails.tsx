@@ -6,11 +6,12 @@ import {
   FaPhone,
   FaBirthdayCake,
   FaIdCard,
-  FaUniversity,
-  FaHospital,
   FaFileAlt,
   FaArrowLeft,
   FaSpinner,
+  FaEnvelope,
+  FaBuilding,
+  FaImages,
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
@@ -49,12 +50,16 @@ export default function AdminViewDetails() {
       >
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="flex items-center gap-5">
-            {/* Profile Image */}
             <div className="relative">
               <div className="w-28 h-28 rounded-2xl overflow-hidden border-4 border-primary/20 shadow-lg">
                 {userBase.profilePhoto ? (
                   <img
-                    src={import.meta.env.VITE_USER_IMAGE + userBase.profilePhoto}
+                    src={
+                      role === "Gym" ?
+                      import.meta.env.VITE_GYM_IMAGE + userBase.profilePhoto
+                      :
+                      import.meta.env.VITE_USER_IMAGE + userBase.profilePhoto
+                    }
                     alt="profile"
                     className="w-full h-full object-cover"
                   />
@@ -65,7 +70,6 @@ export default function AdminViewDetails() {
                 )}
               </div>
 
-              {/* Role badge */}
               <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold bg-primary text-white shadow">
                 {role.toUpperCase()}
               </span>
@@ -91,6 +95,10 @@ export default function AdminViewDetails() {
         </div>
       </motion.div>
 
+      {/* ================= Basic Info ================= */}
+      {
+        role === "Gym" ? <></>
+        :
       <div className="bg-card border border-border rounded-xl p-6">
         <h3 className="font-semibold text-lg mb-4">
           {t("admin.basicInfo")}
@@ -117,14 +125,11 @@ export default function AdminViewDetails() {
           />
         </div>
       </div>
+    }
 
       {/* ================= Resident Details ================= */}
       {role === "resident" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-card border border-border rounded-xl p-6"
-        >
+        <motion.div className="bg-card border border-border rounded-xl p-6">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <FaIdCard className="text-primary" />
             {t("admin.resDet")}
@@ -139,11 +144,7 @@ export default function AdminViewDetails() {
 
       {/* ================= Doctor Details ================= */}
       {role === "doctor" && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="bg-card border border-border rounded-xl p-6 space-y-6"
-        >
+        <motion.div className="bg-card border border-border rounded-xl p-6 space-y-6">
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <FaUser className="text-primary" />
             {t("admin.docDet")}
@@ -160,21 +161,11 @@ export default function AdminViewDetails() {
             />
             <InfoRow
               label={t("profile.doctor.University")}
-              value={
-                <span className="flex items-center gap-2">
-                  <FaUniversity className="text-primary" />
-                  {details.universityName}
-                </span>
-              }
+              value={details.universityName}
             />
             <InfoRow
               label={t("profile.doctor.hos")}
-              value={
-                <span className="flex items-center gap-2">
-                  <FaHospital className="text-primary" />
-                  {details.hospitalName}
-                </span>
-              }
+              value={details.hospitalName}
             />
           </div>
 
@@ -182,28 +173,102 @@ export default function AdminViewDetails() {
             <p className="text-sm text-muted-foreground mb-2">
               {t("profile.doctor.Description")}
             </p>
-            <p className="text-foreground bg-muted/30 p-4 rounded-lg leading-relaxed">
+            <p className="text-foreground bg-muted/30 p-4 rounded-lg">
               {details.description || "—"}
             </p>
           </div>
 
+          {details.cv && (
+            <a
+              href={import.meta.env.VITE_DOCTOR_CV + details.cv}
+              target="_blank"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition"
+            >
+              <FaFileAlt />
+              {t("doctor.ViewCV")}
+            </a>
+          )}
+        </motion.div>
+      )}
+
+      {/* ================= Gym Details ================= */}
+      {role === "Gym" && (
+        <motion.div className="bg-card border border-border rounded-xl p-6 space-y-6">
+          <h3 className="text-lg font-semibold flex items-center gap-2">
+            <FaBuilding className="text-primary" />
+            {t("admin.gymDetails")}
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <InfoRow
+              label={t("profile.gym.businessName")}
+              value={
+                <span className="flex items-center gap-2">
+                  <FaBuilding className="text-primary" />
+                  {details.businessName}
+                </span>
+              }
+            />
+
+            <InfoRow
+              label={t("login.Email")}
+              value={
+                <span className="flex items-center gap-2">
+                  <FaEnvelope className="text-primary" />
+                  {details.email}
+                </span>
+              }
+            />
+          </div>
+
+          {/* Phones */}
+          {details.phones?.length > 0 && (
+            <div>
+              <p className="text-sm text-muted-foreground mb-2">
+                {t("gym.phones")}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {details.phones.map((phone: string, idx: number) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 rounded-lg bg-muted text-sm"
+                  >
+                    {phone}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Description */}
           <div>
             <p className="text-sm text-muted-foreground mb-2">
-              {t("admin.CV")}
+              {t("gym.description")}
             </p>
-            {details.cv ? (
-              <a
-                href={import.meta.env.VITE_DOCTOR_CV + details.cv}
-                target="_blank"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition"
-              >
-                <FaFileAlt />
-                {t("doctor.ViewCV")}
-              </a>
-            ) : (
-              "N/A"
-            )}
+            <p className="bg-muted/30 p-4 rounded-lg">
+              {details.description || "—"}
+            </p>
           </div>
+
+          {/* Images */}
+          {details.images?.length > 0 && (
+            <div>
+              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
+                <FaImages className="text-primary" />
+                {t("gym.gallery")}
+              </p>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {details.images.map((img: string, idx: number) => (
+                  <img
+                    key={idx}
+                    src={import.meta.env.VITE_GYM_IMAGE + img}
+                    className="h-28 w-full object-cover rounded-lg border"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </motion.div>
       )}
     </div>
