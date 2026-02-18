@@ -7,22 +7,21 @@ interface Props {
 
 export default function BookingQRModal({ qrImage, onClose }: Props) {
   const { t } = useTranslation();
-  const imageUrl = import.meta.env.VITE_GYM_IMAGE + qrImage;
 
-  const downloadImage = async () => {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
+  const fullImageUrl = import.meta.env.VITE_QR_IMAGE + qrImage;
 
+  const downloadImage = () => {
     const link = document.createElement("a");
-    link.href = url;
+    link.href = fullImageUrl;
     link.download = "gym-booking-qr.png";
+    document.body.appendChild(link);
     link.click();
+    link.remove();
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" 
-    style={{marginTop : 0}}>
+         style={{ marginTop: 0 }}>
       <div className="bg-background rounded-2xl p-6 w-[90%] max-w-md text-center space-y-4 shadow-lg">
         <h2 className="text-xl font-bold text-primary">
           {t("gym.bookingSuccess")}
@@ -33,7 +32,7 @@ export default function BookingQRModal({ qrImage, onClose }: Props) {
         </p>
 
         <img
-          src={import.meta.env.VITE_QR_IMAGE + imageUrl}
+          src={fullImageUrl}
           alt="QR Code"
           className="w-56 h-56 mx-auto border rounded-xl"
         />
