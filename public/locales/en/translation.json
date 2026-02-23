@@ -304,7 +304,9 @@
     "Prev": "Prev",
     "doctors": "All Doctors Books",
     "gymsb": "All Gyms Books",
-    "Next": "Next"
+    "Next": "Next",
+    "recommend" : "Recommend For You",
+    "viewProfile" : "View Profile"
   },
   "doctor": {
     "ViewCV": "View CV",

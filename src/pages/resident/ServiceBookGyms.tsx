@@ -49,13 +49,13 @@ export default function ServiceBookGyms() {
               <div
                 key={gym.id}
                 className="
-              group flex flex-col
-              rounded-2xl border border-border
-              bg-background
-              shadow-sm hover:shadow-xl
-              transition-all duration-300
-              overflow-hidden
-            ">
+        group flex flex-col
+        rounded-2xl border border-border
+        bg-background
+        shadow-sm hover:shadow-xl
+        transition-all duration-300
+        overflow-hidden
+      ">
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -82,7 +82,9 @@ export default function ServiceBookGyms() {
                     />
                   </button>
                 </div>
-                <div className="p-4 flex flex-col flex-1 justify-between">
+
+                {/* CONTENT */}
+                <div className="p-4 flex flex-col flex-1">
                   <div>
                     <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition">
                       {gym.name}
@@ -97,6 +99,7 @@ export default function ServiceBookGyms() {
                     </div>
                   </div>
 
+                  {/* BUTTON — دايمًا تحت */}
                   <button
                     onClick={() => {
                       createEvent.mutate(
@@ -116,12 +119,12 @@ export default function ServiceBookGyms() {
                       );
                     }}
                     className="
-                  mt-4 w-full py-2
-                  bg-primary text-white
-                  rounded-lg font-medium
-                  hover:bg-primary/90
-                  transition
-                ">
+            mt-auto w-full py-2
+            bg-primary text-white
+            rounded-lg font-medium
+            hover:bg-primary/90
+            transition
+          ">
                     {t("resident.ViewDetails")}
                   </button>
                 </div>

@@ -1,22 +1,19 @@
-import { motion } from "framer-motion";
-import { FaStethoscope, FaTools, FaTaxi, FaSearch } from "react-icons/fa";
-import { IoRestaurant } from "react-icons/io5";
-import { MdFitnessCenter } from "react-icons/md";
-import ResidentGallery from "./ResidentGallery";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import healthTips from "../../utils/Tips";
-import skin from "../../assets/images/detrmonlogy.jpg";
-import fit from "../../assets/images/fitness.jpg";
-import plumber from "../../assets/images/plumber.jpg";
+import { FaStethoscope, FaTools, FaTaxi, FaSearch } from "react-icons/fa";
+import { IoRestaurant } from "react-icons/io5";
+import { MdFitnessCenter } from "react-icons/md";
 import ResidentActivitySection from "./ResidentActivitySection";
+import healthTips from "../../utils/Tips";
+import community from "../../assets/images/collprate.jpg";
+import ContactSection from "../landing/ContactSection";
 
 export default function ResidentHome() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [tip, setTip] = useState("");
-  const userId = sessionStorage.getItem('user_id');
+  const userId = sessionStorage.getItem("user_id");
 
   useEffect(() => {
     const randomTip = healthTips[Math.floor(Math.random() * healthTips.length)];
@@ -28,147 +25,106 @@ export default function ResidentHome() {
       title: t("resident.doctor"),
       icon: <FaStethoscope />,
       link: "/resident/service/doctors",
-      color: "from-primary to-indigo-500",
     },
     {
       title: t("resident.rest"),
       icon: <IoRestaurant />,
       link: "/resident/service/restaurants",
-      color: "from-rose-400 to-rose-600",
     },
     {
       title: t("resident.technical"),
       icon: <FaTools />,
       link: "/resident/service/technicans",
-      color: "from-amber-400 to-amber-600",
     },
     {
       title: t("resident.gym"),
       icon: <MdFitnessCenter />,
       link: "/resident/service/gyms",
-      color: "from-emerald-400 to-emerald-600",
     },
     {
       title: t("resident.driver"),
       icon: <FaTaxi />,
       link: "/resident/service/drivers",
-      color: "from-indigo-400 to-indigo-600",
     },
-  ];
-
-  const popularCategories = [
-    { txt: t("resident.Dermatology"), img: skin },
-    { txt: t("resident.technican"), img: plumber },
-    { txt: t("resident.Fitness"), img: fit },
   ];
 
   return (
     <div className="pt-24 px-4 lg:px-20 space-y-16">
-      {/* HERO */}
-      <section className="relative text-center">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent">
-          {t("resident.welcome")}
-        </motion.h1>
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/20 via-indigo-500/10 to-purple-500/10 p-10 md:p-16">
+        <div className="absolute -top-20 -right-20 w-72 h-72 bg-primary/30 rounded-full blur-3xl opacity-40"></div>
+        <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-indigo-500/30 rounded-full blur-3xl opacity-40"></div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-muted text-lg md:text-xl mt-4 max-w-2xl mx-auto">
-          {t("resident.allhome")}
-        </motion.p>
+        <div className="relative z-10 grid md:grid-cols-2 gap-10 items-center">
+          <div className="space-y-6">
+            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
+              {t("resident.welcome")} 👋
+            </h1>
 
-        {/* Search */}
-        <div 
-        onClick={() => navigate("/resident/service")}
-        className="max-w-xl mx-auto flex items-center hover:cursor-pointer backdrop-blur-md border border-dried rounded-full p-4 mt-8 shadow-xl hover:shadow-2xl transition-all duration-300">
-          <input
-            type="text"
-            placeholder={t("resident.look")}
-            className="flex-1 bg-transparent outline-none text-foreground font-medium text-base md:text-lg"
-          />
-          <button className="ml-3 py-2 rounded-full text-primary font-semibold hover:bg-primary/90 transition">
-            <FaSearch />
-          </button>
-        </div>
-      </section>
+            <p className="text-lg text-muted max-w-md">
+              {t("resident.allhome")}
+            </p>
 
-      {/* Gallery */}
-      <ResidentGallery />
-
-      {/* Services Section */}
-      <section>
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-3xl md:text-4xl font-bold mb-8 text-center">
-          {t("resident.servicesWeOffer")}
-        </motion.h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-          {services.map((s, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ scale: 1.08 }}
-              className={`group relative p-6 rounded-2xl shadow-xl cursor-pointer bg-gradient-to-br hover:from-white/70 hover:to-white/20 transition-all duration-300`}
-              onClick={() => navigate(s.link)}>
-              <div
-                className={`w-16 h-16 mx-auto flex items-center justify-center rounded-full bg-gradient-to-br ${s.color} text-white text-3xl mb-4 group-hover:scale-110 transition-all duration-300`}>
-                {s.icon}
-              </div>
-              <p className="text-center text-lg font-semibold text-foreground">
-                {s.title}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* activity */}
-      <ResidentActivitySection userId={userId!} />
-      
-      {/* Health Tips */}
-      <section className="relative p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden group cursor-pointer bg-white/10 backdrop-blur-2xl border border-white/20">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-300 via-teal-200 to-green-200 opacity-60 rounded-3xl animate-gradient-x"></div>
-        <div className="absolute -top-4 -right-4 w-20 sm:w-24 h-20 sm:h-24 bg-cyan-300/40 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-6 -left-6 w-28 sm:w-32 h-28 sm:h-32 bg-green-200/30 rounded-full blur-3xl animate-pulse delay-300"></div>
-        <div className="absolute inset-0 bg-black/10 rounded-3xl"></div>
-        <div className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6">
-          <div className="flex items-center gap-2 md:gap-3 mb-4 justify-center">
-            <div className="text-lg md:text-4xl animate-bounce">💡</div>
-            <h3 className="text-lg md:text-4xl font-extrabold text-black drop-shadow-md">
-              {t("resident.tips")}
-            </h3>
-          </div>
-          <p className="text-base sm:text-lg md:text-xl text-gray-800 leading-relaxed max-w-full sm:max-w-xl md:max-w-2xl">
-            {t(tip)}
-          </p>
-        </div>
-      </section>
-
-      {/* Popular Categories */}
-      <section>
-        <h3 className="text-2xl font-bold mb-6">{t("resident.popular")}</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          {popularCategories.map((c, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ scale: 1.05 }}
-              className="relative mb-12 overflow-hidden rounded-2xl shadow-lg cursor-pointer group">
-              <img
-                src={c.img}
-                className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-300"
+            {/* Search */}
+            <div className="flex items-center bg-background backdrop-blur rounded-xl px-4 py-3 shadow-xl border border-white/40">
+              <input
+                type="text"
+                placeholder={t("resident.look")}
+                className="flex-1 bg-transparent outline-none text-base"
+                onFocus={() => navigate("/resident/service")}
               />
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-25 transition-opacity rounded-2xl"></div>
-              <p className="absolute bottom-3 w-full text-center text-white font-bold z-10">
-                {c.txt}
+              <FaSearch className="text-primary text-lg" />
+            </div>
+          </div>
+
+          <div className="relative hidden md:flex justify-center">
+            <div className="relative w-72 h-72 rounded-full overflow-hidden shadow-2xl border border-white/40">
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-indigo-500/20"></div>
+
+              <img
+                src={community}
+                alt="community"
+                className="w-full h-full object-cover scale-110 hover:scale-125 transition duration-700"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="-mt-10 relative z-20">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              onClick={() => navigate(service.link)}
+              className="flex flex-col items-center justify-center p-6 rounded-2xl bg-background shadow-xl hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 cursor-pointer border border-border">
+              <div className="text-4xl text-primary mb-3">{service.icon}</div>
+              <p className="text-sm font-semibold text-center">
+                {service.title}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
+
+      {userId && <ResidentActivitySection userId={userId} />}
+
+      <section className="relative  overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-500/10 via-primary/10 to-purple-500/10 p-8 shadow-xl">
+        <div className="absolute inset-0 backdrop-blur-xl bg-white/10"></div>
+
+        <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
+          <div className="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-2xl shadow-lg animate-pulse">
+            💡
+          </div>
+
+          <div className="flex-1">
+            <h3 className="text-xl font-bold mb-2">{t("resident.tips")}</h3>
+            <p className="text-muted text-sm md:text-base leading-relaxed">
+              {t(tip)}
+            </p>
+          </div>
+        </div>
+      </section>
+      <ContactSection />
     </div>
   );
 }

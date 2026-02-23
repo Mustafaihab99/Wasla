@@ -21,9 +21,8 @@ export default function ResidentActivitySection({ userId }: Props) {
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl md:text-4xl font-bold text-center"
-      >
-        {t("resident.topForYou")}
+        className="text-3xl md:text-4xl font-bold text-center">
+        {t("resident.recommend")}
       </motion.h2>
 
       {isLoading ? (
@@ -31,37 +30,36 @@ export default function ResidentActivitySection({ userId }: Props) {
           {t("resident.loading")}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 items-stretch">
           {activity?.map((item, i) => (
             <motion.div
               key={item.id}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              whileHover={{ scale: 1.05 }}
-              className="group relative rounded-2xl overflow-hidden shadow-xl cursor-pointer bg-white/10 backdrop-blur-xl border border-white/20"
-            >
+              whileHover={{ y: -6 }}
+              className="group rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition bg-background border border-border flex flex-col h-full">
               {/* Image */}
               <div className="h-40 overflow-hidden">
                 <img
-                  src={item.image}
+                  src={import.meta.env.VITE_USER_IMAGE + item.image}
                   alt={item.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                 />
               </div>
 
               {/* Content */}
-              <div className="p-4 space-y-2">
-                <h3 className="font-semibold text-lg line-clamp-1">
+              <div className="p-4 flex flex-col flex-1">
+                <h3 className="font-semibold text-base line-clamp-1 mb-1">
                   {item.name}
                 </h3>
 
-                <p className="text-sm text-muted line-clamp-2">
+                <p className="text-sm text-dried line-clamp-2 mb-3">
                   {item.description}
                 </p>
 
                 {/* Rating */}
-                <div className="flex items-center gap-1 text-yellow-500">
+                <div className="flex items-center gap-1 text-yellow-500 mb-4">
                   <FaStar />
                   <span className="text-sm font-medium">
                     {item.rating.toFixed(1)}
@@ -70,11 +68,8 @@ export default function ResidentActivitySection({ userId }: Props) {
 
                 {/* Button */}
                 <button
-                  onClick={() =>
-                    navigate(`/resident/provider/${item.id}`)
-                  }
-                  className="mt-3 w-full py-2 rounded-lg bg-primary text-white font-semibold hover:bg-primary/90 transition"
-                >
+                  onClick={() => navigate(`/resident/provider/${item.id}`)}
+                  className="mt-auto w-full py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition">
                   {t("resident.viewProfile")}
                 </button>
               </div>
