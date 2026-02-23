@@ -4,3 +4,9 @@ export const serviceType = {
     driver : 3,
     gym : 4
 };
+export const UserEvent = {
+    booking : 1,
+    viewDetails : 2,
+    addFav : 3,
+    search : 4
+}

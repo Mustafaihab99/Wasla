@@ -12,15 +12,18 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
+import useCreateEvent from "../../hooks/userEvent/useCreateEvent";
+import { UserEvent } from "../../utils/enum";
 
 export default function ServiceBookDoctor() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedSpec, setSelectedSpec] = useState(0);
+  const createEvent = useCreateEvent();
 
   const { data: specs } = useDoctorSpecialezed();
   const { data: doctors, isLoading } = useGetDoctorToResident(
-    selectedSpec.toString()
+    selectedSpec.toString(),
   );
   const residentId = sessionStorage.getItem("user_id")!;
   const { data: favourites = [] } = useGetFavourites(residentId);
@@ -30,7 +33,7 @@ export default function ServiceBookDoctor() {
 
   const isFav = (doctorId: string) =>
     favourites.find(
-      (f: { serviceProviderId: string }) => f.serviceProviderId === doctorId
+      (f: { serviceProviderId: string }) => f.serviceProviderId === doctorId,
     );
 
   return (
@@ -134,7 +137,23 @@ export default function ServiceBookDoctor() {
 
                 <button
                   className="mt-4 w-full px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition text-sm sm:text-base"
-                  onClick={() => navigate(`${doc.id}`)}>
+                  onClick={() => {
+                    createEvent.mutate(
+                      {
+                        userId: residentId,
+                        serviceProviderId: doc.id,
+                        eventType: UserEvent.viewDetails,
+                      },
+                      {
+                        onSuccess: () => {
+                          navigate(`${doc.id}`);
+                        },
+                        onError: () => {
+                          navigate(`${doc.id}`); 
+                        },
+                      },
+                    );
+                  }}>
                   {t("resident.ViewDetails")}
                 </button>
               </div>

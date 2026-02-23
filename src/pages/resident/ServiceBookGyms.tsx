@@ -8,11 +8,13 @@ import { useAddToFavourite } from "../../hooks/resident/favourites/useAddToFavou
 import { useRemoveFavourite } from "../../hooks/resident/favourites/useRemoveFavourite";
 import noData from "../../assets/images/nodata.webp";
 import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
+import useCreateEvent from "../../hooks/userEvent/useCreateEvent";
+import { UserEvent } from "../../utils/enum";
 
 export default function ServiceBookGyms() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
+  const createEvent = useCreateEvent();
   // Pagination
   const [page, setPage] = useState(1);
   const pageSize = 6;
@@ -34,17 +36,14 @@ export default function ServiceBookGyms() {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
-      <h2 className="text-2xl font-bold mb-6">
-        {t("resident.gyms")}
-      </h2>
+      <h2 className="text-2xl font-bold mb-6">{t("resident.gyms")}</h2>
       {isLoading ? (
-         <DoctorCardSkeleton />
+        <DoctorCardSkeleton />
       ) : data?.data?.length ? (
         <>
           {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative">
-            {isFetching && ( <DoctorCardSkeleton />
-            )}
+            {isFetching && <DoctorCardSkeleton />}
 
             {data.data.map((gym) => (
               <div
@@ -99,7 +98,23 @@ export default function ServiceBookGyms() {
                   </div>
 
                   <button
-                    onClick={() => navigate(`${gym.id}`)}
+                    onClick={() => {
+                      createEvent.mutate(
+                        {
+                          userId: residentId,
+                          serviceProviderId: gym.id,
+                          eventType: UserEvent.viewDetails,
+                        },
+                        {
+                          onSuccess: () => {
+                            navigate(`${gym.id}`);
+                          },
+                          onError: () => {
+                            navigate(`${gym.id}`);
+                          },
+                        },
+                      );
+                    }}
                     className="
                   mt-4 w-full py-2
                   bg-primary text-white

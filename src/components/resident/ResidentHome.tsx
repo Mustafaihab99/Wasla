@@ -10,11 +10,13 @@ import healthTips from "../../utils/Tips";
 import skin from "../../assets/images/detrmonlogy.jpg";
 import fit from "../../assets/images/fitness.jpg";
 import plumber from "../../assets/images/plumber.jpg";
+import ResidentActivitySection from "./ResidentActivitySection";
 
 export default function ResidentHome() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [tip, setTip] = useState("");
+  const userId = sessionStorage.getItem('user_id');
 
   useEffect(() => {
     const randomTip = healthTips[Math.floor(Math.random() * healthTips.length)];
@@ -124,6 +126,9 @@ export default function ResidentHome() {
         </div>
       </section>
 
+      {/* activity */}
+      <ResidentActivitySection userId={userId!} />
+      
       {/* Health Tips */}
       <section className="relative p-6 sm:p-8 rounded-3xl shadow-2xl overflow-hidden group cursor-pointer bg-white/10 backdrop-blur-2xl border border-white/20">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-300 via-teal-200 to-green-200 opacity-60 rounded-3xl animate-gradient-x"></div>
