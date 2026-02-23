@@ -14,7 +14,7 @@ export default function MainDashboard() {
     doctor: DoctorWelcomeScreen,
     resident: ResidentDashboard,
     admin: AdminWelcomeScreen,
-    Gym : GymWelcomeScreen,
+    gym : GymWelcomeScreen,
     // restaurant: RestaurantDashboard,
     // technician: TechnicianDashboard,
   };

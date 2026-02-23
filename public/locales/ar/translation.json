@@ -582,6 +582,7 @@
     "downloadQR": "تحميل الكود",
     "close": "إغلاق",
     "loading": "جارٍ التنفيذ...",
-    "membersByService" : "الاعضاء لكل خدمه"
+    "membersByService" : "الاعضاء لكل خدمه",
+    "noMembers" : "ليس هناك اعضاء حتى الان"
   }
 }

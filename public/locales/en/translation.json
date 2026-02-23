@@ -582,6 +582,7 @@
     "downloadQR": "Download QR",
     "close": "Close",
     "loading": "Processing...",
-    "membersByService" : "Members By Service"
+    "membersByService" : "Members By Service",
+    "noMembers" : "No Members yet"
   }
 }

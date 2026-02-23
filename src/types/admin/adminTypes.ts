@@ -70,7 +70,7 @@ export type UserDetailsData =
       details: DoctorDetails;
     }
   | {
-      role: "Gym";
+      role: "gym";
       userBase: UserBase;
       details: GymDetails;
     }  

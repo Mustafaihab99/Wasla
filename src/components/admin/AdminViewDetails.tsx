@@ -55,7 +55,7 @@ export default function AdminViewDetails() {
                 {userBase.profilePhoto ? (
                   <img
                     src={
-                      role === "Gym" ?
+                      role === "gym" ?
                       import.meta.env.VITE_GYM_IMAGE + userBase.profilePhoto
                       :
                       import.meta.env.VITE_USER_IMAGE + userBase.profilePhoto
@@ -97,7 +97,7 @@ export default function AdminViewDetails() {
 
       {/* ================= Basic Info ================= */}
       {
-        role === "Gym" ? <></>
+        role === "gym" ? <></>
         :
       <div className="bg-card border border-border rounded-xl p-6">
         <h3 className="font-semibold text-lg mb-4">
@@ -192,7 +192,7 @@ export default function AdminViewDetails() {
       )}
 
       {/* ================= Gym Details ================= */}
-      {role === "Gym" && (
+      {role === "gym" && (
         <motion.div className="bg-card border border-border rounded-xl p-6 space-y-6">
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <FaBuilding className="text-primary" />

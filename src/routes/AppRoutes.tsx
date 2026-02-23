@@ -109,7 +109,7 @@ export default function AppRoutes() {
         {/* end admin Dashboard */}
 
         {/* gym Dashboard */}
-        <Route element={<ProtectedRoute allowedRoles={["Gym"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["gym"]} />}>
         {/* Doctor layout */}
         <Route path="/gym" element={<GymDashboard />}>
           <Route index element={<Navigate to="dashboard" replace />} />
