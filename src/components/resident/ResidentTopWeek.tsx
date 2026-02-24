@@ -1,18 +1,14 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import useGetUserActivity from "../../hooks/userEvent/useGetUserActivity";
+import useGetTopWeek from "../../hooks/userEvent/useGetTopWeek";
 import { FaStar } from "react-icons/fa";
 
-interface Props {
-  userId: string;
-}
-
-export default function ResidentActivitySection({ userId }: Props) {
+export default function ResidentTopWeek() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { data: activity, isLoading } = useGetUserActivity(userId);
+  const { data: activity, isLoading } = useGetTopWeek();
 
   if (!isLoading && (!activity || activity.length === 0)) return null;
 
@@ -22,7 +18,7 @@ export default function ResidentActivitySection({ userId }: Props) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-3xl md:text-4xl font-bold text-center">
-        {t("resident.recommend")}
+        {t("resident.topWeek")}
       </motion.h2>
 
       {isLoading ? (
@@ -30,7 +26,7 @@ export default function ResidentActivitySection({ userId }: Props) {
           {t("resident.loading")}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
           {activity?.map((item, i) => (
             <motion.div
               key={item.id}

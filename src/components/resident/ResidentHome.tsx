@@ -8,6 +8,7 @@ import ResidentActivitySection from "./ResidentActivitySection";
 import healthTips from "../../utils/Tips";
 import community from "../../assets/images/collprate.jpg";
 import ContactSection from "../landing/ContactSection";
+import ResidentTopWeek from "./ResidentTopWeek";
 
 export default function ResidentHome() {
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ export default function ResidentHome() {
         <div className="relative z-10 grid md:grid-cols-2 gap-10 items-center">
           <div className="space-y-6">
             <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
-              {t("resident.welcome")} 👋
+              {t("resident.welcome")} 
             </h1>
 
             <p className="text-lg text-muted max-w-md">
@@ -107,6 +108,7 @@ export default function ResidentHome() {
       </section>
 
       {userId && <ResidentActivitySection userId={userId} />}
+      {userId && <ResidentTopWeek />}
 
       <section className="relative  overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-500/10 via-primary/10 to-purple-500/10 p-8 shadow-xl">
         <div className="absolute inset-0 backdrop-blur-xl bg-white/10"></div>

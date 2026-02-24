@@ -10,6 +10,7 @@ import { HiDotsVertical } from "react-icons/hi";
 import { RiUserStarFill } from "react-icons/ri";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import i18next from "i18next";
 
 enum UserStatus {
   Active = 0,
@@ -64,7 +65,7 @@ const PAGE_SIZE = 10;
 export default function AdminManageUsers() {
   const [role, setRole] = useState<roleData>({
       id : "930439bf-c727-4ebc-9b5b-f86a61dde13b",
-      roleName : "doctor",
+      roleName : i18next.language === "en" ? "doctor" : "طبيب",
       value: "doctor"
   });
   const [page, setPage] = useState(1);

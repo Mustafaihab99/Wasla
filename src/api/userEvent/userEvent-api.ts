@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import axiosInstance from "../axios-instance";
 import axios, { AxiosError } from "axios";
-import { userActivityData } from "../../types/userEvent/userEvent-typs";
+import { userActivityData, userEventDashboardData } from "../../types/userEvent/userEvent-typs";
 
 export async function createUserEvent (userId : string , serviceProviderId : string , eventType: number) {
   try {
@@ -20,6 +20,36 @@ export async function createUserEvent (userId : string , serviceProviderId : str
 export async function getUserActivity(userId: string): Promise<userActivityData[]> {
   try {
     const response = await axiosInstance.get(`UserEvent/GetTopServiceProviders?userId=${userId}&top=5`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message || "Fetched failed";
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
+}
+
+export async function getTopWeek(): Promise<userActivityData[]> {
+  try {
+    const response = await axiosInstance.get(`UserEvent/GetMostUsedServicesGlobally?top=4`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message || "Fetched failed";
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
+}
+
+export async function getEventDashboard(): Promise<userEventDashboardData> {
+  try {
+    const response = await axiosInstance.get(`UserEvent/GetServiceProviderResponse?top=1`);
     return response.data.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {

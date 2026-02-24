@@ -1,7 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { createUserEvent } from "../../api/userEvent/userEvent-api";
 
 export default function useCreateEvent() {
+  const queryClient = new QueryClient();
   return useMutation({
     mutationKey: ["create-event"],
     mutationFn: ({
@@ -13,5 +14,9 @@ export default function useCreateEvent() {
       serviceProviderId: string;
       eventType: number;
     }) => createUserEvent(userId, serviceProviderId, eventType),
+            onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["events"], exact: false });
+            queryClient.invalidateQueries({ queryKey: ["top-events"], exact: false });
+    },
   });
 }

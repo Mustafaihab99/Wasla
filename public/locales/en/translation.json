@@ -306,7 +306,8 @@
     "gymsb": "All Gyms Books",
     "Next": "Next",
     "recommend" : "Recommend For You",
-    "viewProfile" : "View Profile"
+    "viewProfile" : "View Profile",
+    "topWeek": "Top of the Week"
   },
   "doctor": {
     "ViewCV": "View CV",
@@ -510,7 +511,21 @@
     "resDet": "Resident Details",
     "docDet": "Doctor Details",
     "CV": "CV",
-    "basicInfo": "basic Info"
+    "basicInfo": "basic Info",
+    "serv" : "Services Overview",
+    "serviceDashboard": "Service Providers Overview",
+    "serviceDashboardDesc": "Monitor performance and engagement of service providers",
+    "topBooking": "Top by Bookings",
+    "topViews": "Top by Views",
+    "topFavorites": "Top by Favorites",
+    "conversionStats": "Conversion Statistics",
+    "conversionRate": "Conversion Rate",
+    "views": "Views",
+    "bookings": "Bookings",
+    "role": "Role",
+    "noData": "No data available",
+    "avgConversion": "Avg Conversion",
+    "bestRole": "Best Performing Role"
   },
   "gym": {
     "welcome": "Welcome to your Gym Dashboard",

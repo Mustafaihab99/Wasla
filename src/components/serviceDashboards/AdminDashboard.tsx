@@ -13,6 +13,7 @@ import {
   FaUserShield,
   FaUsers,
 } from "react-icons/fa6";
+import { GrServices } from "react-icons/gr";
 import { MdDashboard, MdReport } from "react-icons/md";
 import logo from "../../assets/images/icons/app-logo.png";
 import { useTranslation } from "react-i18next";
@@ -65,6 +66,11 @@ export default function AdminDashboard() {
       label: t("admin.users"),
       link: "/admin/manage-users",
       icon: <FaUsers />,
+    },
+    {
+      label: t("admin.serv"),
+      link: "/admin/services-overview",
+      icon: <GrServices />,
     },
     {
       label: t("admin.reports"),
