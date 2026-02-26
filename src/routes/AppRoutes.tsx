@@ -25,6 +25,8 @@ const ResidentMyBooking = lazy(() => import ("../pages/resident/ResidentMyBookin
 const ResidentMyFavourites = lazy(() => import ("../pages/resident/ResidentMyFavourites"));
 const ServiceBookGyms = lazy(() => import ("../pages/resident/ServiceBookGyms"));
 const GymViewDetailes = lazy(() => import ("../pages/resident/GymViewDetails"));
+const PaymentSuccessPage = lazy(() => import ("../pages/resident/payments/PaymentSuccessPage"));
+const PaymentFailedPage = lazy(() => import ("../pages/resident/payments/PaymentFailedPage"));
 // doctor dashboard
 const DoctorDashboard = lazy(() => import ("../components/serviceDashboards/DoctorDashboard"));
 const DoctorHomeDashboard = lazy(() => import ("../components/doctor/DoctorHomeDahboard"));
@@ -80,6 +82,8 @@ export default function AppRoutes() {
             <Route path="service/gyms" element={<ServiceBookGyms />} /> 
             <Route path="service/gyms/:gymId" element={<GymViewDetailes />} /> 
           </Route>
+            <Route path="/resident/payment-success" element={<PaymentSuccessPage />} /> 
+            <Route path="/resident/payment-failed" element={<PaymentFailedPage />} /> 
         </Route>  
         {/* end resident Dashboard */}
 

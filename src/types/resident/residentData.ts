@@ -85,3 +85,13 @@ export interface contactUsData{
     email: string,
     message: string
 }
+// payment
+export interface userCreatePaymentData{
+  userId: string,
+  serviceProviderId: string,
+  serviceId: number,
+  amount: number,
+  paymentMethod: number,
+  serviceProviderType: number,
+  bookingId: number
+}

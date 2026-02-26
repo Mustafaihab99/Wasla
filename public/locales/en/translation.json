@@ -601,5 +601,13 @@
     "loading": "Processing...",
     "membersByService" : "Members By Service",
     "noMembers" : "No Members yet"
+  },
+    "payment": {
+    "successTitle": "Payment Successful!",
+    "successMessage": "Your payment has been processed successfully.",
+    "goHome": "Go to Home",
+    "failedTitle": "Payment Failed!",
+    "failedMessage": "There was an error processing your payment. Please try again.",
+    "retry": "Retry Payment"
   }
 }
