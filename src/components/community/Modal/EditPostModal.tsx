@@ -2,13 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import { useEditPost } from "../../../hooks/community/useEditPost";
 import { FaX } from "react-icons/fa6";
 import { FaImage } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 interface EditPostModalProps {
   postId: number;
   initialContent: string;
-  initialFiles: string[];   // existing image URLs from server
+  initialFiles: string[]; 
   currentUserId: string;
-  profileUserId?: string;   // pass when opened from profile page
+  profileUserId?: string;
   onClose: () => void;
 }
 
@@ -20,12 +21,10 @@ export default function EditPostModal({
   onClose,
 }: EditPostModalProps) {
   const [content, setContent] = useState(initialContent);
-
-  // Track new file the user wants to upload
+  const {t} = useTranslation();
   const [newFile, setNewFile] = useState<File | null>(null);
   const [newPreview, setNewPreview] = useState<string | null>(null);
 
-  // Track whether to keep the existing server image
   const [keepExisting, setKeepExisting] = useState(initialFiles.length > 0);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -33,22 +32,18 @@ export default function EditPostModal({
 
   const { mutate: doEdit, isPending } = useEditPost(currentUserId);
 
-  // ── helpers ──────────────────────────────────────────────
   const charLeft = 280 - content.length;
   const isOverLimit = charLeft < 0;
   const canSave = content.trim().length > 0 && !isOverLimit && !isPending;
   const progress = Math.min((content.length / 280) * 100, 100);
 
-  // Which preview to show: new file > existing server image > nothing
   const displayPreview = newPreview
     ? newPreview
     : keepExisting && initialFiles[0]
     ? initialFiles[0]
     : null;
 
-  // ── lifecycle ─────────────────────────────────────────────
   useEffect(() => {
-    // Focus and move cursor to end
     const ta = textareaRef.current;
     if (ta) {
       ta.focus();
@@ -62,13 +57,12 @@ export default function EditPostModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  // ── handlers ──────────────────────────────────────────────
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
     if (!file) return;
     setNewFile(file);
     setNewPreview(URL.createObjectURL(file));
-    setKeepExisting(false); // new file replaces the old one
+    setKeepExisting(false);
   };
 
   const removeImage = () => {
@@ -89,26 +83,18 @@ export default function EditPostModal({
     formData.append("files", newFile);
   }
 
-  if (!keepExisting && !newFile) {
-    formData.append("clearFiles", "true");
-  }
-
   doEdit(formData, { onSuccess: onClose });
 };
 
-  // ── render ────────────────────────────────────────────────
   return (
-    /* Backdrop */
     <div
       className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-start justify-center pt-14 px-4"
       onClick={onClose}
     >
-      {/* Modal card */}
       <div
         className="w-full max-w-[600px] bg-black border border-[#2f3336] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.9)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ── Top bar ── */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#2f3336]">
           <button
             onClick={onClose}
@@ -118,7 +104,7 @@ export default function EditPostModal({
             <FaX className="w-5 h-5" />
           </button>
 
-          <h2 className="text-white font-extrabold text-[17px]">Edit post</h2>
+          <h2 className="text-white font-extrabold text-[17px]">{t("common.editPost")}</h2>
 
           <button
             onClick={handleSave}
@@ -128,9 +114,9 @@ export default function EditPostModal({
             {isPending ? (
               <span className="flex items-center gap-2">
                 <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                Saving…
+                {t("common.Saving…")}
               </span>
-            ) : "Save"}
+            ) : t("common.Save")}
           </button>
         </div>
 
@@ -174,14 +160,11 @@ export default function EditPostModal({
             )}
 
             <div className="h-px bg-[#2f3336]" />
-
-            {/* ── Toolbar ── */}
             <div className="flex items-center justify-between">
-              {/* Image upload */}
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="p-2 text-sky-500 hover:bg-sky-500/10 rounded-full transition"
-                title="Change image"
+                title={t("common.ChangeImage")}
               >
                 <FaImage className="w-5 h-5" />
               </button>

@@ -1,47 +1,20 @@
-import { singlePostData } from "../../types/commuinty/community-types";
-
-interface PostCardProps {
-  post: singlePostData;
-  currentUserId: string;
-}
-
-export default function PostCard({ post }: PostCardProps) {
+export default function PostSkeleton() {
   return (
-    <div className="bg-backgroundSecondary p-4 rounded-2xl shadow-md">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-3">
-        <img
-          src="/assets/images/default-avatar.png"
-          alt="avatar"
-          className="w-10 h-10 rounded-full"
-        />
-        <div>
-          <h4 className="font-semibold text-white">{post.postId}</h4>
-          <span className="text-xs text-white/60">{post.createdAt}</span>
+    <div className="flex gap-3 px-4 py-3 border-b border-[#2f3336] animate-pulse">
+      <div className="w-10 h-10 rounded-full bg-white/10 flex-shrink-0" />
+      <div className="flex-1 space-y-2 pt-1">
+        <div className="flex gap-2">
+          <div className="h-3.5 w-24 bg-white/10 rounded-full" />
+          <div className="h-3.5 w-16 bg-white/10 rounded-full" />
         </div>
-      </div>
-
-      {/* Content */}
-      <p className="text-white mb-3">{post.content}</p>
-
-      {/* Media */}
-      {post.files.length > 0 && (
-        <div className="grid grid-cols-2 gap-2 mb-3">
-          {post.files.map((file, idx) => (
-            <img
-              key={idx}
-              src={file}
-              className="w-full h-40 object-cover rounded-xl"
-            />
+        <div className="h-3.5 w-full bg-white/10 rounded-full" />
+        <div className="h-3.5 w-4/5 bg-white/10 rounded-full" />
+        <div className="h-32 w-full bg-white/10 rounded-2xl mt-2" />
+        <div className="flex gap-10 pt-1">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-4 w-8 bg-white/10 rounded-full" />
           ))}
         </div>
-      )}
-
-      {/* Reactions */}
-      <div className="flex justify-between text-white/70 text-sm">
-        <button>❤️ {post.numberofReacts}</button>
-        <button>💾 {post.numberofSaves}</button>
-        <button>💬 Comment</button>
       </div>
     </div>
   );

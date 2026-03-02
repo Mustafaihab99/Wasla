@@ -50,6 +50,9 @@ const GymHomeDashboard = lazy(() => import ("../components/gym/GymHomeDashboard"
 const CommunityLoader = lazy(() => import ("../pages/community/CommunityLoader"));
 const CommunityLayout = lazy(() => import ("../pages/community/CommuintyLayout"));
 const ProfileSocialPage = lazy(() => import ("../components/community/ProfileSocialPage"));
+const MainFeed = lazy(() => import ("../components/community/MainFeed"));
+const SocialSettings = lazy(() => import ("../components/community/SociallSettings"));
+const CommentPage = lazy(() => import ("../components/community/comments/CommentPage"));
 
 
 export default function AppRoutes() {
@@ -135,12 +138,15 @@ export default function AppRoutes() {
         {/* socila media */}
         <Route element={<ProtectedRoute allowedRoles={["gym" , "doctor" , "resident"]} />}>
           <Route path="community-loader" element={<CommunityLoader />} />
-          <Route path="community" element={<CommunityLayout />} />
-          <Route path="/community/profile/me" element={<ProfileSocialPage />} />
-          <Route path="/community/profile/:userId" element={<ProfileSocialPage />} />
+          <Route path="community" element={<CommunityLayout />} >
+          <Route path="home" index element={<MainFeed />} />
+          <Route path="profile/me" element={<ProfileSocialPage />} />
+          <Route path="profile/:userId" element={<ProfileSocialPage />} />
+          <Route path="settings" element={<SocialSettings />} />
+          <Route path="post/:postId" element={<CommentPage currentUserId={sessionStorage.getItem("user_id")!} />} />
+          </Route>
         </Route>
         {/* end socila media */}
       </Routes>
   );
 }
-

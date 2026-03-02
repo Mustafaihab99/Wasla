@@ -40,7 +40,7 @@
 }
 
 [data-theme="dark"] {
-  --background: #0f172a;
+  --background: #080d18;
   --foreground: #f9fafb;
   --primary: #a855f7; 
   --secondary: #facc15;
@@ -107,4 +107,12 @@
 }
 .bg-primary-gradient {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
 }

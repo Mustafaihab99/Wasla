@@ -305,8 +305,8 @@
     "doctors": "All Doctors Books",
     "gymsb": "All Gyms Books",
     "Next": "Next",
-    "recommend" : "Recommend For You",
-    "viewProfile" : "View Profile",
+    "recommend": "Recommend For You",
+    "viewProfile": "View Profile",
     "topWeek": "Top of the Week"
   },
   "doctor": {
@@ -512,7 +512,7 @@
     "docDet": "Doctor Details",
     "CV": "CV",
     "basicInfo": "basic Info",
-    "serv" : "Services Overview",
+    "serv": "Services Overview",
     "serviceDashboard": "Service Providers Overview",
     "serviceDashboardDesc": "Monitor performance and engagement of service providers",
     "topBooking": "Top by Bookings",
@@ -591,18 +591,18 @@
     "EGP": "EGP",
     "cancelBooking": "Cancel Booking",
     "canceling": "canceling...",
-    "bookings" : "no of Bookings",
-    "trainees" : "Trainees",
-    "totalRevenue" : "Total Revenue",
+    "bookings": "no of Bookings",
+    "trainees": "Trainees",
+    "totalRevenue": "Total Revenue",
     "bookingSuccess": "Booking Confirmed!",
     "qrInstruction": "Please show this QR code at the gym reception to activate your subscription. You can download it for later use.",
     "downloadQR": "Download QR",
     "close": "Close",
     "loading": "Processing...",
-    "membersByService" : "Members By Service",
-    "noMembers" : "No Members yet"
+    "membersByService": "Members By Service",
+    "noMembers": "No Members yet"
   },
-    "payment": {
+  "payment": {
     "successTitle": "Payment Successful!",
     "successMessage": "Your payment has been processed successfully.",
     "goHome": "Go to Home",
@@ -610,11 +610,39 @@
     "failedMessage": "There was an error processing your payment. Please try again.",
     "retry": "Retry Payment"
   },
-  "common" : {
-    "ExploreNow" : "Explore Now",
-    "Community" : "Our Commuinty",
+  "common": {
+    "ExploreNow": "Explore Now",
+    "Community": "Our Commuinty",
     "home": "Community",
     "communitySubtitle": "Share your thoughts and connect with others.",
+    "whatsHappening": "What's happening?!",
+    "addImage": "Add image",
+    "preview": "Preview",
+    "post": "Post",
+    "posting": "Posting...",
+    "editPost": "Edit post",
+    "deletePost": "Delete post",
+    "myAvatar": "My avatar",
+    "back": "Back to your dashboard",
+    "settings": "Settings",
+    "language": "Language",
+    "english": "English",
+    "arabic": "Arabic",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "warm": "Warm",
+    "cold": "Cold",
+    "logout": "Log out",
+    "loggingOut": "Logging out...",
+    "Saving…" : "Saving…",
+    "Save" : "Save",
+    "ChangeImage" : "Change Image",
+    "remove" : "This can't be undone and it will be removed from your profile.",
+  "deleteConfirm": "Are you sure you want to delete this post?",
+  "close": "Close",
+  "Deleting..." : "Deleting...",
+  "Delete" : "Delete",
     "nav": {
       "home": "Home",
       "explore": "Explore",
@@ -625,8 +653,28 @@
       "post": "Post"
     }
   },
-    "community": {
+  "community": {
     "loadingTitle": "Entering the Community...",
     "loadingSubtitle": "Connecting you with posts, discussions and interactions"
-  }
+  },
+  "feed": {
+  "errorTitle": "Something went wrong",
+  "errorSubtitle": "Try refreshing the page",
+  "emptyTitle": "Welcome to the feed!",
+  "emptySubtitle": "When people you follow post, you'll see it here. Start by posting something!",
+  "endOfFeed": "You've seen it all!"
+},
+"cprofile": {
+  "profile": "Profile",
+  "posts": "Posts",
+  "likes": "Likes",
+  "comments": "Comments",
+  "noPostsOwner": "You haven't posted yet",
+  "noPostsOther": "No posts yet",
+  "ownerEmptySubtitle": "When you post, it'll show up here.",
+  "otherEmptySubtitle": "When {{name}} posts, you'll see it here.",
+  "noMorePosts": "No more posts",
+  "nothingHere": "Nothing here yet",
+  "tabPlaceholder": "{{tab}} will appear here when available."
+}
 }

@@ -117,3 +117,50 @@ export async function toggleReaction(params: toggleReactionData) {
     throw error;
   }
 }
+
+export async function AddComment(formData: FormData , userId: string , content: string , postId:number) {
+  try {
+    const response = await axiosInstance.post(`Social/Comment?userId=${userId}&content=${content}&postId=${postId}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    toast.success(response.data.message || "Added successfully!");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "Added failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function editComment(formData: FormData , content:string , commentId : number) {
+  try {
+    const response = await axiosInstance.put(`Social/Commnet?commentId=${commentId}&content=${content}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    toast.success(response.data.message || "Updated successfully!");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "Updated Failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function deleteComment(commentId: number) {
+  try {
+    const response = await axiosInstance.delete(
+      `Social/Comment?commentId=${commentId}`,
+    );
+    toast.success(response?.data?.message || "deleted successfully");
+    return response;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "deleted failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}

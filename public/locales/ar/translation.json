@@ -305,8 +305,8 @@
     "gymsb": "كل حجوزات الجيم",
     "Prev": "السابق",
     "Next": "التالى",
-    "recommend" : "المقترحة لك",
-    "viewProfile" : "عرض الملف الشخصي",
+    "recommend": "المقترحة لك",
+    "viewProfile": "عرض الملف الشخصي",
     "topWeek": "الأفضل هذا الأسبوع"
   },
   "doctor": {
@@ -512,7 +512,7 @@
     "docDet": "تفاصيل الدكتور",
     "CV": "السيرة الذاتيه",
     "basicInfo": "المعلومات الاساسية",
-    "serv" : "حول الخدمات",
+    "serv": "حول الخدمات",
     "serviceDashboard": "حول مقدمي الخدمات",
     "serviceDashboardDesc": "متابعة الأداء والتفاعل لمقدمي الخدمات",
     "topBooking": "الأعلى حجزًا",
@@ -591,18 +591,18 @@
     "EGP": "جنيه",
     "cancelBooking": "إلغاء الاشتراك",
     "canceling": "جاري الإلغاء...",
-    "bookings" : "عدد الاشتراكات",
-    "trainees" : "المتدربين",
-    "totalRevenue" : "مجموع الايرادات",
+    "bookings": "عدد الاشتراكات",
+    "trainees": "المتدربين",
+    "totalRevenue": "مجموع الايرادات",
     "bookingSuccess": "تم الحجز بنجاح!",
     "qrInstruction": "يرجى إظهار رمز QR عند استقبال الجيم لتفعيل الاشتراك. يمكنك تحميله للاستخدام لاحقاً.",
     "downloadQR": "تحميل الكود",
     "close": "إغلاق",
     "loading": "جارٍ التنفيذ...",
-    "membersByService" : "الاعضاء لكل خدمه",
-    "noMembers" : "ليس هناك اعضاء حتى الان"
+    "membersByService": "الاعضاء لكل خدمه",
+    "noMembers": "ليس هناك اعضاء حتى الان"
   },
-    "payment": {
+  "payment": {
     "successTitle": "تم الدفع بنجاح!",
     "successMessage": "عملية الدفع تمت بنجاح",
     "goHome": "العوده للصفحة",
@@ -610,11 +610,39 @@
     "failedMessage": "حدث خطا في عمليه الدفع الرجاء المحاوله مرة اخرى",
     "retry": "اعاده الدفع"
   },
-  "common" : {
-    "ExploreNow" : "تصفح الان",
-    "Community" : "مجتمعنا",
+  "common": {
+    "ExploreNow": "تصفح الان",
+    "Community": "مجتمعنا",
     "home": "مجتمعنا",
     "communitySubtitle": "شارك افكارك هنا وتواصل مع الاخرين",
+    "whatsHappening": "بماذا تفكر؟؟",
+    "addImage": "اضافه وسائط",
+    "preview": "العرض",
+    "post": "منشور",
+    "posting": "يتم النشر...",
+    "myAvatar": "صورتى",
+    "editPost": "تعديل المنشور",
+    "deletePost": "حذف المنشور",
+    "back": "العودة الى صفحة الادارة",
+    "settings": "الاعدادات",
+    "language": "اللغة",
+    "english": "الانجليزية",
+    "arabic": "العربية",
+    "theme": "السمات",
+    "light": "فاتح",
+    "dark": "مظلم",
+    "warm": "دافئ",
+    "cold": "بارد",
+    "logout": "تسجيل الخروج",
+    "loggingOut": "يتم تسجيل الخروج...",
+    "deleteConfirm": "هل أنت متأكد من حذف هذا المنشور؟",
+    "close": "إغلاق",
+    "Saving…" : "يتم الحفظ...",
+    "Save" : "حفظ",
+    "ChangeImage" : "تغيير الصورة",
+    "remove" : "عندما تحذف هذا المنشور سوف ينحذف من الملف الشخصي الخاص بك.",
+    "Delete" : "حذف",
+    "Deleting..." : "يتم الحذف...",
     "nav": {
       "home": "الصفحه الرئيسية",
       "explore": "اكتشف",
@@ -625,8 +653,28 @@
       "post": "منشور"
     }
   },
-    "community": {
+  "community": {
     "loadingTitle": "جاري الدخول إلى المجتمع...",
     "loadingSubtitle": "نقوم بربطك بالمنشورات والنقاشات والتفاعلات"
-  }
+  },
+  "feed": {
+  "errorTitle": "حدث خطأ ما",
+  "errorSubtitle": "حاول تحديث الصفحة",
+  "emptyTitle": "مرحباً بك في الصفحة الرئيسية!",
+  "emptySubtitle": "عندما ينشر الأشخاص الذين تتابعهم، ستراهم هنا. ابدأ بنشر شيء!",
+  "endOfFeed": "لقد شاهدت كل المنشورات!"
+},
+"cprofile": {
+  "profile": "الملف الشخصي",
+  "posts": "المنشورات",
+  "likes": "الإعجابات",
+  "comments": "التعليقات",
+  "noPostsOwner": "لم تقم بالنشر بعد",
+  "noPostsOther": "لا توجد منشورات بعد",
+  "ownerEmptySubtitle": "عند نشر شيء سيظهر هنا.",
+  "otherEmptySubtitle": "عندما ينشر {{name}} سيظهر هنا.",
+  "noMorePosts": "لا توجد منشورات أخرى",
+  "nothingHere": "لا يوجد شيء هنا بعد",
+  "tabPlaceholder": "سيظهر {{tab}} هنا عند توفره."
+}
 }

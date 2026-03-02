@@ -16,7 +16,7 @@ export default function CommunityLoader() {
         if (prev >= 100) {
           clearInterval(interval);
           setFadeOut(true);
-          setTimeout(() => navigate("/community"), 600);
+          setTimeout(() => navigate("/community/home"), 600);
           return 100;
         }
         return prev + 2;

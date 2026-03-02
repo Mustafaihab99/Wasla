@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { FaTrashAlt } from "react-icons/fa";
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function DeleteConfirmModal({ onConfirm, onCancel, isDeleting }: Props) {
+  const {t} =useTranslation();
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onCancel(); };
     window.addEventListener("keydown", handler);
@@ -28,9 +30,9 @@ export default function DeleteConfirmModal({ onConfirm, onCancel, isDeleting }: 
         </div>
 
         <div className="space-y-1">
-          <h2 className="text-white font-extrabold text-xl">Delete post?</h2>
+          <h2 className="text-white font-extrabold text-xl">{t("common.deletePost")}?</h2>
           <p className="text-gray-500 text-[15px] leading-snug">
-            This can't be undone and it will be removed from your profile.
+            {t("common.remove")}
           </p>
         </div>
 
@@ -43,7 +45,7 @@ export default function DeleteConfirmModal({ onConfirm, onCancel, isDeleting }: 
             {isDeleting ? (
               <span className="flex items-center justify-center gap-2">
                 <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                Deleting...
+                {t("common.Deleting...")}
               </span>
             ) : "Delete"}
           </button>
@@ -52,7 +54,7 @@ export default function DeleteConfirmModal({ onConfirm, onCancel, isDeleting }: 
             disabled={isDeleting}
             className="w-full border border-[#536471] hover:bg-white/5 text-white font-bold rounded-full py-3 transition-colors disabled:opacity-50"
           >
-            Cancel
+            {t("common.close")}
           </button>
         </div>
       </div>

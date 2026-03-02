@@ -6,6 +6,7 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        secondary: "var(--secondary)",
         primary: "var(--primary)",
         border: "var(--border)",
         canceled: "var(--canceled)",

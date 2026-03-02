@@ -1,8 +1,6 @@
 import { useState, useRef } from "react";
-import { 
-  FaImage, 
-  FaTimes  
-} from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import { FaImage, FaTimes } from "react-icons/fa";
 import { useCreatePost } from "../../hooks/community/useAddPost";
 
 interface CreatePostBoxProps {
@@ -10,6 +8,7 @@ interface CreatePostBoxProps {
 }
 
 export default function CreatePostBox({ currentUserId }: CreatePostBoxProps) {
+  const { t } = useTranslation();
   const [content, setContent] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -24,10 +23,7 @@ export default function CreatePostBox({ currentUserId }: CreatePostBoxProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0] || null;
     setFile(selected);
-    if (selected) {
-      const url = URL.createObjectURL(selected);
-      setPreview(url);
-    }
+    if (selected) setPreview(URL.createObjectURL(selected));
   };
 
   const removeFile = () => {
@@ -38,7 +34,6 @@ export default function CreatePostBox({ currentUserId }: CreatePostBoxProps) {
 
   const handleSubmit = () => {
     if (!canPost) return;
-
     const formData = new FormData();
     formData.append("userId", currentUserId);
     formData.append("content", content);
@@ -53,97 +48,100 @@ export default function CreatePostBox({ currentUserId }: CreatePostBoxProps) {
   };
 
   return (
-    <div className="px-4 py-3 flex gap-3">
-      {/* Avatar */}
+    <div className="px-4 py-3 flex gap-3"
+         style={{ background: "var(--background)", color: "var(--foreground)" }}>
       <img
         src="/assets/images/default-avatar.png"
         className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-        alt="avatar"
+        alt={t("common.myAvatar")}
       />
 
       <div className="flex-1 min-w-0">
-        {/* Textarea */}
         <textarea
-          className="w-full bg-transparent text-white text-xl placeholder:text-gray-600 resize-none outline-none min-h-[56px] leading-relaxed"
-          placeholder="What is happening?!"
+          className="w-full text-lg resize-none outline-none leading-relaxed rounded-xl p-2"
+          style={{
+            background: "var(--background)",
+            color: "var(--foreground)",
+            border: "1px solid var(--border)",
+          }}
+          placeholder={t("common.whatsHappening")}
           value={content}
           maxLength={300}
           rows={2}
           onChange={(e) => setContent(e.target.value)}
         />
 
-        {/* Image Preview */}
         {preview && (
-          <div className="relative mt-2 rounded-2xl overflow-hidden">
+          <div className="relative mt-2 rounded-2xl overflow-hidden border border-var(--border)">
             <img
               src={preview}
-              alt="preview"
+              alt={t("common.preview")}
               className="w-full max-h-72 object-cover"
             />
             <button
               onClick={removeFile}
-              className="absolute top-2 right-2 bg-black/70 hover:bg-black/90 text-white rounded-full p-1.5 transition"
+              className="absolute top-2 right-2 bg-black/70 hover:bg-black text-white rounded-full p-1.5 transition"
             >
               <FaTimes className="w-4 h-4" />
             </button>
           </div>
         )}
 
-        <div className="h-px bg-[#2f3336] my-3" />
+        <div className="h-px my-3" style={{ background: "var(--border)" }} />
 
-        {/* Toolbar */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            {/* Image upload */}
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="p-2 text-sky-500 hover:bg-sky-500/10 rounded-full transition"
-              title="Add image"
-            >
-              <FaImage className="w-5 h-5" />
-            </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              accept="image/*,video/*"
-              onChange={handleFileChange}
-            />
-          </div>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="p-2 rounded-full transition"
+            style={{ color: "var(--primary)" }}
+            title={t("common.addImage")}
+          >
+            <FaImage className="w-5 h-5" />
+          </button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            accept="image/*,video/*"
+            onChange={handleFileChange}
+          />
 
           <div className="flex items-center gap-3">
-            {/* Char counter */}
             {content.length > 0 && (
               <div className="flex items-center gap-2">
-                {/* Circle progress */}
                 <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
-                  <circle cx="16" cy="16" r="12" fill="none" stroke="#2f3336" strokeWidth="3" />
+                  <circle cx="16" cy="16" r="12" fill="none" stroke="var(--border)" strokeWidth="3" />
                   <circle
                     cx="16"
                     cy="16"
                     r="12"
                     fill="none"
-                    stroke={isOverLimit ? "#f4212e" : charLeft <= 20 ? "#ffd400" : "#1d9bf0"}
+                    stroke={isOverLimit ? "var(--canceled)" : charLeft <= 20 ? "var(--dried)" : "var(--primary)"}
                     strokeWidth="3"
                     strokeDasharray={`${Math.min(progress, 100) * 0.754} 75.4`}
                     strokeLinecap="round"
                   />
                 </svg>
                 {charLeft <= 20 && (
-                  <span className={`text-sm font-medium ${isOverLimit ? "text-red-500" : "text-gray-500"}`}>
+                  <span className={`text-sm font-medium ${isOverLimit ? "text-red-500" : "text-gray-400"}`}>
                     {charLeft}
                   </span>
                 )}
               </div>
             )}
 
-            {/* Post button */}
             <button
               onClick={handleSubmit}
               disabled={!canPost}
-              className="bg-sky-500 hover:bg-sky-400 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-full px-5 py-2 text-sm transition"
+              className="font-bold rounded-full px-5 py-2 text-sm transition"
+              style={{
+                background: "var(--primary)",
+                color: "var(--background)",
+                opacity: !canPost ? 0.5 : 1,
+                cursor: !canPost ? "not-allowed" : "pointer",
+              }}
             >
-              {isPending ? "Posting..." : "Post"}
+              {isPending ? t("common.posting") : t("common.post")}
             </button>
           </div>
         </div>
