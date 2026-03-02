@@ -10,8 +10,8 @@ import {
   FaSnowflake,
 } from "react-icons/fa";
 import { FaUser, FaUserDoctor } from "react-icons/fa6";
-import { SiGooglemessages } from "react-icons/si";
-import { MdMedicalServices , MdComment } from "react-icons/md";
+import { RiUserCommunityLine } from "react-icons/ri";
+import { MdMedicalServices, MdComment } from "react-icons/md";
 import logo from "../../assets/images/icons/app-logo.png";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -43,10 +43,10 @@ export default function DoctorDashboardLayout() {
       theme === "light"
         ? "dark"
         : theme === "dark"
-        ? "warm"
-        : theme === "warm"
-        ? "cold"
-        : "light";
+          ? "warm"
+          : theme === "warm"
+            ? "cold"
+            : "light";
     setTheme(next);
     localStorage.setItem("appTheme", next);
   };
@@ -67,11 +67,10 @@ export default function DoctorDashboardLayout() {
       icon: <MdMedicalServices />,
     },
     {
-      label: t("doctor.inbox"),
-      link: "/doctor/inbox",
-      icon: <SiGooglemessages />,
+      label: t("doctor.reviews"),
+      link: "/doctor/reviews",
+      icon: <MdComment />,
     },
-    { label: t("doctor.reviews"), link: "/doctor/reviews", icon: <MdComment /> },
     { label: t("doctor.profile"), link: "/doctor/profile", icon: <FaUser /> },
   ];
 
@@ -145,6 +144,32 @@ export default function DoctorDashboardLayout() {
           </nav>
         </div>
 
+        <motion.div
+          whileHover={{ scale: 1.03 }}
+          transition={{ type: "spring", stiffness: 300 }}
+          className="mx-3 mt-6 p-4 rounded-2xl bg-gradient-to-br from-primary via-pink-500 to-primary text-white shadow-xl cursor-pointer relative overflow-hidden">
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-3xl"></div>
+
+          <div className="relative z-10 flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              <RiUserCommunityLine className="text-3xl" />
+              {sidebarOpen && (
+                <h4 className="font-bold text-lg">{t("common.Community")}</h4>
+              )}
+            </div>
+
+            {sidebarOpen && (
+              <>
+                <NavLink
+                  to="/community-loader"
+                  className="mt-2 inline-block text-center bg-white text-purple-700 font-semibold py-2 rounded-xl hover:bg-white/90 transition">
+                  {t("common.ExploreNow")}
+                </NavLink>
+              </>
+            )}
+          </div>
+        </motion.div>
+
         <div className="flex flex-col gap-2 p-4">
           <button
             onClick={toggleLanguage}
@@ -165,7 +190,9 @@ export default function DoctorDashboardLayout() {
             disabled={isPending}
             className="flex items-center gap-2 p-2 rounded-md hover:bg-red-500/10 transition-colors text-red-500">
             <SlLogout />
-            {sidebarOpen && <span>{isPending ? t("nav.logged...") : t("nav.Logout")}</span>}
+            {sidebarOpen && (
+              <span>{isPending ? t("nav.logged...") : t("nav.Logout")}</span>
+            )}
           </button>
 
           <button
@@ -212,6 +239,28 @@ export default function DoctorDashboardLayout() {
                   ))}
                 </div>
               </div>
+              <motion.div
+                whileHover={{ scale: 1.03 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                className="mx-3 mt-6 p-4 rounded-2xl bg-gradient-to-br from-primary via-pink-500 to-primary text-white shadow-xl cursor-pointer relative overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-3xl"></div>
+
+                <div className="relative z-10 flex flex-col gap-3">
+                  <div className="flex items-center gap-3">
+                    <RiUserCommunityLine className="text-3xl" />
+                    {sidebarOpen && (
+                      <h4 className="font-bold text-lg">
+                        {t("common.Community")}
+                      </h4>
+                    )}
+                  </div>
+                  <NavLink
+                    to="/community-loader"
+                    className="mt-2 inline-block text-center bg-white text-purple-700 font-semibold py-2 rounded-xl hover:bg-white/90 transition">
+                    {t("common.ExploreNow")}
+                  </NavLink>
+                </div>
+              </motion.div>
 
               <div className="flex flex-col gap-4 border-t border-border pt-6">
                 <button
@@ -233,7 +282,7 @@ export default function DoctorDashboardLayout() {
                 <button
                   onClick={handleLogout}
                   className="flex items-center justify-center gap-2 p-3 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition-all w-full">
-                  <SlLogout  className="text-white w-6 h-6" />
+                  <SlLogout className="text-white w-6 h-6" />
                   {t("nav.Logout")}
                 </button>
               </div>

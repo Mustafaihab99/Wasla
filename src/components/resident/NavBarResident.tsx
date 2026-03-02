@@ -35,7 +35,7 @@ export default function ResidentNavBar() {
   const navItems = [
     { label: t("nav.home"), link: "/dashboard" },
     { label: t("resident.service"), link: "/resident/service" },
-    { label: t("resident.inbox"), link: "/resident/inbox" },
+    { label: t("common.Community"), link: "/community-loader" },
   ];
 
   useEffect(() => {
@@ -94,10 +94,8 @@ export default function ResidentNavBar() {
         ))}
       </nav>
 
-      {/* Right Actions – Desktop Only */}
       <div className="hidden md:flex items-center gap-3 relative">
 
-        {/* Theme */}
         <div className="relative">
           <button
             onClick={() => setThemeOpen(!themeOpen)}
@@ -131,7 +129,6 @@ export default function ResidentNavBar() {
           </AnimatePresence>
         </div>
 
-        {/* Language */}
         <button
           onClick={toggleLanguage}
           className="flex items-center gap-1 p-2 px-3 rounded-md border border-border hover:bg-primary/10 transition-all">
@@ -139,7 +136,6 @@ export default function ResidentNavBar() {
           <span className="font-semibold uppercase">{i18n.language}</span>
         </button>
 
-        {/* Profile */}
         <button
           onClick={() => navigate("/resident/profile")}
           className="flex items-center gap-1 p-2 px-3 rounded-md border border-border hover:bg-primary/10 transition-all">
@@ -147,12 +143,10 @@ export default function ResidentNavBar() {
         </button>
       </div>
 
-      {/* Mobile Menu Icon */}
       <button className="md:hidden text-foreground text-xl" onClick={() => setMenuOpen(!menuOpen)}>
         {menuOpen ? <FaTimes /> : <FaBars />}
       </button>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -166,20 +160,17 @@ export default function ResidentNavBar() {
               className="w-3/4 sm:w-1/2 bg-background h-full shadow-xl p-6 border-l border-border flex flex-col justify-between"
               onClick={(e) => e.stopPropagation()}>
 
-              {/* Top Section */}
               <div>
                 {/* Close */}
                 <button className="absolute top-4 right-4 text-xl" onClick={() => setMenuOpen(false)}>
                   <FaTimes />
                 </button>
 
-                {/* Logo */}
                 <div className="flex items-center gap-2 mb-10 mt-6">
                   <img src={logo} className="w-10 h-10" />
                   <h3 className="text-lg font-semibold">Wasla</h3>
                 </div>
 
-                {/* Mobile links */}
                 <div className="flex flex-col gap-6 mb-10">
                   {navItems.map((item, i) => (
                     <NavLink
@@ -204,7 +195,6 @@ export default function ResidentNavBar() {
                   <span className="font-semibold uppercase">{i18n.language}</span>
                 </button>
 
-                {/* Theme — mobile version (instant change) */}
                 <button
                   onClick={() => {
                     const next =
@@ -223,7 +213,6 @@ export default function ResidentNavBar() {
                   <span>{theme}</span>
                 </button>
 
-                {/* Profile */}
                 <button
                   onClick={() => navigate("/resident/profile")}
                   className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-primary/10 transition-all w-full">

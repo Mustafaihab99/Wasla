@@ -46,6 +46,11 @@ const GymProfile = lazy(() => import ("../components/gym/GymProfile"));
 const GymMembers = lazy(() => import ("../components/gym/GymMembers"));
 const GymServicesPage = lazy(() => import ("../components/gym/GymServicePage"));
 const GymHomeDashboard = lazy(() => import ("../components/gym/GymHomeDashboard"));
+// social media
+const CommunityLoader = lazy(() => import ("../pages/community/CommunityLoader"));
+const CommunityLayout = lazy(() => import ("../pages/community/CommuintyLayout"));
+const ProfileSocialPage = lazy(() => import ("../components/community/ProfileSocialPage"));
+
 
 export default function AppRoutes() {
   return (
@@ -116,7 +121,6 @@ export default function AppRoutes() {
 
         {/* gym Dashboard */}
         <Route element={<ProtectedRoute allowedRoles={["gym"]} />}>
-        {/* Doctor layout */}
         <Route path="/gym" element={<GymDashboard />}>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<GymHomeDashboard />} />
@@ -127,6 +131,15 @@ export default function AppRoutes() {
         </Route>
       </Route> 
         {/* end doctor Dashboard */}
+
+        {/* socila media */}
+        <Route element={<ProtectedRoute allowedRoles={["gym" , "doctor" , "resident"]} />}>
+          <Route path="community-loader" element={<CommunityLoader />} />
+          <Route path="community" element={<CommunityLayout />} />
+          <Route path="/community/profile/me" element={<ProfileSocialPage />} />
+          <Route path="/community/profile/:userId" element={<ProfileSocialPage />} />
+        </Route>
+        {/* end socila media */}
       </Routes>
   );
 }

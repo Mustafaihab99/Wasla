@@ -10,3 +10,11 @@ export const UserEvent = {
     addFav : 3,
     search : 4
 }
+export const ReactionTargetType = {
+    post : 1,
+    comment: 2
+}
+export const ReactionType = {
+    love : 1,
+    save: 2
+}

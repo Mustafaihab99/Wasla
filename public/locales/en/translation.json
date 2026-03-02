@@ -609,5 +609,13 @@
     "failedTitle": "Payment Failed!",
     "failedMessage": "There was an error processing your payment. Please try again.",
     "retry": "Retry Payment"
+  },
+  "common" : {
+    "ExploreNow" : "Explore Now",
+    "Community" : "Our Commuinty"
+  },
+    "community": {
+    "loadingTitle": "Entering the Community...",
+    "loadingSubtitle": "Connecting you with posts, discussions and interactions"
   }
 }
