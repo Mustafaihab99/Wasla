@@ -1,107 +1,172 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import CreatePostBox from "../../components/community/CreateBoxPost";
 import PostList from "../../components/community/PostLists";
-import { 
-  FaHome, 
-  FaSearch, 
-  FaBell, 
-  FaBookmark, 
-  FaUser, 
-  FaCog, 
-  FaFeather, 
-  FaTimes 
+import {
+  FaHome,
+  FaBookmark,
+  FaUser,
+  FaCog,
+  FaBars,
 } from "react-icons/fa";
 
 const NAV_ITEMS = [
-  { icon: FaHome, label: "Home", active: true },
-  { icon: FaSearch, label: "Explore" },
-  { icon: FaBell, label: "Notifications" },
-  { icon: FaBookmark, label: "Bookmarks" },
-  { icon: FaUser, label: "Profile" },
-  { icon: FaCog, label: "Settings" },
+  { icon: FaHome, key: "home", active: true },
+  { icon: FaBookmark, key: "bookmarks" },
+  { icon: FaUser, key: "profile" },
+  { icon: FaCog, key: "settings" },
 ];
 
-function LeftSidebar() {
-  return (
-    <aside className="sticky top-0 h-screen flex flex-col py-2 pr-4">
-      {/* Logo */}
-      <div className="p-3 mb-2 w-fit rounded-full hover:bg-white/10 transition cursor-pointer">
-        <FaTimes className="w-7 h-7 text-white" />
-      </div>
+function LeftSidebar({
+  isOpen,
+  toggle,
+}: {
+  isOpen: boolean;
+  toggle: () => void;
+}) {
+  const { t } = useTranslation();
 
-      {/* Nav */}
-      <nav className="flex flex-col gap-1 flex-1">
-        {NAV_ITEMS.map(({ icon: Icon, label, active }) => (
-          <button
-            key={label}
-            className={`flex items-center gap-4 px-4 py-3 rounded-full text-xl font-medium transition-all w-fit xl:w-full hover:bg-white/10 ${
-              active ? "text-white font-bold" : "text-gray-300"
-            }`}
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside
+        className={`hidden md:flex sticky top-0 h-screen flex-col py-6 pr-4 transition-all duration-300 border-r ${
+          isOpen ? "w-[240px]" : "w-[80px]"
+        }`}
+        style={{
+          background: "var(--background)",
+          borderColor: "var(--border)",
+        }}
+      >
+        {/* Logo + Toggle */}
+        <div className="flex items-center justify-between mb-10 px-3">
+          <h2
+            className="font-extrabold text-2xl tracking-wide"
+            style={{ color: "var(--primary)" }}
           >
-            <Icon className={`w-6 h-6 flex-shrink-0 ${active ? "text-white" : ""}`} />
-            <span className="hidden xl:block">{label}</span>
+            {isOpen ? "COMMUNITY" : "C"}
+          </h2>
+
+          <button
+            onClick={toggle}
+            style={{ color: "var(--dried)" }}
+          >
+            <FaBars />
+          </button>
+        </div>
+
+        {/* Nav */}
+        <nav className="flex flex-col gap-3 flex-1">
+          {NAV_ITEMS.map(({ icon: Icon, key, active }) => (
+            <button
+              key={key}
+              className="flex items-center gap-4 px-4 py-3 rounded-xl text-lg font-medium transition-all hover:scale-[1.03]"
+              style={{
+                color: active
+                  ? "var(--foreground)"
+                  : "var(--dried)",
+                background: active ? "var(--border)" : "transparent",
+              }}
+            >
+              <Icon className="w-5 h-5" />
+              {isOpen && <span>{t(`common.nav.${key}`)}</span>}
+            </button>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Mobile Bottom Nav */}
+      <div
+        className="fixed bottom-0 left-0 right-0 md:hidden flex justify-around py-3 border-t z-50"
+        style={{
+          background: "var(--background)",
+          borderColor: "var(--border)",
+        }}
+      >
+        {NAV_ITEMS.map(({ icon: Icon, key, active }) => (
+          <button
+            key={key}
+            className="flex flex-col items-center text-xs"
+            style={{
+              color: active
+                ? "var(--primary)"
+                : "var(--dried)",
+            }}
+          >
+            <Icon className="w-5 h-5 mb-1" />
+            {t(`common.nav.${key}`)}
           </button>
         ))}
-
-        {/* Post Button */}
-        <button className="mt-4 bg-sky-500 hover:bg-sky-400 transition text-white font-bold rounded-full py-3 px-4 xl:px-8 flex items-center justify-center gap-2 w-fit xl:w-full">
-          <FaFeather className="w-5 h-5 xl:hidden" />
-          <span className="hidden xl:block">Post</span>
-        </button>
-      </nav>
-
-      {/* User Profile */}
-      <button className="flex items-center gap-3 p-3 rounded-full hover:bg-white/10 transition w-full">
-        <img
-          src="/assets/images/default-avatar.png"
-          className="w-10 h-10 rounded-full object-cover"
-          alt="me"
-        />
-        <div className="hidden xl:block text-left flex-1 min-w-0">
-          <p className="text-white font-bold text-sm truncate">My Account</p>
-          <p className="text-gray-500 text-sm truncate">@username</p>
-        </div>
-        <span className="hidden xl:block text-gray-400 font-bold">···</span>
-      </button>
-    </aside>
+      </div>
+    </>
   );
 }
 
-
 export default function CommunityLayout() {
   const currentUserId = sessionStorage.getItem("user_id")!;
+  const { t } = useTranslation();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-[1265px] mx-auto grid grid-cols-[auto_1fr_auto] xl:grid-cols-[275px_600px_1fr] gap-0 justify-center">
+    <div
+      className="min-h-screen"
+      style={{
+        background: "var(--background)",
+        color: "var(--foreground)",
+      }}
+    >
+      <div className="max-w-[1400px] mx-auto flex">
 
-        {/* Left Sidebar */}
-        <div className="px-2 xl:px-0">
-          <LeftSidebar />
-        </div>
+        {/* Sidebar */}
+        <LeftSidebar
+          isOpen={sidebarOpen}
+          toggle={() => setSidebarOpen(!sidebarOpen)}
+        />
 
         {/* Main Feed */}
-        <main className="border-x border-[#2f3336] min-h-screen">
+        <main
+          className="flex-1 min-h-screen"
+          style={{
+            borderLeft: "1px solid var(--border)",
+            borderRight: "1px solid var(--border)",
+          }}
+        >
           {/* Header */}
-          <div className="sticky top-0 z-10 bg-black/80 backdrop-blur-md border-b border-[#2f3336]">
-            <div className="px-4 py-4">
-              <h1 className="text-white font-extrabold text-xl">Home</h1>
-            </div>
-            {/* Tabs */}
-            <div className="grid grid-cols-2">
-              <button className="py-4 font-bold text-white border-b-4 border-sky-500 hover:bg-white/5 transition">
-                For you
-              </button>
-              <button className="py-4 font-medium text-gray-500 hover:bg-white/5 transition hover:text-white">
-                Following
-              </button>
+          <div
+            className="sticky top-0 z-10 backdrop-blur-md border-b"
+            style={{
+              background: "var(--background)",
+              borderColor: "var(--border)",
+            }}
+          >
+            <div className="px-8 py-8 text-center">
+              <h1
+                className="font-extrabold text-3xl mb-2"
+                style={{ color: "var(--primary)" }}
+              >
+                {t("common.home")}
+              </h1>
+              <p
+                className="text-sm"
+                style={{ color: "var(--dried)" }}
+              >
+                {t("common.communitySubtitle")}
+              </p>
             </div>
           </div>
 
-          <CreatePostBox currentUserId={currentUserId} />
-          <div className="h-px bg-[#2f3336]" />
-          <PostList currentUserId={currentUserId} />
-        </main>
+          <div className="px-6 md:px-12">
+            <CreatePostBox currentUserId={currentUserId} />
+            <div
+              className="h-px my-6"
+              style={{ background: "var(--border)" }}
+            />
+            <PostList currentUserId={currentUserId} />
+          </div>
 
+          {/* spacing for mobile bottom nav */}
+          <div className="h-16 md:hidden" />
+        </main>
       </div>
     </div>
   );

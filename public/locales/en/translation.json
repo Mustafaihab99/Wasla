@@ -612,7 +612,18 @@
   },
   "common" : {
     "ExploreNow" : "Explore Now",
-    "Community" : "Our Commuinty"
+    "Community" : "Our Commuinty",
+    "home": "Community",
+    "communitySubtitle": "Share your thoughts and connect with others.",
+    "nav": {
+      "home": "Home",
+      "explore": "Explore",
+      "notifications": "Notifications",
+      "bookmarks": "Bookmarks",
+      "profile": "Profile",
+      "settings": "Settings",
+      "post": "Post"
+    }
   },
     "community": {
     "loadingTitle": "Entering the Community...",

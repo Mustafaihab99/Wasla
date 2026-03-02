@@ -263,8 +263,8 @@ export default function ProfileSocialPage() {
                   post={post}
                   currentUserId={currentUserId}
                   userName={userName}
-                  profilePhoto={profilePhoto}
-                />
+                  profilePhoto={profilePhoto} 
+                  postOwnerId={targetUserId}   />
               ))
             )}
 

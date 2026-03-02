@@ -612,7 +612,18 @@
   },
   "common" : {
     "ExploreNow" : "تصفح الان",
-    "Community" : "مجتمعنا"
+    "Community" : "مجتمعنا",
+    "home": "مجتمعنا",
+    "communitySubtitle": "شارك افكارك هنا وتواصل مع الاخرين",
+    "nav": {
+      "home": "الصفحه الرئيسية",
+      "explore": "اكتشف",
+      "notifications": "الاشعارات",
+      "bookmarks": "المحفوظات",
+      "profile": "الملف الشخصي",
+      "settings": "الاعدادات",
+      "post": "منشور"
+    }
   },
     "community": {
     "loadingTitle": "جاري الدخول إلى المجتمع...",
