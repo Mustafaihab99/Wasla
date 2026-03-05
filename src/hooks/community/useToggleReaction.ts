@@ -1,15 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation, useQueryClient, InfiniteData } from "@tanstack/react-query";
 import { toggleReaction } from "../../api/community/community-api";
 import { communityKeys } from "../../utils/community.keys";
 import {
   PaginationResponse,
   mainPostData,
+  singleCommentData,
   toggleReactionData,
 } from "../../types/commuinty/community-types";
 import { ReactionType, ReactionTargetType } from "../../utils/enum";
 
-type FeedInfiniteData = InfiniteData<PaginationResponse<mainPostData>>;
+type FeedCache     = InfiniteData<PaginationResponse<mainPostData>>;
+type CommentsCache = InfiniteData<PaginationResponse<singleCommentData>>;
 
 export function useToggleReaction(currentUserId: string) {
   const queryClient = useQueryClient();
@@ -18,20 +19,17 @@ export function useToggleReaction(currentUserId: string) {
     mutationFn: toggleReaction,
 
     onMutate: async (variables: toggleReactionData) => {
-      const isPost = variables.targetType === ReactionTargetType.post;
+      const isPost    = variables.targetType === ReactionTargetType.post;
       const isComment = variables.targetType === ReactionTargetType.comment;
 
-      const feedKey = communityKeys.feed(currentUserId);
-
       if (isPost) {
+        const feedKey = communityKeys.feed(currentUserId);
         await queryClient.cancelQueries({ queryKey: feedKey });
 
-        const previousData =
-          queryClient.getQueryData<FeedInfiniteData>(feedKey);
+        const previousData = queryClient.getQueryData<FeedCache>(feedKey);
 
-        queryClient.setQueryData<FeedInfiniteData>(feedKey, (old) => {
+        queryClient.setQueryData<FeedCache>(feedKey, (old) => {
           if (!old) return old;
-
           return {
             ...old,
             pages: old.pages.map((page) => ({
@@ -40,64 +38,58 @@ export function useToggleReaction(currentUserId: string) {
                 if (post.postId !== variables.targetId) return post;
 
                 if (variables.reactionType === ReactionType.love) {
-                  const wasLoved = post.isLoved;
                   return {
                     ...post,
-                    isLoved: !wasLoved,
-                    numberofReacts:
-                      post.numberofReacts + (wasLoved ? -1 : 1),
+                    isLoved: !post.isLoved,
+                    numberofReacts: post.numberofReacts + (post.isLoved ? -1 : 1),
                   };
                 }
-
                 if (variables.reactionType === ReactionType.save) {
-                  const wasSaved = post.isSaved;
                   return {
                     ...post,
-                    isSaved: !wasSaved,
-                    numberofSaves:
-                      post.numberofSaves + (wasSaved ? -1 : 1),
+                    isSaved: !post.isSaved,
+                    numberofSaves: post.numberofSaves + (post.isSaved ? -1 : 1),
                   };
                 }
-
                 return post;
               }),
             })),
           };
         });
 
-        return { previousData, type: "post", key: feedKey };
+        return { previousData, key: feedKey };
       }
 
-      if (isComment) {
-        const commentsKey = communityKeys.comments(
-          (variables as any).postId
-        );
-
+      if (isComment && variables.targetId != null) {
+        const commentsKey = communityKeys.comments(variables.targetId);
         await queryClient.cancelQueries({ queryKey: commentsKey });
 
-        const previousComments =
-          queryClient.getQueryData<any[]>(commentsKey);
+        const previousData = queryClient.getQueryData<CommentsCache>(commentsKey);
 
-        queryClient.setQueryData<any[]>(commentsKey, (old = []) =>
-          old.map((comment) => {
-            if (comment.commentId !== variables.targetId)
-              return comment;
+        queryClient.setQueryData<CommentsCache>(commentsKey, (old) => {
+          if (!old) return old;
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              data: page.data.map((comment) => {
+                if (comment.commentId !== variables.targetId) return comment;
 
-            if (variables.reactionType === ReactionType.love) {
-              const wasLoved = comment.isLoved;
-              return {
-                ...comment,
-                isLoved: !wasLoved,
-                numberofReacts:
-                  comment.numberofReacts + (wasLoved ? -1 : 1),
-              };
-            }
+                // Comment uses isLove + numberOfLikes (different from post fields)
+                if (variables.reactionType === ReactionType.love) {
+                  return {
+                    ...comment,
+                    isLove: !comment.isLove,
+                    numberOfLikes: comment.numberOfLikes + (comment.isLove ? -1 : 1),
+                  };
+                }
+                return comment;
+              }),
+            })),
+          };
+        });
 
-            return comment;
-          })
-        );
-
-        return { previousData: previousComments, type: "comment", key: commentsKey };
+        return { previousData, key: commentsKey };
       }
     },
 
@@ -113,12 +105,9 @@ export function useToggleReaction(currentUserId: string) {
           queryKey: communityKeys.feed(currentUserId),
         });
       }
-
-      if (variables.targetType === ReactionTargetType.comment) {
+      if (variables.targetType === ReactionTargetType.comment && variables.targetId != null) {
         queryClient.invalidateQueries({
-          queryKey: communityKeys.comments(
-            (variables as any).postId
-          ),
+          queryKey: communityKeys.comments(variables.targetId),
         });
       }
     },

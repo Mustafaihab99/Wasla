@@ -641,8 +641,10 @@
     "remove" : "This can't be undone and it will be removed from your profile.",
   "deleteConfirm": "Are you sure you want to delete this post?",
   "close": "Close",
+  "savedPosts" : "Saved Posts",
   "Deleting..." : "Deleting...",
   "Delete" : "Delete",
+   "goBack": "Go back",
     "nav": {
       "home": "Home",
       "explore": "Explore",
@@ -676,5 +678,25 @@
   "noMorePosts": "No more posts",
   "nothingHere": "Nothing here yet",
   "tabPlaceholder": "{{tab}} will appear here when available."
-}
+},
+  "comments": {
+    "loadError": "Failed to load replies. Try refreshing.",
+    "noReplies": "No replies yet",
+    "beFirst": "Be the first to reply!",
+    "noMore": "No more replies",
+    "postNotFound": "Post not found",
+    "post": "Post",
+    "replies": "Replies",
+    "placeholder": "Write your reply...",
+    "send": "Send reply",
+    "attach": "Attach image",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "editReply": "Edit Reply",
+    "deleteReply": "Delete Comment",
+    "changeImage": "Change File"
+  }
 }

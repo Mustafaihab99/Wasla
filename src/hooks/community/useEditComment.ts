@@ -1,39 +1,51 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { editComment } from "../../api/community/community-api";
+import { useMutation, useQueryClient, InfiniteData } from "@tanstack/react-query";
 import { communityKeys } from "../../utils/community.keys";
+import { PaginationResponse, singleCommentData } from "../../types/commuinty/community-types";
+import { editComment } from "../../api/community/community-api";
+
+type CommentsCache = InfiniteData<PaginationResponse<singleCommentData>>;
 
 export function useEditComment(postId: number) {
   const queryClient = useQueryClient();
   const commentsKey = communityKeys.comments(postId);
 
   return useMutation({
-    mutationFn: (data: {
-      formData: FormData;
-      content: string;
+    mutationFn: ({
+      commentId,
+      content,
+      file,
+    }: {
       commentId: number;
-    }) =>
-      editComment(data.formData, data.content, data.commentId),
+      content: string;
+      file?: File;     
+    }) => editComment(content , commentId , file),
 
-    onMutate: async (variables) => {
+    onMutate: async ({ commentId, content }) => {
       await queryClient.cancelQueries({ queryKey: commentsKey });
 
-      const previousComments = queryClient.getQueryData<any[]>(commentsKey);
+      const previousData = queryClient.getQueryData<CommentsCache>(commentsKey);
 
-      queryClient.setQueryData<any[]>(commentsKey, (old = []) =>
-        old.map((comment) =>
-          comment.commentId === variables.commentId
-            ? { ...comment, content: variables.content }
-            : comment
-        )
-      );
+      queryClient.setQueryData<CommentsCache>(commentsKey, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map((page) => ({
+            ...page,
+            data: page.data.map((c) =>
+              c.commentId === commentId
+                ? { ...c, content, updatedAt: new Date().toISOString() }
+                : c
+            ),
+          })),
+        };
+      });
 
-      return { previousComments };
+      return { previousData };
     },
 
     onError: (_err, _vars, context) => {
-      if (context?.previousComments) {
-        queryClient.setQueryData(commentsKey, context.previousComments);
+      if (context?.previousData) {
+        queryClient.setQueryData(commentsKey, context.previousData);
       }
     },
 

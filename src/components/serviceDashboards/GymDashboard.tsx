@@ -272,14 +272,11 @@ export default function GymDashboard() {
                     <div className="flex items-center gap-3">
                       <RiUserCommunityLine className="text-3xl" />
                       {sidebarOpen && (
-                        <h4 className="font-bold text-lg">{t("common.Community")}</h4>
+                        <NavLink 
+                        to="/community-loader"
+                        className="font-bold text-lg">{t("common.Community")}</NavLink>
                       )}
                     </div>
-                        <NavLink
-                          to="/community-loader"
-                          className="mt-2 inline-block text-center bg-white text-purple-700 font-semibold py-2 rounded-xl hover:bg-white/90 transition">
-                          {t("common.ExploreNow")}
-                        </NavLink>
                   </div>
                 </motion.div>
 

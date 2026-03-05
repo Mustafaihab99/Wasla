@@ -23,7 +23,6 @@ export default function EditProfileModal({
   const [file, setFile] = useState<File | null>(null);
   const { t } = useTranslation();
   const userId = sessionStorage.getItem("user_id");
-  const role = sessionStorage.getItem("role");
 
   useEffect(() => {
     setName(fullname || "");
@@ -42,7 +41,7 @@ export default function EditProfileModal({
     editProfileMutation.mutate(formData, {
       onSuccess: () => {
         queryClient.invalidateQueries({
-   queryKey: role === "doctor" ? ["doctorProfile"]:["residentProfile"],
+        queryKey: ["residentProfile"],
 });
         onClose();
       },

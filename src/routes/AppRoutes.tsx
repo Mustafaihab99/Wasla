@@ -52,6 +52,7 @@ const CommunityLayout = lazy(() => import ("../pages/community/CommuintyLayout")
 const ProfileSocialPage = lazy(() => import ("../components/community/ProfileSocialPage"));
 const MainFeed = lazy(() => import ("../components/community/MainFeed"));
 const SocialSettings = lazy(() => import ("../components/community/SociallSettings"));
+const SavedPostsPage = lazy(() => import ("../components/community/SavedPostsPage"));
 const CommentPage = lazy(() => import ("../components/community/comments/CommentPage"));
 
 
@@ -143,6 +144,7 @@ export default function AppRoutes() {
           <Route path="profile/me" element={<ProfileSocialPage />} />
           <Route path="profile/:userId" element={<ProfileSocialPage />} />
           <Route path="settings" element={<SocialSettings />} />
+          <Route path="bookmarks" element={<SavedPostsPage />} />
           <Route path="post/:postId" element={<CommentPage currentUserId={sessionStorage.getItem("user_id")!} />} />
           </Route>
         </Route>

@@ -10,48 +10,59 @@ interface CreatePostBoxProps {
 export default function CreatePostBox({ currentUserId }: CreatePostBoxProps) {
   const { t } = useTranslation();
   const [content, setContent] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { mutate: createPost, isPending } = useCreatePost(currentUserId);
-
+  const myImage = sessionStorage.getItem("profilePhoto");
   const charLeft = 280 - content.length;
   const progress = (content.length / 280) * 100;
   const isOverLimit = charLeft < 0;
-  const canPost = (content.trim() || file) && !isOverLimit && !isPending;
+  const canPost = (content.trim() || files?.length > 0) && !isOverLimit && !isPending;
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0] || null;
-    setFile(selected);
-    if (selected) setPreview(URL.createObjectURL(selected));
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    if (!selectedFiles.length) return;
+
+    const newPreviews = selectedFiles.map((file) =>
+      URL.createObjectURL(file)
+    );
+
+    setFiles((prev) => [...prev, ...selectedFiles]);
+    setPreviews((prev) => [...prev, ...newPreviews]);
   };
 
-  const removeFile = () => {
-    setFile(null);
-    setPreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+  const removeFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+    setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = () => {
     if (!canPost) return;
+
     const formData = new FormData();
     formData.append("userId", currentUserId);
     formData.append("content", content);
-    if (file) formData.append("filesDto", file);
+
+    files.forEach((file) => {
+      formData.append("filesDto", file);
+    });
 
     createPost(formData, {
       onSuccess: () => {
         setContent("");
-        removeFile();
+        setFiles([]);
+        setPreviews([]);
       },
     });
   };
+
 
   return (
     <div className="px-4 py-3 flex gap-3"
          style={{ background: "var(--background)", color: "var(--foreground)" }}>
       <img
-        src="/assets/images/default-avatar.png"
+        src={myImage!}
         className="w-10 h-10 rounded-full object-cover flex-shrink-0"
         alt={t("common.myAvatar")}
       />
@@ -71,21 +82,38 @@ export default function CreatePostBox({ currentUserId }: CreatePostBoxProps) {
           onChange={(e) => setContent(e.target.value)}
         />
 
-        {preview && (
-          <div className="relative mt-2 rounded-2xl overflow-hidden border border-var(--border)">
-            <img
-              src={preview}
-              alt={t("common.preview")}
-              className="w-full max-h-72 object-cover"
-            />
-            <button
-              onClick={removeFile}
-              className="absolute top-2 right-2 bg-black/70 hover:bg-black text-white rounded-full p-1.5 transition"
-            >
-              <FaTimes className="w-4 h-4" />
-            </button>
+  {previews.length > 0 && (
+          <div className="grid grid-cols-2 gap-2 mt-3">
+            {previews.map((preview, index) => (
+              <div
+                key={index}
+                className="relative rounded-2xl overflow-hidden border border-[#2f3336]"
+              >
+                {files[index]?.type.startsWith("video") ? (
+                  <video
+                    src={preview}
+                    className="w-full max-h-60 object-cover"
+                    controls
+                  />
+                ) : (
+                  <img
+                    src={preview}
+                    className="w-full max-h-60 object-cover"
+                    alt="preview"
+                  />
+                )}
+
+                <button
+                  onClick={() => removeFile(index)}
+                  className="absolute top-2 right-2 bg-black/70 hover:bg-black text-white rounded-full p-1.5 transition"
+                >
+                  <FaTimes className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
           </div>
         )}
+
 
         <div className="h-px my-3" style={{ background: "var(--border)" }} />
 
@@ -98,11 +126,13 @@ export default function CreatePostBox({ currentUserId }: CreatePostBoxProps) {
           >
             <FaImage className="w-5 h-5" />
           </button>
+
           <input
             type="file"
             ref={fileInputRef}
             className="hidden"
             accept="image/*,video/*"
+            multiple
             onChange={handleFileChange}
           />
 

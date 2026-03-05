@@ -20,7 +20,6 @@ import Modal from "react-modal";
 
 Modal.setAppElement("#root");
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function OptionsMenu({
   t,
   onEdit,
@@ -128,6 +127,7 @@ export default function PostCard({
   const [isSaved, setIsSaved] = useState(post.isSaved);
   const [reactCount, setReactCount] = useState(post.numberofReacts);
   const [saveCount, setSaveCount] = useState(post.numberofSaves);
+  const [commentCount,] = useState(post.numberofComments);
 
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -212,7 +212,7 @@ export default function PostCard({
             </p>
           )}
 
-          {post.files.length > 0 && (
+          {post?.files?.length > 0 && (
             <div className="mt-3 rounded-2xl overflow-hidden grid gap-1 border border-[#2f3336] grid-cols-1 md:grid-cols-1">
               {post.files.map((file, idx) => (
                 <div
@@ -234,6 +234,7 @@ export default function PostCard({
             <ActionBtn
               icon={<FaComment className="w-[18px] h-[18px]" />}
               color="sky"
+              count={commentCount}
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/community/post/${post.postId}`, {

@@ -8,6 +8,7 @@ export interface mainPostData{
     files: string [],
     numberofReacts: number,
     numberofSaves: number,
+    numberofComments : number,
     isLoved: boolean,
     isSaved: boolean,
     createdAt: string,
@@ -19,6 +20,7 @@ export interface singlePostData{
     files: string [],
     numberofReacts: number,
     numberofSaves: number,
+    numberofComments: number,
     isLoved: boolean,
     isSaved: boolean,
     createdAt: string,
@@ -53,4 +55,22 @@ export interface UserPostsResponse {
   userName: string;
   profilePhoto: string;
   posts: PaginationResponse<singlePostData>;
+}
+export interface postAllCommentData{
+    pageNumber: number,
+    pageSize: number,
+    totalCount: number,
+    data :singleCommentData[]
+}
+export interface singleCommentData{
+    commentId: number,
+    content: string,
+    isLove: boolean,
+    numberOfLikes: number,
+    file: string | null,
+    userName: string,
+    userId : string,
+    userProfile: string,
+    createdAt: string,
+    updatedAt: string
 }

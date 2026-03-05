@@ -33,7 +33,7 @@ export default function Login() {
     const res = await login(values); 
     const data = res.data.data;
 
-    const { isVerfied, isCompletedRegister, statue, role , userId } = data;
+    const { isVerfied, isCompletedRegister, statue, role , userId , profilePhoto } = data;
 
     //Not Verified
     if (!isVerfied) {
@@ -57,6 +57,7 @@ export default function Login() {
         localStorage.setItem("auth_token", data.token);
         sessionStorage.setItem("role", role);
         sessionStorage.setItem("user_id", userId);
+        sessionStorage.setItem("profilePhoto" , profilePhoto);
         return navigate("/dashboard");
 
       case 1:

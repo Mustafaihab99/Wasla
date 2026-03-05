@@ -5,8 +5,8 @@ export const communityKeys = {
   feed: (currentUserId: string) =>
     [...communityKeys.all, "feed", currentUserId] as const,
 
-  userPosts: (userId: string, currentUserId: string) =>
-    [...communityKeys.all, "userPosts", userId, currentUserId] as const,
+  userPosts: (userId: string, currentUserId: string , reactionType?: number) =>
+    [...communityKeys.all, "userPosts", userId, currentUserId , reactionType] as const,
 
   userProfile: (userId: string) =>
     [...communityKeys.all, "profile", userId] as const,

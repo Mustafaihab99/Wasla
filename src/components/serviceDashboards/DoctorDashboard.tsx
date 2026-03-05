@@ -150,7 +150,7 @@ export default function DoctorDashboardLayout() {
           className="mx-3 mt-6 p-4 rounded-2xl bg-gradient-to-br from-primary via-pink-500 to-primary text-white shadow-xl cursor-pointer relative overflow-hidden">
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-3xl"></div>
 
-          <div className="relative z-10 flex flex-col gap-3">
+          <div className="relative z-10 flex flex-col gap-2">
             <div className="flex items-center gap-3">
               <RiUserCommunityLine className="text-3xl" />
               {sidebarOpen && (
@@ -243,25 +243,23 @@ export default function DoctorDashboardLayout() {
                 whileHover={{ scale: 1.03 }}
                 transition={{ type: "spring", stiffness: 300 }}
                 className="mx-3 mt-6 p-4 rounded-2xl bg-gradient-to-br from-primary via-pink-500 to-primary text-white shadow-xl cursor-pointer relative overflow-hidden">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-3xl"></div>
 
-                <div className="relative z-10 flex flex-col gap-3">
+                <div className="relative mb-3 z-10 flex flex-col gap-3">
                   <div className="flex items-center gap-3">
                     <RiUserCommunityLine className="text-3xl" />
                     {sidebarOpen && (
-                      <h4 className="font-bold text-lg">
+                      <NavLink 
+                      to="/community-loader"
+                      className="font-bold text-lg"
+                      >
                         {t("common.Community")}
-                      </h4>
+                      </NavLink>
                     )}
                   </div>
-                  <NavLink
-                    to="/community-loader"
-                    className="mt-2 inline-block text-center bg-white text-purple-700 font-semibold py-2 rounded-xl hover:bg-white/90 transition">
-                    {t("common.ExploreNow")}
-                  </NavLink>
                 </div>
               </motion.div>
 
+                      <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-3xl mt-4"></div>
               <div className="flex flex-col gap-4 border-t border-border pt-6">
                 <button
                   onClick={toggleLanguage}

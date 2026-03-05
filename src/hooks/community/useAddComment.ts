@@ -1,46 +1,64 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, InfiniteData } from "@tanstack/react-query";
 import { AddComment } from "../../api/community/community-api";
 import { communityKeys } from "../../utils/community.keys";
+import { PaginationResponse, singleCommentData } from "../../types/commuinty/community-types";
+
+type CommentsCache = InfiniteData<PaginationResponse<singleCommentData>>;
 
 export function useAddComment(postId: number, currentUserId: string) {
   const queryClient = useQueryClient();
   const commentsKey = communityKeys.comments(postId);
 
   return useMutation({
-    mutationFn: (data: {
-      formData: FormData;
+    mutationFn: ({
+      content,
+      file,
+    }: {
       content: string;
-    }) =>
-      AddComment(data.formData, currentUserId, data.content, postId),
+      file?: File;
+    }) => AddComment(currentUserId, content, postId, file),
 
-    onMutate: async (variables) => {
+    onMutate: async ({ content }) => {
       await queryClient.cancelQueries({ queryKey: commentsKey });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const previousComments = queryClient.getQueryData<any[]>(commentsKey);
+      const previousData = queryClient.getQueryData<CommentsCache>(commentsKey);
 
-      // optimistic fake comment
-      const optimisticComment = {
-        commentId: Date.now(),
-        content: variables.content,
-        isLoved: false,
-        numberofReacts: 0,
+      const optimistic: singleCommentData = {
+        commentId: Date.now(),        //
+        content,
+        isLove: false,
+        numberOfLikes: 0,
+        file: null,
+        userName: "",                
+        userProfile: "",
+        userId: currentUserId,
         createdAt: new Date().toISOString(),
-        isOptimistic: true,
+        updatedAt: new Date().toISOString(),
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      queryClient.setQueryData<any[]>(commentsKey, (old = []) => [
-        optimisticComment,
-        ...old,
-      ]);
+      // Prepend to the first page optimistically
+      queryClient.setQueryData<CommentsCache>(commentsKey, (old) => {
+        if (!old) return old;
+        const [firstPage, ...rest] = old.pages;
+        return {
+          ...old,
+          pages: [
+            {
+              ...firstPage,
+              data: [optimistic, ...firstPage.data],
+              totalCount: firstPage.totalCount + 1,
+            },
+            ...rest,
+          ],
+        };
+      });
 
-      return { previousComments };
+      return { previousData };
     },
 
     onError: (_err, _vars, context) => {
-      if (context?.previousComments) {
-        queryClient.setQueryData(commentsKey, context.previousComments);
+      if (context?.previousData) {
+        queryClient.setQueryData(commentsKey, context.previousData);
       }
     },
 

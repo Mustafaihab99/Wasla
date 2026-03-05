@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 interface EditPostModalProps {
   postId: number;
   initialContent: string;
-  initialFiles: string[]; 
+  initialFiles: string[];
   currentUserId: string;
   profileUserId?: string;
   onClose: () => void;
@@ -21,11 +21,11 @@ export default function EditPostModal({
   onClose,
 }: EditPostModalProps) {
   const [content, setContent] = useState(initialContent);
-  const {t} = useTranslation();
-  const [newFile, setNewFile] = useState<File | null>(null);
-  const [newPreview, setNewPreview] = useState<string | null>(null);
-
-  const [keepExisting, setKeepExisting] = useState(initialFiles.length > 0);
+  const { t } = useTranslation();
+  const [newFiles, setNewFiles] = useState<File[]>([]);
+  const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  const myImage = sessionStorage.getItem("profilePhoto");
+  const [keepExisting, setKeepExisting] = useState(initialFiles?.length > 0);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -37,12 +37,6 @@ export default function EditPostModal({
   const canSave = content.trim().length > 0 && !isOverLimit && !isPending;
   const progress = Math.min((content.length / 280) * 100, 100);
 
-  const displayPreview = newPreview
-    ? newPreview
-    : keepExisting && initialFiles[0]
-    ? initialFiles[0]
-    : null;
-
   useEffect(() => {
     const ta = textareaRef.current;
     if (ta) {
@@ -52,36 +46,48 @@ export default function EditPostModal({
   }, []);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] ?? null;
-    if (!file) return;
-    setNewFile(file);
-    setNewPreview(URL.createObjectURL(file));
-    setKeepExisting(false);
-  };
+const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedFiles = Array.from(e.target.files || []);
+  if (!selectedFiles.length) return;
 
-  const removeImage = () => {
-    setNewFile(null);
-    setNewPreview(null);
-    setKeepExisting(false);
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
+  const previews = selectedFiles.map((file) =>
+    URL.createObjectURL(file)
+  );
 
-  const handleSave = () => {
+  setNewFiles((prev) => [...prev, ...selectedFiles]);
+  setNewPreviews((prev) => [...prev, ...previews]);
+  setKeepExisting(false);
+};
+
+const removeImage = (index?: number) => {
+  if (index !== undefined) {
+    setNewFiles((prev) => prev.filter((_, i) => i !== index));
+    setNewPreviews((prev) => prev.filter((_, i) => i !== index));
+  } else {
+    setNewFiles([]);
+    setNewPreviews([]);
+    setKeepExisting(false);
+  }
+  if (fileInputRef.current) fileInputRef.current.value = "";
+};
+
+const handleSave = () => {
   if (!canSave) return;
 
   const formData = new FormData();
   formData.append("id", String(postId));
   formData.append("content", content);
 
-  if (newFile) {
-    formData.append("files", newFile);
-  }
+  newFiles.forEach((file) => {
+    formData.append("files", file);
+  });
 
   doEdit(formData, { onSuccess: onClose });
 };
@@ -89,34 +95,34 @@ export default function EditPostModal({
   return (
     <div
       className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-start justify-center pt-14 px-4"
-      onClick={onClose}
-    >
+      onClick={onClose}>
       <div
         className="w-full max-w-[600px] bg-black border border-[#2f3336] rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.9)] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
+        onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-[#2f3336]">
           <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-white/10 transition text-white"
-            aria-label="Close"
-          >
+            aria-label="Close">
             <FaX className="w-5 h-5" />
           </button>
 
-          <h2 className="text-white font-extrabold text-[17px]">{t("common.editPost")}</h2>
+          <h2 className="text-white font-extrabold text-[17px]">
+            {t("common.editPost")}
+          </h2>
 
           <button
             onClick={handleSave}
             disabled={!canSave}
-            className="bg-sky-500 hover:bg-sky-400 active:bg-sky-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-full px-5 py-1.5 text-sm transition-colors"
-          >
+            className="bg-sky-500 hover:bg-sky-400 active:bg-sky-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold rounded-full px-5 py-1.5 text-sm transition-colors">
             {isPending ? (
               <span className="flex items-center gap-2">
                 <span className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
                 {t("common.Saving…")}
               </span>
-            ) : t("common.Save")}
+            ) : (
+              t("common.Save")
+            )}
           </button>
         </div>
 
@@ -124,7 +130,7 @@ export default function EditPostModal({
         <div className="flex gap-3 p-4">
           {/* Avatar */}
           <img
-            src="/assets/images/default-avatar.png"
+            src={myImage!}
             className="w-10 h-10 rounded-full object-cover flex-shrink-0"
             alt="avatar"
           />
@@ -142,35 +148,39 @@ export default function EditPostModal({
             />
 
             {/* Image preview */}
-            {displayPreview && (
-              <div className="relative rounded-2xl overflow-hidden border border-[#2f3336]">
-                <img
-                  src={displayPreview}
-                  alt="preview"
-                  className="w-full max-h-72 object-cover"
-                />
-                <button
-                  onClick={removeImage}
-                  className="absolute top-2 right-2 bg-black/70 hover:bg-black text-white rounded-full p-1.5 transition"
-                  aria-label="Remove image"
-                >
-                  <FaX className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+          {(keepExisting ? initialFiles : newPreviews).length > 0 && (
+  <div className="grid grid-cols-2 gap-2 mt-3">
+    {(keepExisting ? initialFiles : newPreviews).map((preview, index) => (
+      <div key={index} className="relative rounded-2xl overflow-hidden border border-[#2f3336]">
+        {preview.endsWith(".mp4") || preview.endsWith(".webm") ? (
+          <video src={preview} className="w-full max-h-72 object-cover" controls />
+        ) : (
+          <img src={preview} className="w-full max-h-72 object-cover" alt="preview" />
+        )}
+
+        <button
+          onClick={() => removeImage(index)}
+          className="absolute top-2 right-2 bg-black/70 hover:bg-black text-white rounded-full p-1.5 transition"
+        >
+          <FaX className="w-4 h-4" />
+        </button>
+      </div>
+    ))}
+  </div>
+)}
 
             <div className="h-px bg-[#2f3336]" />
             <div className="flex items-center justify-between">
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="p-2 text-sky-500 hover:bg-sky-500/10 rounded-full transition"
-                title={t("common.ChangeImage")}
-              >
+                title={t("common.ChangeImage")}>
                 <FaImage className="w-5 h-5" />
               </button>
               <input
                 ref={fileInputRef}
                 type="file"
+                multiple
                 accept="image/*,video/*"
                 className="hidden"
                 onChange={handleFileChange}
@@ -178,18 +188,28 @@ export default function EditPostModal({
 
               {/* Char counter */}
               <div className="flex items-center gap-2">
-                {content.length > 0 && (
+                {content?.length > 0 && (
                   <>
                     <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
                       <circle
-                        cx="16" cy="16" r="12"
-                        fill="none" stroke="#2f3336" strokeWidth="3"
+                        cx="16"
+                        cy="16"
+                        r="12"
+                        fill="none"
+                        stroke="#2f3336"
+                        strokeWidth="3"
                       />
                       <circle
-                        cx="16" cy="16" r="12"
+                        cx="16"
+                        cy="16"
+                        r="12"
                         fill="none"
                         stroke={
-                          isOverLimit ? "#f4212e" : charLeft <= 20 ? "#ffd400" : "#1d9bf0"
+                          isOverLimit
+                            ? "#f4212e"
+                            : charLeft <= 20
+                              ? "#ffd400"
+                              : "#1d9bf0"
                         }
                         strokeWidth="3"
                         strokeDasharray={`${progress * 0.754} 75.4`}
@@ -197,7 +217,8 @@ export default function EditPostModal({
                       />
                     </svg>
                     {charLeft <= 20 && (
-                      <span className={`text-sm font-medium ${isOverLimit ? "text-red-500" : "text-gray-500"}`}>
+                      <span
+                        className={`text-sm font-medium ${isOverLimit ? "text-red-500" : "text-gray-500"}`}>
                         {charLeft}
                       </span>
                     )}

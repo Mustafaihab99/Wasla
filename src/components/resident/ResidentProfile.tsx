@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useGetResidentProfile from "../../hooks/resident/useGetResidentProfile";
 import EditProfileModal from "../common/EditProfileModal";
 import ChangePasswordModal from "../common/ChangePasswordModal";
@@ -28,10 +28,13 @@ export default function ResidentProfile() {
   const handleLogout = () => {
     logout();
   };
+  useEffect(()=>{
+    sessionStorage.setItem("profilePhoto" , import.meta.env.VITE_USER_IMAGE + data?.imageUrl)
+  },[data?.imageUrl, openEdit])
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-background via-background/90 to-background/80 pb-20 px-4 space-y-12">
-      {/* ===== Profile Header ===== */}
+      {/*  Profile Header  */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
