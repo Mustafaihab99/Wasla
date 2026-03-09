@@ -50,7 +50,7 @@ export default function CommentSection({ postId, currentUserId }: Props) {
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const comments = data?.pages.flatMap((p) => p.data) ?? [];
+  const comments = data?.pages?.flatMap((p) => p.data) ?? [];
 
   if (isLoading) {
     return (

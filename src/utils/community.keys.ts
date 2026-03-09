@@ -11,6 +11,6 @@ export const communityKeys = {
   userProfile: (userId: string) =>
     [...communityKeys.all, "profile", userId] as const,
 
-  comments: (postId: number) =>
-  [...communityKeys.all, "comments", postId] as const,
+  comments: (postId: number , currentUserId: string) =>
+  [...communityKeys.all, "comments", postId , currentUserId] as const,
 };

@@ -10,7 +10,7 @@ export function useGetComments(
   pageSize: number = 10
 ) {
   return useQuery<postAllCommentData>({
-    queryKey: communityKeys.comments(postId),
+    queryKey: communityKeys.comments(postId , currentUserId),
     queryFn: () =>
       getAllCommentsPerPost(
         postId,

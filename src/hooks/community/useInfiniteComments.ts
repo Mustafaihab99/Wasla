@@ -5,7 +5,7 @@ import { PaginationResponse, singleCommentData } from "../../types/commuinty/com
 
 export function useInfiniteComments(postId: number, currentUserId: string) {
   return useInfiniteQuery<PaginationResponse<singleCommentData>>({
-    queryKey: communityKeys.comments(postId),
+    queryKey: communityKeys.comments(postId, currentUserId),
 
     queryFn: ({ pageParam = 1 }) =>
       getAllCommentsPerPost(postId, pageParam as number, 10, currentUserId),

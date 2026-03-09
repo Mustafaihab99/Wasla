@@ -298,7 +298,7 @@ export default function PostCard({
         <img
           src={lightboxImg}
           alt="preview"
-          className="w-full h-auto object-contain rounded-xl"
+          className="w-full h-[80vh] object-contain rounded-xl"
         />
       </Modal>
     </>
