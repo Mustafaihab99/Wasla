@@ -50,6 +50,17 @@ export default function CommentSection({ postId, currentUserId }: Props) {
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+      if (!currentUserId) {
+        {window.location.reload()}
+    return (
+      <div className="bg-background">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <CommentSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   const comments = data?.pages?.flatMap((p) => p.data) ?? [];
 
   if (isLoading) {

@@ -10,9 +10,9 @@ export default function CommentPage({ currentUserId }: { currentUserId: string }
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
-
+  
   const post = location.state?.post as mainPostData | undefined;
-
+  
   if (!post) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-6 text-center">

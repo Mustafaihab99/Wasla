@@ -136,7 +136,7 @@ export default function UserPostCard({
   const [isSaved, setIsSaved] = useState(post.isSaved);
   const [reactCount, setReactCount] = useState(post.numberofReacts);
   const [saveCount, setSaveCount] = useState(post.numberofSaves);
-  const [commentCount,] = useState(post.numberofComments);
+  const [commentCount] = useState(post.numberofComments);
 
   const navigate = useNavigate();
   const [showEdit, setShowEdit] = useState(false);
@@ -232,7 +232,14 @@ export default function UserPostCard({
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/community/post/${post.postId}`, {
-                  state: { post },
+                  state: {
+                    post: {
+                      ...post,
+                      userId: postOwnerId,
+                      userName,
+                      profilePhoto,
+                    },
+                  },
                 });
               }}
             />

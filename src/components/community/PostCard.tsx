@@ -176,7 +176,7 @@ export default function PostCard({
       <article className="flex gap-3 px-4 py-3 hover:bg-white/[0.03] transition-colors border-b border-[#2f3336] cursor-pointer group">
         <button className="flex-shrink-0 self-start" onClick={goToProfile}>
           <img
-            src={post.profilePhoto || "/assets/images/default-avatar.png"}
+            src={post.profilePhoto}
             alt={post.userName}
             className="w-10 h-10 rounded-full object-cover hover:opacity-90 transition"
           />
