@@ -47,7 +47,7 @@ export default function GymProfile() {
             className="flex flex-col md:flex-row gap-8 items-center -mt-20"
             style={{ direction: "ltr" }}>
             <img
-              src={import.meta.env.VITE_GYM_IMAGE + data.profilePhoto}
+              src={data.profilePhoto}
               className="w-40 h-40 rounded-xl object-cover border-4 border-background shadow-lg"
             />
 
@@ -131,7 +131,7 @@ export default function GymProfile() {
                 {data.photos.map((photo, index) => (
                   <motion.img
                     key={index}
-                    src={import.meta.env.VITE_GYM_IMAGE + photo}
+                    src={photo}
                     className="w-full h-36 object-cover rounded-lg shadow hover:scale-105 transition"
                   />
                 ))}

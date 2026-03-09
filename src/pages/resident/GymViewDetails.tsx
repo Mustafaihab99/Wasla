@@ -87,7 +87,7 @@ export default function GymViewDetails() {
         <div className="relative">
           <div className="w-40 h-40 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-md">
             <img
-              src={import.meta.env.VITE_GYM_IMAGE + profile?.profilePhoto}
+              src={profile?.profilePhoto}
               alt={profile?.businessName}
               className="w-full h-full object-cover"
             />
@@ -164,7 +164,7 @@ export default function GymViewDetails() {
                 className="overflow-hidden rounded-2xl border border-border shadow-sm bg-background"
               >
                 <img
-                  src={import.meta.env.VITE_GYM_IMAGE + photo}
+                  src={photo}
                   alt={`gym-photo-${idx}`}
                   className="w-full h-36 object-cover"
                 />
