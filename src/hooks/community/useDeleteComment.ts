@@ -7,7 +7,8 @@ type CommentsCache = InfiniteData<PaginationResponse<singleCommentData>>;
 
 export function useDeleteComment(postId: number) {
   const queryClient = useQueryClient();
-  const commentsKey = communityKeys.comments(postId);
+  const currentUserId = sessionStorage.getItem("user_id")!;
+  const commentsKey = communityKeys.comments(postId , currentUserId);
 
   return useMutation({
     mutationFn: (commentId: number) => deleteComment(commentId),

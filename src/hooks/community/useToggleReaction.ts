@@ -61,7 +61,7 @@ export function useToggleReaction(currentUserId: string) {
       }
 
       if (isComment && variables.targetId != null) {
-        const commentsKey = communityKeys.comments(variables.targetId);
+        const commentsKey = communityKeys.comments(variables.targetId , currentUserId);
         await queryClient.cancelQueries({ queryKey: commentsKey });
 
         const previousData = queryClient.getQueryData<CommentsCache>(commentsKey);
@@ -107,7 +107,7 @@ export function useToggleReaction(currentUserId: string) {
       }
       if (variables.targetType === ReactionTargetType.comment && variables.targetId != null) {
         queryClient.invalidateQueries({
-          queryKey: communityKeys.comments(variables.targetId),
+          queryKey: communityKeys.comments(variables.targetId , currentUserId),
         });
       }
     },

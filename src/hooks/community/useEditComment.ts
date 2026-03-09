@@ -6,8 +6,9 @@ import { editComment } from "../../api/community/community-api";
 type CommentsCache = InfiniteData<PaginationResponse<singleCommentData>>;
 
 export function useEditComment(postId: number) {
+  const currentUserId = sessionStorage.getItem("user_id");
   const queryClient = useQueryClient();
-  const commentsKey = communityKeys.comments(postId);
+  const commentsKey = communityKeys.comments(postId , currentUserId!);
 
   return useMutation({
     mutationFn: ({

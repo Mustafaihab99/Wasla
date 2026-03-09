@@ -285,7 +285,7 @@ export default function UserPostCard({
           initialContent={post.content}
           initialFiles={post.files}
           currentUserId={currentUserId}
-          profileUserId={postOwnerId}
+          // profileUserId={postOwnerId}
           onClose={() => setShowEdit(false)}
         />
       )}

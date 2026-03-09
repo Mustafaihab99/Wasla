@@ -7,7 +7,7 @@ type CommentsCache = InfiniteData<PaginationResponse<singleCommentData>>;
 
 export function useAddComment(postId: number, currentUserId: string) {
   const queryClient = useQueryClient();
-  const commentsKey = communityKeys.comments(postId);
+  const commentsKey = communityKeys.comments(postId , currentUserId);
 
   return useMutation({
     mutationFn: ({
