@@ -39,9 +39,7 @@ export default function ResidentTopWeek() {
               <div className="h-40 overflow-hidden">
                 <img
                   src={
-                   item.roleName === "gym" ? 
-                   import.meta.env.VITE_GYM_IMAGE + item.image
-                   : import.meta.env.VITE_USER_IMAGE + item.image
+                  import.meta.env.VITE_USER_IMAGE + item.image
                   }
                   alt={item.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-300"

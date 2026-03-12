@@ -41,7 +41,6 @@ export default function GymViewDetails() {
         const qrUrl = res.data.qrCodeUrl;
         const bookingId = res.data.bookingId;
 
-        // فتح QR في صفحة جديدة
         window.open(import.meta.env.VITE_QR_IMAGE + qrUrl, "_blank");
 
         handleContinuePayment(service, bookingId);

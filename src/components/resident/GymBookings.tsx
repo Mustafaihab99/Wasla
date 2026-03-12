@@ -62,7 +62,7 @@ export default function GymBookings() {
             whileHover={{ scale: 1.03, y: -3 }}
             className="flex flex-col sm:flex-row p-6 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg">
             <img
-              src={import.meta.env.VITE_GYM_IMAGE + g.imageUrl}
+              src={import.meta.env.VITE_USER_IMAGE + g.imageUrl}
               className="w-20 h-20 rounded-full object-cover border-2 border-primary"
             />
 

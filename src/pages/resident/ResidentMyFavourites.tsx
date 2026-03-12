@@ -68,10 +68,6 @@ export default function ResidentMyFavourites() {
               <div className="flex-shrink-0">
                 <img
                   src={
-                    fav.serviceProviderType === 'Gym' ? 
-                    import.meta.env.VITE_GYM_IMAGE +
-                    fav.serviceProviderProfilePhoto
-                    :
                     import.meta.env.VITE_USER_IMAGE +
                     fav.serviceProviderProfilePhoto
                   }

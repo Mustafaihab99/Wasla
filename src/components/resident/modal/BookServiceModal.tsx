@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import useBookService from "../../../hooks/resident/useBookService";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import useCreatePayment from "../../../hooks/resident/payment/useCreatePayment";
 
 interface BookServiceModalProps {
   serviceId: number;
@@ -16,16 +17,18 @@ interface BookServiceModalProps {
 }
 
 export default function BookServiceModal({
+  serviceId,
   serviceProviderId,
   price,
   availableDays,
   onClose,
 }: BookServiceModalProps) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [bookingType, setBookingType] = useState<1 | 2>(1);
+  const { mutate: createPaymentMutation } = useCreatePayment();
+  
   const [images, setImages] = useState<{ file: File; preview: string }[]>([]);
   const [availableTimesForDay, setAvailableTimesForDay] = useState<
     { id: number; start: string; end: string; isBooking: boolean }[]
@@ -109,54 +112,81 @@ export default function BookServiceModal({
     });
   };
 
-  const handleSubmit = async () => {
-    // Reset errors first
-    setDayError("");
-    setTimeError("");
-    setImgError("");
+const handleSubmit = async () => {
+  setDayError("");
+  setTimeError("");
+  setImgError("");
 
-    let hasError = false;
+  let hasError = false;
 
-    if (!selectedDay && availableDays.length > 0) {
-      setDayError(t("doctor.error.selectDay"));
-      hasError = true;
+  if (!selectedDay && availableDays.length > 0) {
+    setDayError(t("doctor.error.selectDay"));
+    hasError = true;
+  }
+
+  if (!selectedTime) {
+    setTimeError(t("doctor.selectTimeSlot"));
+    hasError = true;
+  }
+
+  if (bookingType === 2 && images.length === 0) {
+    setImgError(t("doctor.error.uploadImages"));
+    hasError = true;
+  }
+
+  if (hasError) return;
+
+  try {
+    const selectedDayInt = Number(selectedDay);
+    const bookingDateStr = getNextBookingDate(selectedDayInt);
+
+    const formData = new FormData();
+
+    const userId = sessionStorage.getItem("user_id") || "";
+
+    formData.append("userId", userId);
+    formData.append("serviceProviderId", serviceProviderId);
+    formData.append("serviceDayId", selectedTimeSlotId?.toString() || "");
+    formData.append("price", price.toString());
+    formData.append("serviceProviderType", "1");
+    formData.append("bookingType", bookingType.toString());
+    formData.append("bookingDate", bookingDateStr);
+
+    if (bookingType === 2) {
+      images.forEach((img) => formData.append("Images", img.file));
     }
 
-    if (!selectedTime) {
-      setTimeError(t("doctor.selectTimeSlot"));
-      hasError = true;
-    }
+    const res: any = await mutation(formData);
 
-    if (bookingType === 2 && images.length === 0) {
-      setImgError(t("doctor.error.uploadImages"));
-      hasError = true;
-    }
+    console.log("BOOKING RESPONSE", res);
 
-    if (hasError) return;
+    const bookingId = res?.data;
 
-    try {
-      const selectedDayInt = Number(selectedDay);
-      const bookingDateStr = getNextBookingDate(selectedDayInt);
-      const formData = new FormData();
-      formData.append("userId", sessionStorage.getItem("user_id") || "");
-      formData.append("serviceProviderId", serviceProviderId);
-      formData.append("serviceDayId", selectedTimeSlotId?.toString() || "");
-      formData.append("price", price.toString());
-      formData.append("serviceProviderType", "1");
-      formData.append("bookingType", bookingType.toString());
-      formData.append("bookingDate", bookingDateStr);
-
-      if (bookingType === 2) {
-        images.forEach((img) => formData.append("Images", img.file));
-      }
-
-      await mutation(formData);
-      onClose();
-      navigate("/resident/profile/my-bookings");
-    } catch {
+    if (!bookingId) {
       toast.error(t("doctor.error.bookingFailed"));
+      return;
     }
-  };
+
+    createPaymentMutation(
+      {
+        userId,
+        serviceProviderId,
+        serviceId,
+        amount: price,
+        paymentMethod: 1,
+        serviceProviderType: 1,
+        bookingId,
+      },
+      {
+        onSuccess: (paymentRes: any) => {
+          window.location.href = paymentRes.data;
+        },
+      }
+    );
+  } catch {
+    toast.error(t("doctor.error.bookingFailed"));
+  }
+};
 
   return (
     <div

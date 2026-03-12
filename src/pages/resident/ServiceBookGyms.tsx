@@ -59,7 +59,7 @@ export default function ServiceBookGyms() {
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={import.meta.env.VITE_GYM_IMAGE + gym.imageUrl}
+                    src={gym.imageUrl}
                     alt={gym.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
@@ -99,7 +99,6 @@ export default function ServiceBookGyms() {
                     </div>
                   </div>
 
-                  {/* BUTTON — دايمًا تحت */}
                   <button
                     onClick={() => {
                       createEvent.mutate(
