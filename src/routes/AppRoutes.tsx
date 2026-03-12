@@ -54,7 +54,12 @@ const MainFeed = lazy(() => import ("../components/community/MainFeed"));
 const SocialSettings = lazy(() => import ("../components/community/SociallSettings"));
 const SavedPostsPage = lazy(() => import ("../components/community/SavedPostsPage"));
 const CommentPage = lazy(() => import ("../components/community/comments/CommentPage"));
-
+// chat
+const ChatLayout = lazy(() => import ("../components/chat/ChatLayout"));
+const NewChatPage = lazy(() => import ("../components/chat/NewChatPage"));
+const ChatList = lazy(() => import ("../components/chat/ChatList"));
+const UserProfileChatPage = lazy(() => import ("../components/chat/UserProfileChatPage"));
+const ChatConversationPage = lazy(() => import ("../components/chat/ChatConversationPage"));
 
 export default function AppRoutes() {
   return (
@@ -149,6 +154,17 @@ export default function AppRoutes() {
           </Route>
         </Route>
         {/* end socila media */}
+
+        {/* Chatting*/}
+        <Route element={<ProtectedRoute allowedRoles={["gym" , "doctor" , "resident"]} />}>
+          <Route path="/chat" element={<ChatLayout />}>
+            <Route index element={<ChatList />} />
+            <Route path="new" element={<NewChatPage />}/>
+            <Route path=":receiverId" element={<ChatConversationPage />} />
+            <Route path="profile/:userId" element={<UserProfileChatPage />} />
+          </Route>
+        </Route>
+        {/* end Chatting */}
       </Routes>
   );
 }

@@ -18,3 +18,10 @@ export const ReactionType = {
     love : 1,
     save: 2
 }
+
+export const MessageType = {
+    text : 1,
+    file: 2,
+    audio: 3,
+    mixed: 4 // text + file
+}

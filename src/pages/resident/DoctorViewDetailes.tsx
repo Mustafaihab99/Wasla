@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useGetDoctorProfile from "../../hooks/doctor/useDoctorProfile";
 import useGetDoctorServices from "../../hooks/doctor/useGetDoctorService";
 import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
@@ -18,9 +18,11 @@ import noData from "../../assets/images/nodata.webp";
 import BookServiceModal from "../../components/resident/modal/BookServiceModal";
 import { useState } from "react";
 import ReviewSection from "../../components/resident/ReviewSection";
+import { FiMessageCircle } from "react-icons/fi";
 
 export default function DoctorViewDetailes() {
   const { doctorId } = useParams();
+  const navigate = useNavigate();
   const userId = sessionStorage.getItem("user_id");
   const { t } = useTranslation();
   const [selectedService, setSelectedService] = useState<null | {
@@ -78,6 +80,13 @@ export default function DoctorViewDetailes() {
           <p className="text-primary text-xl font-semibold">
             {profile?.specializationName}
           </p>
+
+            <button
+              onClick={()=>  navigate(`/chat/${doctorId}`)}
+              className="flex items-center mt-2 gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition shadow-sm">
+              <FiMessageCircle size={18} />
+              <span className="text-sm font-medium">{t("chat.message")}</span>
+            </button>
 
           <div className="grid grid-cols-1 md:grid-cols-2 text-dried text-sm space-y-1">
             <button 

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaStar, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
@@ -12,20 +12,26 @@ import ReviewSection from "../../components/resident/ReviewSection";
 import i18next from "i18next";
 import { gymServiceData } from "../../types/gym/gym-types";
 import useCreatePayment from "../../hooks/resident/payment/useCreatePayment";
+import { FiMessageCircle } from "react-icons/fi";
 
 export default function GymViewDetails() {
   const { gymId } = useParams();
   const { t } = useTranslation();
-  const [selectedService, setSelectedService] = useState<null | gymServiceData>(null);
+  const [selectedService, setSelectedService] = useState<null | gymServiceData>(
+    null,
+  );
+  const navigate = useNavigate();
   const residentId = sessionStorage.getItem("user_id") || "";
   const [bookingId] = useState<number | null>(null);
   const { mutate: createPaymentMutation } = useCreatePayment();
   const { data: profile, isLoading: loadingProfile } = useGetGymProfile(gymId!);
-  const { data: services, isLoading: loadingServices } = useGetGymService(gymId!);
+  const { data: services, isLoading: loadingServices } = useGetGymService(
+    gymId!,
+  );
   const { mutate: bookGym, isPending } = useBookGymService(
     gymId!,
     selectedService?.id || 0,
-    residentId
+    residentId,
   );
 
   if (loadingProfile) return <DoctorCardSkeleton />;
@@ -48,7 +54,10 @@ export default function GymViewDetails() {
     });
   };
 
-  const handleContinuePayment = (service?: gymServiceData, bookingIdParam?: number) => {
+  const handleContinuePayment = (
+    service?: gymServiceData,
+    bookingIdParam?: number,
+  ) => {
     const serviceData = service || selectedService;
     const bookingIdData = bookingIdParam || bookingId;
     if (!serviceData || !bookingIdData) return;
@@ -68,7 +77,7 @@ export default function GymViewDetails() {
         onSuccess: (paymentRes: any) => {
           window.location.href = paymentRes.data;
         },
-      }
+      },
     );
   };
 
@@ -80,8 +89,7 @@ export default function GymViewDetails() {
         p-6 rounded-3xl border border-border
         shadow-sm bg-background
         hover:shadow-md transition"
-        style={{ direction: "ltr" }}
-      >
+        style={{ direction: "ltr" }}>
         {/* Profile Image */}
         <div className="relative">
           <div className="w-40 h-40 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-md">
@@ -105,10 +113,18 @@ export default function GymViewDetails() {
             <h1 className="text-2xl md:text-4xl font-extrabold text-foreground">
               {profile?.businessName}
             </h1>
-            <p className="text-primary text-lg font-semibold">{profile?.ownerName}</p>
+            <p className="text-primary text-lg font-semibold">
+              {profile?.ownerName}
+            </p>
             <p className="text-sm text-muted-foreground mt-1">
               {profile?.reviewsCount} {t("resident.reviews")}
             </p>
+            <button
+              onClick={()=>  navigate(`/chat/${profile?.id}`)}
+              className="flex items-center mt-2 gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition shadow-sm">
+              <FiMessageCircle size={18} />
+              <span className="text-sm font-medium">{t("chat.message")}</span>
+            </button>
           </div>
 
           {/* Contact Section */}
@@ -119,8 +135,7 @@ export default function GymViewDetails() {
                   <button
                     key={index}
                     onClick={() => window.open(`tel:${ph}`)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-muted/40 text-sm font-medium hover:bg-primary hover:text-white transition"
-                  >
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-muted/40 text-sm font-medium hover:bg-primary hover:text-white transition">
                     <FaPhoneAlt className="text-xs" />
                     {ph}
                   </button>
@@ -132,8 +147,7 @@ export default function GymViewDetails() {
               <div className="flex justify-center md:justify-start">
                 <button
                   onClick={() => window.open(`mailto:${profile.email}`)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-muted/40 text-sm font-medium hover:bg-primary hover:text-white transition"
-                >
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-muted/40 text-sm font-medium hover:bg-primary hover:text-white transition">
                   <FaEnvelope className="text-xs" />
                   {profile.email}
                 </button>
@@ -160,8 +174,7 @@ export default function GymViewDetails() {
               <motion.div
                 key={idx}
                 whileHover={{ scale: 1.05 }}
-                className="overflow-hidden rounded-2xl border border-border shadow-sm bg-background"
-              >
+                className="overflow-hidden rounded-2xl border border-border shadow-sm bg-background">
                 <img
                   src={photo}
                   alt={`gym-photo-${idx}`}
@@ -185,7 +198,9 @@ export default function GymViewDetails() {
                 service.type === 2 &&
                 service.newPrice &&
                 service.newPrice < service.price;
-              const savedAmount = hasOffer ? service.price - service.newPrice : 0;
+              const savedAmount = hasOffer
+                ? service.price - service.newPrice
+                : 0;
 
               return (
                 <motion.div
@@ -194,12 +209,13 @@ export default function GymViewDetails() {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -8 }}
                   transition={{ duration: 0.3 }}
-                  className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-background to-muted/40 shadow-md hover:shadow-2xl transition-all duration-300 group"
-                >
+                  className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-background to-muted/40 shadow-md hover:shadow-2xl transition-all duration-300 group">
                   <div className="relative h-44 overflow-hidden">
                     <img
                       src={import.meta.env.VITE_GYM_IMAGE + service.photoUrl}
-                      alt={isArabic ? service.name.arabic : service.name.english}
+                      alt={
+                        isArabic ? service.name.arabic : service.name.english
+                      }
                       className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                     />
                     <div className="absolute inset-0 bg-black/30" />
@@ -222,7 +238,9 @@ export default function GymViewDetails() {
                     </h3>
 
                     <p className="text-sm text-muted-foreground line-clamp-2 min-h-[40px]">
-                      {isArabic ? service.description.arabic : service.description.english}
+                      {isArabic
+                        ? service.description.arabic
+                        : service.description.english}
                     </p>
 
                     <div className="flex items-center justify-between pt-2">
@@ -255,8 +273,7 @@ export default function GymViewDetails() {
                     <button
                       disabled={isPending}
                       className="mt-auto w-full py-2 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 disabled:opacity-50"
-                      onClick={() => handleBook(service)}
-                    >
+                      onClick={() => handleBook(service)}>
                       {isPending ? t("gym.loading") : t("resident.bookNow")}
                     </button>
                   </div>

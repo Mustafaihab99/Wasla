@@ -644,6 +644,7 @@
     "Delete" : "حذف",
     "Deleting..." : "يتم الحذف...",
     "savedPosts" : "المنشورات المحفوظة",
+    "chat" : "المحادثات",
      "goBack": "رجوع",
     "nav": {
       "home": "الصفحه الرئيسية",
@@ -698,5 +699,35 @@
     "editReply": "تعديل الرد",
     "deleteReply": "حذف الرد",
     "changeImage": "تغيير الصورة"
+  },
+  "chat": {
+    "selectChatToStart": "اختر محادثة لبدء المراسلة",
+    "startConversationHint": "اختر محادثة من القائمة الجانبية",
+    "searchChats": "ابحث في المحادثات...",
+    "noChats": "لا توجد محادثات بعد",
+    "voiceMessage": "رسالة صوتية",
+    "file": "ملف",
+    "unknownUser": "مستخدم غير معروف",
+    "newChat": "محادثة جديدة",
+    "searchUsers": "ابحث عن مستخدم...",
+    "noUsersFound": "لم يتم العثور على مستخدمين",
+    "profile": "الملف الشخصي",
+    "bio": "نبذة",
+    "writeBio": "اكتب نبذة عنك...",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ...",
+    "message": "إرسال رسالة",
+    "addBio": "اضغط تعديل لإضافة نبذة",
+    "noBio": "لا توجد نبذة بعد",
+    "longBio" : "النبذة التعريفية طويلة جدا",
+    "typing": "يكتب…",
+    "loadOlderMessages": "تحميل الرسائل الأقدم",
+    "loading": "جارٍ التحميل…",
+    "editing": "تعديل",
+    "placeholderMessage": "رسالة…",
+    "edited": "تم التعديل",
+    "edit": "تعديل",
+    "delete": "حذف"
   }
 }

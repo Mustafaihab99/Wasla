@@ -1,6 +1,3 @@
-// ============================================================
-// ProfileSocialPage.tsx  (fixed)
-// ============================================================
 import { useParams, useNavigate } from "react-router-dom";
 import { useRef, useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
@@ -10,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import ProfileSkeleton from "./ProfileSkeleton";
 import PostSkeleton from "./PostProfileSkeleton";
 import UserPostLikes from "./UserPostLikes";
+import { FiMessageCircle } from "react-icons/fi";
 
 const TABS = ["posts", "likes"] as const;
 type TabType = (typeof TABS)[number];
@@ -37,7 +35,7 @@ export default function ProfileSocialPage() {
       ([entry]) => {
         if (entry.isIntersecting && !isFetchingNextPage) fetchNextPage();
       },
-      { rootMargin: "200px" }
+      { rootMargin: "200px" },
     );
     observer.observe(loadMoreRef.current);
     return () => observer.disconnect();
@@ -50,20 +48,24 @@ export default function ProfileSocialPage() {
   const posts = data?.pages.flatMap((p) => p.posts.data) ?? [];
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
+    <div
+      className="min-h-screen"
+      style={{ background: "var(--background)", color: "var(--foreground)" }}>
       <div className="w-full mx-auto min-h-screen">
-
         {/* Top bar */}
         <div
           className="sticky top-0 z-20 backdrop-blur-md px-6 py-4 flex items-center gap-5"
-          style={{ background: "var(--background)" }}
-        >
-          <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-white/10 transition">
+          style={{ background: "var(--background)" }}>
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2 rounded-full hover:bg-white/10 transition">
             <FaArrowLeft className="w-5 h-5" />
           </button>
           <div>
             <h1 className="font-extrabold text-lg">
-              {isLoading ? t("cprofile.profile") : userName || t("cprofile.profile")}
+              {isLoading
+                ? t("cprofile.profile")
+                : userName || t("cprofile.profile")}
             </h1>
             <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
               {totalPostCount} {t("cprofile.posts")}
@@ -90,12 +92,27 @@ export default function ProfileSocialPage() {
             </div>
             <div className="px-6 pt-20 pb-6">
               <h1 className="font-extrabold text-2xl">{userName}</h1>
-              <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
+              <p
+                className="text-sm mt-1"
+                style={{ color: "var(--muted-foreground)" }}>
                 @{userName.toLowerCase().replace(/\s/g, "_")}
               </p>
+              {
+                targetUserId == routeUserId ?
+              <button
+                onClick={() => navigate(`/chat/${targetUserId}`)}
+                className="flex items-center mt-2 gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition shadow-sm">
+                <FiMessageCircle size={18} />
+                <span className="text-sm font-medium">{t("chat.message")}</span>
+              </button>
+              :
+              <></>
+            }
               <div className="mt-4 text-sm">
                 <span className="font-bold">{totalPostCount}</span>{" "}
-                <span style={{ color: "var(--muted-foreground)" }}>{t("cprofile.posts")}</span>
+                <span style={{ color: "var(--muted-foreground)" }}>
+                  {t("cprofile.posts")}
+                </span>
               </div>
             </div>
           </div>
@@ -104,15 +121,21 @@ export default function ProfileSocialPage() {
         {/* Tabs */}
         <div
           className="grid border-b"
-          style={{ gridTemplateColumns: `repeat(${TABS.length}, 1fr)`, borderColor: "var(--border-color)" }}
-        >
+          style={{
+            gridTemplateColumns: `repeat(${TABS.length}, 1fr)`,
+            borderColor: "var(--border-color)",
+          }}>
           {TABS.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className="py-4 text-sm font-medium transition relative"
-              style={{ color: activeTab === tab ? "var(--foreground)" : "var(--muted-foreground)" }}
-            >
+              style={{
+                color:
+                  activeTab === tab
+                    ? "var(--foreground)"
+                    : "var(--muted-foreground)",
+              }}>
               {t(`cprofile.${tab}`)}
               {activeTab === tab && (
                 <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-sky-500 rounded-full" />
@@ -129,9 +152,13 @@ export default function ProfileSocialPage() {
             ) : posts.length === 0 ? (
               <div className="flex flex-col items-center gap-3 py-20 text-center px-8">
                 <p className="font-extrabold text-2xl">
-                  {isOwner ? t("cprofile.noPostsOwner") : t("cprofile.noPostsOther")}
+                  {isOwner
+                    ? t("cprofile.noPostsOwner")
+                    : t("cprofile.noPostsOther")}
                 </p>
-                <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--muted-foreground)" }}>
                   {isOwner
                     ? t("cprofile.ownerEmptySubtitle")
                     : t("cprofile.otherEmptySubtitle", { name: userName })}
@@ -154,7 +181,9 @@ export default function ProfileSocialPage() {
                 <div className="w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
               )}
               {!hasNextPage && posts.length > 0 && (
-                <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--muted-foreground)" }}>
                   {t("cprofile.noMorePosts")}
                 </p>
               )}

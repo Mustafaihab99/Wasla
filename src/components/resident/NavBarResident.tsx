@@ -36,6 +36,7 @@ export default function ResidentNavBar() {
     { label: t("nav.home"), link: "/dashboard" },
     { label: t("resident.service"), link: "/resident/service" },
     { label: t("common.Community"), link: "/community-loader" },
+    { label: t("common.chat"), link: "/chat" },
   ];
 
   useEffect(() => {
