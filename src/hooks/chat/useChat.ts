@@ -100,17 +100,26 @@ export function useUpdateBio() {
   });
 }
 
+// useSendMessage — شيل invalidation للـ conversation
 export function useSendMessage(senderId: string, receiverId: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (params: SendMessageParams) => sendMessage(params),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: chatKeys.conversation(senderId, receiverId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: chatKeys.recentChats(senderId),
-      });
+      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(senderId) });
+      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(receiverId) });
+    },
+  });
+}
+
+// useDeleteMessage — نفس الكلام
+export function useDeleteMessage(senderId: string, receiverId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (params: DeleteMessageParams) => deleteMessage(params),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(senderId) });
+      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(receiverId) });
     },
   });
 }
@@ -122,21 +131,6 @@ export function useEditMessage(senderId: string, receiverId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: chatKeys.conversation(senderId, receiverId),
-      });
-    },
-  });
-}
-
-export function useDeleteMessage(senderId: string, receiverId: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (params: DeleteMessageParams) => deleteMessage(params),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: chatKeys.conversation(senderId, receiverId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: chatKeys.recentChats(senderId),
       });
     },
   });

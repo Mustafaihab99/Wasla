@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 
 function App() {
   const token = localStorage.getItem("auth_token") ?? "";
-  
+
   return (
     <QueryClientProvider client={queryClient}>
       <SignalRListener token={token} />
@@ -20,9 +20,11 @@ function App() {
 }
 
 export default App;
+
 function SignalRListener({ token }: { token: string }) {
   useBookingHub(token);
   useServiceHub(token);
   useReviewHub(token);
-  return null; 
+
+  return null;
 }

@@ -72,7 +72,7 @@ export default function ChatConversationPage() {
   const navigate = useNavigate();
 
   const currentUserId = sessionStorage.getItem("user_id") || "";
-  const token = sessionStorage.getItem("auth_token") || "";
+  const token = localStorage.getItem("auth_token") || "";
 
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
@@ -111,7 +111,6 @@ export default function ChatConversationPage() {
   const { sendTyping, sendStopTyping } = useChatHub({
     token,
     currentUserId,
-    receiverId,
     onTyping: (sid) => {
       if (sid === receiverId) setIsTyping(true);
     },
@@ -440,7 +439,7 @@ function MessageBubble({
             }`}>
           {/* Audio */}
           {msg.audio && (
-            <audio src={msg.audio} controls className="h-8 max-w-[220px]" />
+            <audio src={msg.audio} controls className="h-8 max-w-[180px]" />
           )}
 
           {/* Files */}

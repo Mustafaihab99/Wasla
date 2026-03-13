@@ -89,9 +89,14 @@ export default function ChatList() {
               className="group w-full flex items-center justify-between px-4 py-3 hover:bg-border/40 transition">
               {/* Go to conversation */}
               <button
-                onClick={() =>
-                  navigate(CHAT_ROUTES.conversation(chat.receiverId))
-                }
+                onClick={() => {
+                  const otherUserId =
+                    chat.senderId === currentUserId
+                      ? chat.receiverId
+                      : chat.senderId;
+
+                  navigate(CHAT_ROUTES.conversation(otherUserId));
+                }}
                 className="flex items-center gap-3 flex-1 text-left">
                 <div className="relative shrink-0">
                   {chat.profileReceiver ? (
@@ -129,7 +134,9 @@ export default function ChatList() {
 
               {/* Delete icon on hover */}
               <button
-                onClick={() => deleteChat({ userId : currentUserId, chatId: chat.chatId })}
+                onClick={() =>
+                  deleteChat({ userId: currentUserId, chatId: chat.chatId })
+                }
                 className="opacity-0 group-hover:opacity-100 mx-2 my-2 transition text-red-500 p-1 rounded-full hover:bg-red-50">
                 <FiTrash2 size={18} />
               </button>

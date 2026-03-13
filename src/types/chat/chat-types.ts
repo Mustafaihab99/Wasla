@@ -29,6 +29,8 @@ export interface UserProfile {
 
 export interface Message {
   messageId?: number;
+  senderId : string;
+  receiverId : string;
   messageText: string | null;
   audio: string | null;
   type: MessageTypeValue;
@@ -41,6 +43,7 @@ export interface Message {
 
 export interface RecentChat {
   receiverId: string;
+  senderId: string,
   chatId: number;
   name: string | null;
   profileReceiver: string | null;
