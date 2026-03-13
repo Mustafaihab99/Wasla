@@ -17,6 +17,10 @@ interface UseChatHubOptions {
   onUserOffline?: (userId: string) => void;
 }
 
+// مقارنة IDs بـ case-insensitive عشان نتجنب مشكلة UUID uppercase/lowercase
+const sameId = (a?: string, b?: string) =>
+  !!a && !!b && a.toLowerCase() === b.toLowerCase();
+
 export function useChatHub({
   token,
   currentUserId,
@@ -69,112 +73,214 @@ export function useChatHub({
     connectionRef.current = connection;
 
     const handleReceiveMessage = (message: Message) => {
-  const myId = currentUserIdRef.current;
-  const otherId =
-    message.senderId === myId ? message.receiverId : message.senderId;
-  if (!otherId) return;
-
-  // ← الإضافة دي هي الحل
-  const messageWithCorrectOwnership: Message = {
-    ...message,
-    isMine: message.senderId === myId,
-  };
-
-  queryClient.setQueryData(
-    chatKeys.conversation(myId, otherId),
-    (oldData: any) => {
-      if (!oldData) return oldData;
-      const lastPageIdx = oldData.pages.length - 1;
-      return {
-        ...oldData,
-        pages: oldData.pages.map((page: any, idx: number) =>
-          idx === lastPageIdx
-            ? {
-                ...page,
-                messages: {
-                  ...page.messages,
-                  data: [...page.messages.data, messageWithCorrectOwnership], // ← هنا
-                  totalCount: page.messages.totalCount + 1,
-                },
-              }
-            : page,
-        ),
-      };
-    },
-  );
-
-  queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
-  // queryClient.invalidateQueries({ queryKey: chatKeys.conversation(message.senderId , message.receiverId) });
-  onNewMessageRef.current?.(message);
-};
-
-    const handleMessageDeleted = (messageId: number) => {
       const myId = currentUserIdRef.current;
-      queryClient.setQueriesData(
-        { queryKey: ["chat-conversation"] },
-        (oldData: any) => {
+      const otherId = sameId(message.senderId, myId)
+        ? message.receiverId
+        : message.senderId;
+      if (!otherId) return;
+
+      const msg: Message = {
+        ...message,
+        isMine: sameId(message.senderId, myId),
+      };
+
+      // نلف على كل الـ conversation queries
+      const allConvQueries = queryClient.getQueriesData<any>({
+        queryKey: ["chat-conversation"],
+      });
+
+      const matchedEntry = allConvQueries.find(([key]) => {
+        const k = key as string[];
+        return k.length === 3 && sameId(k[1], myId) && sameId(k[2], otherId);
+      });
+
+      if (matchedEntry) {
+        // لو في cache -> نضيف الرسالة مباشرة
+        queryClient.setQueryData(matchedEntry[0], (oldData: any) => {
           if (!oldData) return oldData;
+          const lastPageIdx = oldData.pages.length - 1;
           return {
             ...oldData,
-            pages: oldData.pages.map((page: any) => ({
-              ...page,
-              messages: {
-                ...page.messages,
-                data: page.messages.data.filter(
-                  (m: Message) => m.messageId !== messageId,
-                ),
-                totalCount: page.messages.totalCount - 1,
-              },
-            })),
+            pages: oldData.pages.map((page: any, idx: number) =>
+              idx === lastPageIdx
+                ? {
+                    ...page,
+                    messages: {
+                      ...page.messages,
+                      data: [...page.messages.data, msg],
+                      totalCount: page.messages.totalCount + 1,
+                    },
+                  }
+                : page,
+            ),
           };
-        },
-      );
+        });
+      } else {
+        queryClient.invalidateQueries({
+  queryKey: ["chat-conversation", myId, otherId],
+  refetchType: "none",
+});
+
+        queryClient.setQueryData(chatKeys.recentChats(myId), (oldData: any) => {
+          if (!oldData) return oldData;
+
+          // نشوف لو الشات موجود في الـ recent
+          const existingIndex = oldData.findIndex((chat: any) =>
+            sameId(chat.userId, otherId),
+          );
+
+          const newRecent = {
+            userId: otherId,
+            lastMessage:
+              msg.messageText || (msg.audio ? "🎤 Voice message" : "📎 File"),
+            lastMessageTime: msg.sentAt,
+            unreadCount: !msg.isMine ? 1 : 0,
+            ...(msg.isMine ? {} : { isTyping: false }),
+          };
+
+          if (existingIndex >= 0) {
+            // لو موجود، نحدثه
+            const updated = [...oldData];
+            updated[existingIndex] = {
+              ...updated[existingIndex],
+              ...newRecent,
+            };
+            return updated;
+          } else {
+            // لو مش موجود، نضيفه جديد
+            return [newRecent, ...oldData];
+          }
+        });
+
+        // 3. نضيف الرسالة فوراً في الـ conversation cache (بنشئ cache جديد)
+        const newConversationData = {
+          pages: [
+            {
+              messages: {
+                data: [msg],
+                pageNumber: 1,
+                pageSize: 30,
+                totalCount: 1,
+                totalPages: 1,
+              },
+            },
+          ],
+          pageParams: [1],
+        };
+
+        queryClient.setQueryData(
+  ["chat-conversation", myId, otherId],
+  newConversationData
+);
+      }
+
+      if (!msg.isMine) {
+        queryClient.setQueryData(
+          chatKeys.recentChats(otherId),
+          (oldData: any) => {
+            if (!oldData) return oldData;
+
+            const existingIndex = oldData.findIndex((chat: any) =>
+              sameId(chat.userId, myId),
+            );
+
+            const newRecent = {
+              userId: myId,
+              lastMessage:
+                msg.messageText || (msg.audio ? "🎤 Voice message" : "📎 File"),
+              lastMessageTime: msg.sentAt,
+              unreadCount: 1,
+            };
+
+            if (existingIndex >= 0) {
+              const updated = [...oldData];
+              updated[existingIndex] = {
+                ...updated[existingIndex],
+                ...newRecent,
+              };
+              return updated;
+            } else {
+              return [newRecent, ...oldData];
+            }
+          },
+        );
+      }
+
+      onNewMessageRef.current?.(message);
+    };
+
+    // ── MessageDeleted ──────────────────────────────────────────────────────
+    const handleMessageDeleted = (messageId: number) => {
+      const myId = currentUserIdRef.current;
+
+      const allConvQueries = queryClient.getQueriesData<any>({
+        queryKey: ["chat-conversation"],
+      });
+
+      for (const [key, oldData] of allConvQueries) {
+        if (!oldData) continue;
+        queryClient.setQueryData(key, {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            messages: {
+              ...page.messages,
+              data: page.messages.data.filter(
+                (m: Message) => m.messageId !== messageId,
+              ),
+              totalCount: Math.max(0, page.messages.totalCount - 1),
+            },
+          })),
+        });
+      }
+
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
     };
 
-  const handleMessageUpdated = (updatedMessage: Message) => {
-  const myId = currentUserIdRef.current;
-  const otherId =
-    updatedMessage.senderId === myId
-      ? updatedMessage.receiverId
-      : updatedMessage.senderId;
+    // ── MessageUpdated ──────────────────────────────────────────────────────
+    const handleMessageUpdated = (updatedMessage: Message) => {
+      const myId = currentUserIdRef.current;
 
-  const messageWithCorrectOwnership: Message = {
-    ...updatedMessage,
-    isMine: updatedMessage.senderId === myId, // ← نفس الحل
-  };
+      const allConvQueries = queryClient.getQueriesData<any>({
+        queryKey: ["chat-conversation"],
+      });
 
-  queryClient.setQueryData(
-    chatKeys.conversation(myId, otherId),
-    (oldData: any) => {
-      if (!oldData) return oldData;
-      return {
-        ...oldData,
-        pages: oldData.pages.map((page: any) => ({
-          ...page,
-          messages: {
-            ...page.messages,
-            data: page.messages.data.map((m: Message) =>
-              m.messageId === updatedMessage.messageId
-                ? messageWithCorrectOwnership
-                : m,
-            ),
-          },
-        })),
-      };
-    },
-  );
-};
+      for (const [key, oldData] of allConvQueries) {
+        if (!oldData) continue;
 
-   const handleTyping = (senderId: string) => {
-  if (senderId === currentUserIdRef.current) return;
-  onTypingRef.current?.(senderId);
-};
+        const msg: Message = {
+          ...updatedMessage,
+          isMine: sameId(updatedMessage.senderId, myId),
+        };
 
-const handleStopTyping = (senderId: string) => {
-  if (senderId === currentUserIdRef.current) return;
-  onStopTypingRef.current?.(senderId);
-};
+        queryClient.setQueryData(key, {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            messages: {
+              ...page.messages,
+              data: page.messages.data.map((m: Message) =>
+                m.messageId === updatedMessage.messageId ? msg : m,
+              ),
+            },
+          })),
+        });
+      }
+
+      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
+    };
+
+    // ── Typing ──────────────────────────────────────────────────────────────
+    const handleTyping = (senderId: string) => {
+      if (sameId(senderId, currentUserIdRef.current)) return;
+      onTypingRef.current?.(senderId);
+    };
+
+    const handleStopTyping = (senderId: string) => {
+      if (sameId(senderId, currentUserIdRef.current)) return;
+      onStopTypingRef.current?.(senderId);
+    };
+
     const handleUserOnline = (userId: string) =>
       onUserOnlineRef.current?.(userId);
     const handleUserOffline = (userId: string) =>

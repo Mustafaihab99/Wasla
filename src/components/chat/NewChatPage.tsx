@@ -68,6 +68,7 @@ export default function NewChatPage() {
                 <img
                   src={user.image}
                   alt={user.name || ""}
+                  loading="lazy"
                   className="w-11 h-11 rounded-full object-cover shrink-0"
                 />
               ) : (

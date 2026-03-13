@@ -116,3 +116,86 @@
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out forwards;
 }
+/* في ملف global.css */
+
+/* تحسين الـ container بتاع الشات */
+@media (max-width: 640px) {
+  .chat-container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  /* تأكد إن الـ input مش بيخرج برة */
+  .input-bar textarea {
+    max-width: calc(100vw - 120px);
+  }
+  
+  /* تصغير الـ bubble شوية على الموبايل */
+  .message-bubble {
+    max-width: 90% !important;
+  }
+}
+
+/* تحسين الـ scroll */
+.overflow-y-auto {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(99,102,241,0.3) transparent;
+}
+
+/* منع الـ zoom على الموبايل */
+input, textarea, select {
+  font-size: 16px !important;
+}
+
+/* تحسين الـ touch targets */
+@media (max-width: 640px) {
+  button, 
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+/* تحسين عرض الرسائل الطويلة */
+.break-words {
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  hyphens: auto !important;
+}
+
+/* للشاشات الصغيرة */
+@media (max-width: 640px) {
+  /* خلي البابل ياخد مساحة أكبر عشان الكلام الطويل */
+  .max-w-\[85\%\] {
+    max-width: 90% !important;
+  }
+  
+  /* تأكد إن النص مش بيخرج */
+  .text-sm {
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+  }
+  
+  /* الميتا بيانات تبقى مرنة */
+  .flex-wrap {
+    flex-wrap: wrap !important;
+  }
+  
+  /* لو الكلام طويل جداً، نعمله break */
+  .whitespace-pre-wrap {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+  }
+}
+
+/* للشاشات الصغيرة جداً */
+@media (max-width: 380px) {
+  .max-w-\[85\%\] {
+    max-width: 92% !important;
+  }
+  
+  /* الكلام الطويل جداً */
+  .break-all {
+    word-break: break-all !important;
+  }
+}

@@ -88,7 +88,7 @@ export async function deleteChat({ chatId, userId }: DeleteChatParams): Promise<
     const { data } = await axiosInstance.delete("Chats/Chat", {
       params: { chatId, userId },
     });
-    toast.success(data?.message || "Chat deleted");
+    console.log(data.message);
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     toast.error(axiosError.response?.data?.message || "Failed to delete chat");
@@ -100,7 +100,7 @@ export async function deleteChat({ chatId, userId }: DeleteChatParams): Promise<
 export async function updateBio({ userId, bio }: UpdateBioParams): Promise<void> {
   try {
     const { data } = await axiosInstance.put("Chats/Bio", { userId, bio });
-    toast.success(data?.message || "Bio updated!");
+    console.log(data?.message || "Bio updated!");
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     toast.error(axiosError.response?.data?.message || "Failed to update bio");
@@ -148,7 +148,6 @@ export async function editMessage(params: EditMessageParams): Promise<void> {
         existFiles: params.existFiles,
       },
     });
-    toast.success("Message updated");
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     toast.error(axiosError.response?.data?.message || "Failed to edit message");
@@ -162,7 +161,6 @@ export async function deleteMessage({ messageId, senderId }: DeleteMessageParams
     await axiosInstance.delete("Chats/Message", {
       params: { messageId, senderId },
     });
-    toast.success("Message deleted");
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     toast.error(axiosError.response?.data?.message || "Failed to delete message");

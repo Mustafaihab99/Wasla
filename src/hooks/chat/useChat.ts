@@ -100,7 +100,6 @@ export function useUpdateBio() {
   });
 }
 
-// useSendMessage — شيل invalidation للـ conversation
 export function useSendMessage(senderId: string, receiverId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -108,11 +107,11 @@ export function useSendMessage(senderId: string, receiverId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(senderId) });
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(receiverId) });
+      queryClient.invalidateQueries({ queryKey: chatKeys.conversation(senderId , receiverId) });
     },
   });
 }
 
-// useDeleteMessage — نفس الكلام
 export function useDeleteMessage(senderId: string, receiverId: string) {
   const queryClient = useQueryClient();
   return useMutation({

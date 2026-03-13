@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   FiArrowLeft,
-  FiMic,
   FiMoreVertical,
   FiPaperclip,
   FiSend,
@@ -10,7 +9,7 @@ import {
   FiUser,
   FiX,
   FiEdit2,
-  FiSquare,
+  FiMic,
 } from "react-icons/fi";
 import {
   useDeleteMessage,
@@ -25,46 +24,8 @@ import { CHAT_ROUTES } from "../../routes/ChatRoutes";
 import { formatChatTime } from "../../utils/chatUtils";
 import { MessageType } from "../../utils/enum";
 import { useTranslation } from "react-i18next";
-
-function useAudioRecorder() {
-  const [recording, setRecording] = useState(false);
-  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<BlobPart[]>([]);
-
-  const start = useCallback(async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mr = new MediaRecorder(stream);
-      mediaRecorderRef.current = mr;
-      chunksRef.current = [];
-      mr.ondataavailable = (e) => chunksRef.current.push(e.data);
-      mr.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
-        setAudioBlob(blob);
-        setAudioUrl(URL.createObjectURL(blob));
-        stream.getTracks().forEach((t) => t.stop());
-      };
-      mr.start();
-      setRecording(true);
-    } catch {
-      console.error("Microphone access denied");
-    }
-  }, []);
-
-  const stop = useCallback(() => {
-    mediaRecorderRef.current?.stop();
-    setRecording(false);
-  }, []);
-
-  const clear = useCallback(() => {
-    setAudioBlob(null);
-    setAudioUrl(null);
-  }, []);
-
-  return { recording, audioBlob, audioUrl, start, stop, clear };
-}
+import { useAudioRecorder } from "../../hooks/chat/useAudioRecorder";
+import { AudioRecorderButton, WavePreview } from "./AudioRecordButton";
 
 export default function ChatConversationPage() {
   const { t } = useTranslation();
@@ -82,7 +43,8 @@ export default function ChatConversationPage() {
     text: string;
     existFiles: string[];
   } | null>(null);
-  const [menuMsgId, setMenuMsgId] = useState<number | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -91,6 +53,7 @@ export default function ChatConversationPage() {
     recording,
     audioBlob,
     audioUrl,
+    recordingSeconds,
     start: startRec,
     stop: stopRec,
     clear: clearAudio,
@@ -107,7 +70,6 @@ export default function ChatConversationPage() {
   const { mutate: editMsg } = useEditMessage(currentUserId, receiverId || "");
   const { mutate: delMsg } = useDeleteMessage(currentUserId, receiverId || "");
 
-  // ── SignalR ────────────────────────────────────────────────────────────────
   const { sendTyping, sendStopTyping } = useChatHub({
     token,
     currentUserId,
@@ -119,8 +81,8 @@ export default function ChatConversationPage() {
     },
   });
 
-const allMessages: Message[] =
-  data?.pages?.flatMap((p) => p?.messages?.data ?? []) ?? [];
+  const allMessages: Message[] =
+    data?.pages?.flatMap((p) => p?.messages?.data ?? []) ?? [];
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -184,36 +146,40 @@ const allMessages: Message[] =
     }
   };
 
-  const handleFilePick = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) setFiles(Array.from(e.target.files));
-  };
+  // show send button only when there's text/files and no audio
+  const hasTextOrFiles =
+    (text.trim().length > 0 || files.length > 0) && !audioUrl;
+
+  // when recording or audio preview is active, hide text input & attachment
+  const isAudioMode = recording || !!audioUrl;
 
   return (
     <div
-      className="flex flex-col h-full bg-background"
-      onClick={() => setMenuMsgId(null)}>
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-border shrink-0 bg-background sticky top-0 z-20">
+      className="flex flex-col h-[100dvh] w-full max-w-full bg-background overflow-hidden"
+      onClick={() => setOpenMenuId(null)}>
+      {/* ── Header ── */}
+      <div className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-3 border-b border-border shrink-0 bg-background z-20 w-full">
         <button
           onClick={() => navigate(-1)}
-          className="w-10 h-10 rounded-full hover:bg-primary/10 transition flex items-center justify-center text-primary">
-          <FiArrowLeft size={20} />
+          className="w-9 h-9 rounded-full hover:bg-primary/10 transition flex items-center justify-center text-primary shrink-0 active:scale-95">
+          <FiArrowLeft size={19} />
         </button>
 
         <button
           onClick={() => navigate(CHAT_ROUTES.profile(receiverId || ""))}
-          className="flex items-center gap-3 flex-1 min-w-0">
+          className="flex items-center gap-2 flex-1 min-w-0 text-left">
           {profile?.profileImage ? (
             <img
               src={profile.profileImage}
               alt={profile.name || ""}
-              className="w-10 h-10 rounded-full object-cover shrink-0"
+              className="w-9 h-9 rounded-full object-cover shrink-0"
             />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <FiUser size={18} className="text-primary" />
+            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+              <FiUser size={16} className="text-primary" />
             </div>
           )}
-          <div className="text-left min-w-0">
+          <div className="min-w-0">
             <p className="text-sm font-semibold truncate text-foreground">
               {profile?.name || "..."}
             </p>
@@ -226,10 +192,10 @@ const allMessages: Message[] =
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-2">
-        {/* Load more */}
+      {/* ── Messages list ── */}
+      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-3 flex flex-col gap-1.5 min-h-0 w-full">
         {hasNextPage && (
-          <div className="flex justify-center mb-2">
+          <div className="flex justify-center mb-2 w-full">
             <button
               onClick={() => fetchNextPage()}
               disabled={isFetchingNextPage}
@@ -242,59 +208,52 @@ const allMessages: Message[] =
         )}
 
         {allMessages.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center text-center select-none opacity-70">
-            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
-              <FiSend size={28} className="text-primary" />
+          <div className="flex flex-1 flex-col items-center justify-center text-center select-none opacity-60 w-full">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <FiSend size={22} className="text-primary" />
             </div>
-
             <h3 className="text-sm font-semibold text-foreground">
               {t("chat.noMessagesYet")}
             </h3>
-
-            <p className="text-xs text-foreground/50 mt-1 max-w-[240px]">
+            <p className="text-xs text-foreground/50 mt-1 max-w-[200px]">
               {t("chat.startConversationHint2")}
             </p>
           </div>
         ) : (
-          allMessages.map((msg, idx) => {
-            return (
-              <MessageBubble
-                key={msg.messageId ?? idx}
-                msg={msg}
-                isMine={msg.isMine}
-                menuOpen={menuMsgId === msg.messageId}
-                onMenuToggle={(e) => {
-                  e.stopPropagation();
-                  setMenuMsgId(
-                    menuMsgId === msg.messageId ? null : msg.messageId!,
-                  );
-                }}
-                onEdit={() => {
-                  setEditingMsg({
-                    id: msg.messageId!, // ← messageId الحقيقي
-                    text: msg.messageText || "",
-                    existFiles: msg.files,
-                  });
-                  setText(msg.messageText || "");
-                  setMenuMsgId(null);
-                }}
-                onDelete={() => {
-                  delMsg({
-                    messageId: msg.messageId!,
-                    senderId: currentUserId,
-                  });
-                  setMenuMsgId(null);
-                }}
-              />
-            );
-          })
+          allMessages.map((msg, idx) => (
+            <MessageBubble
+              key={msg.messageId ?? idx}
+              msg={msg}
+              isMine={msg.isMine}
+              menuOpen={openMenuId === msg.messageId}
+              onMenuToggle={(e) => {
+                e.stopPropagation();
+                setOpenMenuId(
+                  openMenuId === msg.messageId ? null : (msg.messageId ?? null),
+                );
+              }}
+              onEdit={() => {
+                setEditingMsg({
+                  id: msg.messageId!,
+                  text: msg.messageText || "",
+                  existFiles: msg.files,
+                });
+                setText(msg.messageText || "");
+                setOpenMenuId(null);
+              }}
+              onDelete={() => {
+                delMsg({ messageId: msg.messageId!, senderId: currentUserId });
+                setOpenMenuId(null);
+              }}
+            />
+          ))
         )}
-
         <div ref={bottomRef} />
       </div>
 
+      {/* ── Editing banner ── */}
       {editingMsg && (
-        <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 border-t border-primary/20 text-xs text-primary shrink-0">
+        <div className="flex items-center gap-2 px-2 sm:px-3 py-2 bg-primary/10 border-t border-primary/20 text-xs text-primary shrink-0 w-full">
           <FiEdit2 size={13} />
           <span className="flex-1 truncate">
             {t("chat.editing")}: {editingMsg.text}
@@ -304,33 +263,21 @@ const allMessages: Message[] =
               setEditingMsg(null);
               setText("");
             }}
-            className="hover:opacity-70">
+            className="hover:opacity-70 p-1">
             <FiX size={14} />
           </button>
         </div>
       )}
 
-      {/* ── Audio preview ─────────────────────────────────────────────────────── */}
-      {audioUrl && !recording && (
-        <div className="flex items-center gap-2 px-4 py-2 bg-background border-t border-border shrink-0">
-          <audio src={audioUrl} controls className="h-8 flex-1" />
-          <button
-            onClick={clearAudio}
-            className="text-foreground/50 hover:text-foreground transition">
-            <FiX size={16} />
-          </button>
-        </div>
-      )}
-
-      {/* ── File preview ──────────────────────────────────────────────────────── */}
+      {/* ── File preview ── */}
       {files.length > 0 && (
-        <div className="flex gap-2 px-4 py-2 overflow-x-auto border-t border-border shrink-0">
+        <div className="flex gap-2 px-2 sm:px-3 py-2 overflow-x-auto border-t border-border shrink-0 w-full">
           {files.map((f, i) => (
             <div key={i} className="relative shrink-0">
               {f.type.startsWith("image/") ? (
                 <img
                   src={URL.createObjectURL(f)}
-                  alt="send file"
+                  alt="file"
                   className="w-14 h-14 rounded-xl object-cover"
                 />
               ) : (
@@ -348,65 +295,87 @@ const allMessages: Message[] =
         </div>
       )}
 
-      {/* ── Input bar ─────────────────────────────────────────────────────────── */}
-      <div className="flex items-end gap-2 px-4 py-3 border-t border-border shrink-0 bg-background">
-        {/* File attach */}
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="w-10 h-10 rounded-full hover:bg-primary/10 transition flex items-center justify-center shrink-0 text-primary/70">
-          <FiPaperclip size={18} />
-        </button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          accept="image/*,video/*,application/pdf"
-          className="hidden"
-          onChange={handleFilePick}
-        />
+      {/* ── Input bar ── */}
+      <div className="shrink-0 w-full border-t border-border bg-background px-2 sm:px-3 py-2">
+        <div className="flex items-end gap-1.5 sm:gap-2 w-full max-w-full">
+          {/* Attachment button — hidden in audio mode */}
+          {!isAudioMode && (
+            <>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-primary/10 flex items-center justify-center shrink-0 text-primary/70">
+                <FiPaperclip size={17} />
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/*,video/*,application/pdf"
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files) setFiles(Array.from(e.target.files));
+                }}
+              />
+            </>
+          )}
 
-        {/* Text area */}
-        <div className="flex-1 bg-primary/10 rounded-2xl px-4 py-2.5 min-h-[42px] flex items-end">
-          <textarea
-            value={text}
-            onChange={(e) => handleTextChange(e.target.value)}
-            onKeyDown={handleKey}
-            placeholder={t("chat.placeholderMessage")}
-            rows={1}
-            className="w-full bg-transparent text-sm outline-none resize-none placeholder:text-foreground/40 max-h-32 leading-snug"
-            style={{
-              overflowY: text.split("\n").length > 4 ? "auto" : "hidden",
-            }}
-          />
+          {/* Text input — hidden in audio mode */}
+          {!isAudioMode && (
+            <div className="flex-1 min-w-0 bg-primary/10 rounded-2xl px-3 py-2">
+              <textarea
+                value={text}
+                onChange={(e) => handleTextChange(e.target.value)}
+                onKeyDown={handleKey}
+                placeholder={t("chat.placeholderMessage")}
+                rows={1}
+                className="w-full bg-transparent text-sm outline-none resize-none placeholder:text-foreground/40 max-h-24"
+                style={{ minHeight: "36px" }}
+              />
+            </div>
+          )}
+
+          {/* Audio recorder — takes full width in audio mode */}
+          {isAudioMode && (
+            <div className="flex-1 min-w-0">
+              <AudioRecorderButton
+                recording={recording}
+                audioUrl={audioUrl}
+                recordingSeconds={recordingSeconds}
+                onStart={startRec}
+                onStop={stopRec}
+                onClear={clearAudio}
+                onSend={handleSubmit}
+                disabled={sending}
+              />
+            </div>
+          )}
+
+          {/* Send / mic button */}
+          <div className="shrink-0">
+            {!isAudioMode ? (
+              hasTextOrFiles ? (
+                <button
+                  onClick={handleSubmit}
+                  disabled={sending}
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary flex items-center justify-center shadow-sm disabled:opacity-50 active:scale-95 transition-transform">
+                  <FiSend size={15} className="text-white" />
+                </button>
+              ) : (
+                <button
+                  onClick={startRec}
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-primary/10 transition flex items-center justify-center text-primary/70 active:scale-95">
+                  <FiMic size={18} />
+                </button>
+              )
+            ) : null}
+          </div>
         </div>
-
-        {/* Mic / Send */}
-        {text.trim() || files.length || audioUrl ? (
-          <button
-            onClick={handleSubmit}
-            disabled={sending}
-            className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shrink-0 hover:opacity-85 transition disabled:opacity-50">
-            <FiSend size={16} className="text-white ml-0.5" />
-          </button>
-        ) : recording ? (
-          <button
-            onClick={stopRec}
-            className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center shrink-0 animate-pulse">
-            <FiSquare size={14} className="text-white" />
-          </button>
-        ) : (
-          <button
-            onClick={startRec}
-            className="w-10 h-10 rounded-full hover:bg-primary/10 transition flex items-center justify-center shrink-0 text-primary/70">
-            <FiMic size={18} />
-          </button>
-        )}
       </div>
     </div>
   );
 }
 
-// ─── Message Bubble ───────────────────────────────────────────────────────────
+// ─── Message Bubble ────────────────────────────────────────────────────────────
 
 interface BubbleProps {
   msg: Message;
@@ -426,12 +395,12 @@ function MessageBubble({
   onDelete,
 }: BubbleProps) {
   const { t } = useTranslation();
+
   return (
-    <div className={`flex ${isMine ? "justify-end" : "justify-start"} group`}>
-      <div className="relative max-w-[75%]">
-        {/* Bubble */}
+    <div className={`flex ${isMine ? "justify-end" : "justify-start"} group w-full px-1`}>
+      <div className={`relative ${isMine ? 'max-w-[85%] sm:max-w-[70%]' : 'max-w-[85%] sm:max-w-[70%]'}`}>
         <div
-          className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed
+          className={`rounded-2xl px-3 sm:px-4 py-2.5 text-sm leading-relaxed break-words
             ${
               isMine
                 ? "bg-primary text-white rounded-br-sm"
@@ -439,19 +408,25 @@ function MessageBubble({
             }`}>
           {/* Audio */}
           {msg.audio && (
-            <audio src={msg.audio} controls className="h-8 max-w-[180px]" />
+            <div className="w-full max-w-[180px] sm:max-w-[220px]">
+              <WavePreview
+                audioUrl={msg.audio}
+                isMine={isMine}
+                showActions={false}
+              />
+            </div>
           )}
 
           {/* Files */}
           {msg.files?.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mb-1">
+            <div className="flex flex-wrap gap-1.5 mb-1 w-full">
               {msg.files.map((f, i) =>
                 /\.(jpg|jpeg|png|gif|webp)$/i.test(f) ? (
                   <img
                     key={i}
                     src={f}
-                    alt="send file"
-                    className="max-w-[180px] rounded-xl object-cover"
+                    alt=""
+                    className="max-w-[120px] sm:max-w-[160px] rounded-xl object-cover"
                   />
                 ) : (
                   <a
@@ -459,8 +434,8 @@ function MessageBubble({
                     href={f}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs underline opacity-80">
-                    📎 {f}
+                    className="text-xs underline opacity-80 break-all">
+                    📎 {f.split('/').pop() || f}
                   </a>
                 ),
               )}
@@ -469,53 +444,61 @@ function MessageBubble({
 
           {/* Text */}
           {msg.messageText && (
-            <p className="whitespace-pre-wrap">{msg.messageText}</p>
+            <p className="whitespace-pre-wrap break-words overflow-hidden">
+              {msg.messageText}
+            </p>
           )}
 
           {/* Meta */}
           <div
-            className={`flex items-center gap-1 mt-1 ${isMine ? "justify-end" : "justify-start"}`}>
+            className={`flex items-center gap-1 mt-1 ${isMine ? "justify-end" : "justify-start"} flex-wrap`}>
             <span
-              className={`text-[10px] ${isMine ? "text-white/60" : "text-foreground/40"}`}>
+              className={`text-[10px] whitespace-nowrap ${isMine ? "text-white/60" : "text-foreground/40"}`}>
               {formatChatTime(msg.sentAt)}
             </span>
-            {msg.isEdited  && (
+            {msg.isEdited && (
               <span
-                className={`text-[10px] ${isMine ? "text-white/50" : "text-foreground/30"}`}>
+                className={`text-[10px] whitespace-nowrap ${isMine ? "text-white/50" : "text-foreground/30"}`}>
                 · {t("chat.edited")}
               </span>
             )}
             {msg.readAt && isMine && (
-              <span className="text-[10px] text-white/60">✓✓</span>
+              <span className="text-[10px] text-white/60 whitespace-nowrap">✓✓</span>
             )}
           </div>
         </div>
 
-        {/* Context menu trigger */}
+        {/* Menu trigger */}
         {isMine && (
           <button
             onClick={onMenuToggle}
-            className="absolute -left-7 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition w-6 h-6 rounded-full hover:bg-primary/10 flex items-center justify-center">
-            <FiMoreVertical size={13} className="text-foreground/50" />
+            className={`
+              absolute left-0 -translate-x-full top-1/2 -translate-y-1/2
+              w-8 h-8 rounded-full hover:bg-border
+              flex items-center justify-center transition-opacity z-10
+              ${menuOpen ? "opacity-100" : "opacity-0 md:group-hover:opacity-70"}
+            `}>
+            <FiMoreVertical size={14} className="text-foreground/60" />
           </button>
         )}
 
-        {/* Dropdown menu */}
+        {/* Dropdown */}
         {menuOpen && isMine && (
-          <div className="absolute right-0 top-full mt-1 z-10 bg-background border border-border rounded-xl shadow-lg overflow-hidden min-w-[120px]">
-            {
-              msg.type !== MessageType.audio && msg.type !== MessageType.file && (
-            <button
-              onClick={onEdit}
-              className="w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-primary/10 transition">
-              <FiEdit2 size={12} /> {t("chat.edit")}
-            </button>
-            )
-           }
+          <div
+            className="absolute right-0 top-full mt-1 z-30 bg-background border border-border rounded-xl shadow-lg overflow-hidden min-w-[130px]"
+            onClick={(e) => e.stopPropagation()}>
+            {msg.type !== MessageType.audio &&
+              msg.type !== MessageType.file && (
+                <button
+                  onClick={onEdit}
+                  className="w-full flex items-center gap-2 px-3 py-2.5 text-xs hover:bg-primary/10 transition">
+                  <FiEdit2 size={13} /> {t("chat.edit")}
+                </button>
+              )}
             <button
               onClick={onDelete}
-              className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition">
-              <FiTrash2 size={12} /> {t("chat.delete")}
+              className="w-full flex items-center gap-2 px-3 py-2.5 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition">
+              <FiTrash2 size={13} /> {t("chat.delete")}
             </button>
           </div>
         )}

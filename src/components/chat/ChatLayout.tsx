@@ -13,12 +13,13 @@ export default function ChatLayout() {
   const showChat = receiverId || isNewChatPage || isProfilePage;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background text-foreground">
+    <div className="flex h-screen overflow-x-hidden bg-background text-foreground">
       {/* Sidebar */}
       <aside
         className={`
           flex flex-col
-          w-full md:w-[360px]
+          w-full lg:max-w-[350px]
+          md:max-w-[150px]
           shrink-0
           border-r border-border
           bg-background

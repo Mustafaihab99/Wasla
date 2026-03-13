@@ -103,6 +103,7 @@ export default function ChatList() {
                     <img
                       src={chat.profileReceiver}
                       alt={chat.name || ""}
+                      loading="lazy"
                       className="w-12 h-12 rounded-full object-cover"
                     />
                   ) : (
