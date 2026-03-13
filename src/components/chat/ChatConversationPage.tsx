@@ -26,8 +26,6 @@ import { formatChatTime } from "../../utils/chatUtils";
 import { MessageType } from "../../utils/enum";
 import { useTranslation } from "react-i18next";
 
-// ─── Audio recorder hook ──────────────────────────────────────────────────────
-
 function useAudioRecorder() {
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -122,9 +120,8 @@ export default function ChatConversationPage() {
     },
   });
 
-  const allMessages: Message[] = data
-    ? data.pages.flatMap((p) => [...p.messages.data]) // بدون reverse
-    : [];
+const allMessages: Message[] =
+  data?.pages?.flatMap((p) => p?.messages?.data ?? []) ?? [];
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -245,35 +242,54 @@ export default function ChatConversationPage() {
           </div>
         )}
 
-        {allMessages.map((msg, idx) => {
-          return (
-            <MessageBubble
-              key={msg.messageId ?? idx} // ← استخدم messageId كـ key
-              msg={msg}
-              isMine={true}
-              menuOpen={menuMsgId === msg.messageId} // ← قارن بـ messageId مش idx
-              onMenuToggle={(e) => {
-                e.stopPropagation();
-                setMenuMsgId(
-                  menuMsgId === msg.messageId ? null : msg.messageId!,
-                );
-              }}
-              onEdit={() => {
-                setEditingMsg({
-                  id: msg.messageId!, // ← messageId الحقيقي
-                  text: msg.messageText || "",
-                  existFiles: msg.files,
-                });
-                setText(msg.messageText || "");
-                setMenuMsgId(null);
-              }}
-              onDelete={() => {
-                delMsg({ messageId: msg.messageId!, senderId: currentUserId });
-                setMenuMsgId(null);
-              }}
-            />
-          );
-        })}
+        {allMessages.length === 0 ? (
+          <div className="flex flex-1 flex-col items-center justify-center text-center select-none opacity-70">
+            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-5">
+              <FiSend size={28} className="text-primary" />
+            </div>
+
+            <h3 className="text-sm font-semibold text-foreground">
+              {t("chat.noMessagesYet")}
+            </h3>
+
+            <p className="text-xs text-foreground/50 mt-1 max-w-[240px]">
+              {t("chat.startConversationHint2")}
+            </p>
+          </div>
+        ) : (
+          allMessages.map((msg, idx) => {
+            return (
+              <MessageBubble
+                key={msg.messageId ?? idx}
+                msg={msg}
+                isMine={msg.isMine}
+                menuOpen={menuMsgId === msg.messageId}
+                onMenuToggle={(e) => {
+                  e.stopPropagation();
+                  setMenuMsgId(
+                    menuMsgId === msg.messageId ? null : msg.messageId!,
+                  );
+                }}
+                onEdit={() => {
+                  setEditingMsg({
+                    id: msg.messageId!, // ← messageId الحقيقي
+                    text: msg.messageText || "",
+                    existFiles: msg.files,
+                  });
+                  setText(msg.messageText || "");
+                  setMenuMsgId(null);
+                }}
+                onDelete={() => {
+                  delMsg({
+                    messageId: msg.messageId!,
+                    senderId: currentUserId,
+                  });
+                  setMenuMsgId(null);
+                }}
+              />
+            );
+          })
+        )}
 
         <div ref={bottomRef} />
       </div>
@@ -464,7 +480,7 @@ function MessageBubble({
               className={`text-[10px] ${isMine ? "text-white/60" : "text-foreground/40"}`}>
               {formatChatTime(msg.sentAt)}
             </span>
-            {msg.isEdited && (
+            {msg.isEdited  && (
               <span
                 className={`text-[10px] ${isMine ? "text-white/50" : "text-foreground/30"}`}>
                 · {t("chat.edited")}
@@ -488,11 +504,15 @@ function MessageBubble({
         {/* Dropdown menu */}
         {menuOpen && isMine && (
           <div className="absolute right-0 top-full mt-1 z-10 bg-background border border-border rounded-xl shadow-lg overflow-hidden min-w-[120px]">
+            {
+              msg.type !== MessageType.audio && msg.type !== MessageType.file && (
             <button
               onClick={onEdit}
               className="w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-primary/10 transition">
               <FiEdit2 size={12} /> {t("chat.edit")}
             </button>
+            )
+           }
             <button
               onClick={onDelete}
               className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition">

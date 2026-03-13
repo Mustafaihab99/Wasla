@@ -8,14 +8,14 @@ import { CHAT_ROUTES } from "../../routes/ChatRoutes";
 export default function NewChatPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-
+  const userId = sessionStorage.getItem("user_id")!;
   const [search, setSearch] = useState("");
   const { data, isLoading } = useGetChatUsers(1, 50);
 
   const users = data?.data ?? [];
 
   const filtered = users.filter((u) =>
-    u.name?.toLowerCase().includes(search.toLowerCase()),
+    u.name?.toLowerCase().includes(search.toLowerCase()) && u.id != userId,
   );
 
   return (

@@ -728,6 +728,8 @@
     "placeholderMessage": "Message…",
     "edited": "edited",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "noMessagesYet" : "No Messages Yet.",
+    "startConversationHint2" : "Start The Conversion Now."
   }
 }

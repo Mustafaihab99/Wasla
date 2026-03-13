@@ -10,45 +10,39 @@ export default function ChatLayout() {
   const isNewChatPage = location.pathname.includes("/chat/new");
   const isProfilePage = location.pathname.includes("/chat/profile");
 
+  const showChat = receiverId || isNewChatPage || isProfilePage;
+
   return (
     <div className="flex h-screen overflow-hidden bg-background text-foreground">
-
       {/* Sidebar */}
       <aside
         className={`
-          flex flex-col w-full max-w-sm shrink-0
+          flex flex-col
+          w-full md:w-[360px]
+          shrink-0
           border-r border-border
           bg-background
-          ${
-            isNewChatPage ? "hidden md:flex" : "flex"
-          }
-        `}
-      >
+          transition-all duration-300
+          ${showChat ? "hidden md:flex" : "flex"}
+        `}>
         <ChatList />
       </aside>
 
-      {/* Main content area */}
+      {/* Main */}
       <main
         className={`
-          flex-1 flex flex-col
+          flex flex-col flex-1
           bg-background
-          ${
-            // الـ main يظهر في حال الشات موجود، New Chat أو Profile
-            receiverId || isNewChatPage || isProfilePage
-              ? "flex"
-              : "hidden md:flex"
-          }
-        `}
-      >
-        {receiverId || isNewChatPage || isProfilePage ? (
+          transition-all duration-300
+          ${showChat ? "flex" : "hidden md:flex"}
+        `}>
+        {showChat ? (
           <Outlet />
         ) : (
-          // placeholder لما مفيش chat مختار
-          <div className="flex flex-1 flex-col items-center justify-center gap-4 select-none text-dried">
-
+          <div className="flex flex-1 flex-col items-center justify-center gap-5 select-none text-dried p-6">
             {/* icon */}
             <div className="opacity-60">
-              <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+              <svg width="72" height="72" viewBox="0 0 64 64" fill="none">
                 <circle
                   cx="32"
                   cy="32"
@@ -66,19 +60,17 @@ export default function ChatLayout() {
             </div>
 
             {/* text */}
-            <p className="text-sm font-medium tracking-wide text-center max-w-xs">
+            <p className="text-base font-semibold tracking-wide text-center max-w-xs">
               {t("chat.selectChatToStart")}
             </p>
 
             {/* hint */}
-            <p className="text-xs opacity-60">
+            <p className="text-sm opacity-60 text-center">
               {t("chat.startConversationHint")}
             </p>
-
           </div>
         )}
       </main>
-
     </div>
   );
 }

@@ -35,8 +35,18 @@ export function useChatHub({
 
     connectionRef.current = connection;
 
-    connection.start().catch((err) => console.error("ChatHub connection failed:", err));
+    const startConnection = async () => {
+      try {
+        if (connection.state === signalR.HubConnectionState.Disconnected) {
+          await connection.start();
+          console.log("ChatHub connected");
+        }
+      } catch (err) {
+        console.error("ChatHub connection failed:", err);
+      }
+    };
 
+    startConnection();
 
     connection.on("ReceiveMessage", () => {
       // Invalidate conversation + recent chats on new message
@@ -60,7 +70,9 @@ export function useChatHub({
     });
 
     return () => {
-      connection.stop();
+      if (connection.state !== signalR.HubConnectionState.Disconnected) {
+        connection.stop();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, currentUserId, receiverId]);
@@ -74,7 +86,9 @@ export function useChatHub({
   // ─── Send stop typing event ──────────────────────────────────────────────
 
   const sendStopTyping = useCallback((toReceiverId: string) => {
-    connectionRef.current?.invoke("StopTyping", toReceiverId).catch(console.error);
+    connectionRef.current
+      ?.invoke("StopTyping", toReceiverId)
+      .catch(console.error);
   }, []);
 
   return { sendTyping, sendStopTyping };

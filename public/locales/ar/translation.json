@@ -728,6 +728,8 @@
     "placeholderMessage": "رسالة…",
     "edited": "تم التعديل",
     "edit": "تعديل",
-    "delete": "حذف"
+    "delete": "حذف",
+    "noMessagesYet" : "لا توجد رسايل حتى الان.",
+    "startConversationHint2" : "ابدء المحادثه الان."
   }
 }

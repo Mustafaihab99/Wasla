@@ -1,4 +1,9 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   deleteChat,
   deleteMessage,
@@ -26,14 +31,12 @@ export const chatKeys = {
     ["chat-conversation", senderId, receiverId] as const,
 };
 
-
 export function useGetChatUsers(pageNumber: number = 1, pageSize: number = 20) {
   return useQuery({
     queryKey: chatKeys.users(pageNumber),
     queryFn: () => getChatUsers(pageNumber, pageSize),
   });
 }
-
 
 export function useGetRecentChats(userId: string) {
   return useQuery({
@@ -43,7 +46,6 @@ export function useGetRecentChats(userId: string) {
   });
 }
 
-
 export function useGetUserProfile(userId: string) {
   return useQuery({
     queryKey: chatKeys.profile(userId),
@@ -52,26 +54,29 @@ export function useGetUserProfile(userId: string) {
   });
 }
 
-
 export function useGetChatConversation(
   senderId: string,
   receiverId: string,
-  pageSize: number = 30
+  pageSize: number = 30,
 ) {
   return useInfiniteQuery({
     queryKey: chatKeys.conversation(senderId, receiverId),
     queryFn: ({ pageParam = 1 }) =>
       getChatConversation(senderId, receiverId, pageParam as number, pageSize),
     getNextPageParam: (lastPage) => {
-      const { pageNumber, pageSize: size, totalCount } = lastPage.messages;
-      const hasMore = pageNumber * size < totalCount;
-      return hasMore ? pageNumber + 1 : undefined;
+      const messages = lastPage?.messages;
+
+      if (!messages) return undefined;
+
+      const hasMore =
+        messages.pageNumber * messages.pageSize < messages.totalCount;
+
+      return hasMore ? messages.pageNumber + 1 : undefined;
     },
     initialPageParam: 1,
     enabled: !!senderId && !!receiverId,
   });
 }
-
 
 export function useDeleteChat(userId: string) {
   const queryClient = useQueryClient();
@@ -83,17 +88,17 @@ export function useDeleteChat(userId: string) {
   });
 }
 
-
 export function useUpdateBio() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (params: UpdateBioParams) => updateBio(params),
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: chatKeys.profile(variables.userId) });
+      queryClient.invalidateQueries({
+        queryKey: chatKeys.profile(variables.userId),
+      });
     },
   });
 }
-
 
 export function useSendMessage(senderId: string, receiverId: string) {
   const queryClient = useQueryClient();
@@ -103,11 +108,12 @@ export function useSendMessage(senderId: string, receiverId: string) {
       queryClient.invalidateQueries({
         queryKey: chatKeys.conversation(senderId, receiverId),
       });
-      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(senderId) });
+      queryClient.invalidateQueries({
+        queryKey: chatKeys.recentChats(senderId),
+      });
     },
   });
 }
-
 
 export function useEditMessage(senderId: string, receiverId: string) {
   const queryClient = useQueryClient();
@@ -121,7 +127,6 @@ export function useEditMessage(senderId: string, receiverId: string) {
   });
 }
 
-
 export function useDeleteMessage(senderId: string, receiverId: string) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -130,7 +135,9 @@ export function useDeleteMessage(senderId: string, receiverId: string) {
       queryClient.invalidateQueries({
         queryKey: chatKeys.conversation(senderId, receiverId),
       });
-      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(senderId) });
+      queryClient.invalidateQueries({
+        queryKey: chatKeys.recentChats(senderId),
+      });
     },
   });
 }
