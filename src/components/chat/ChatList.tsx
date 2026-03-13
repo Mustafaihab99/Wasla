@@ -135,8 +135,10 @@ export default function ChatList() {
 
               {/* Delete icon on hover */}
               <button
-                onClick={() =>
-                  deleteChat({ userId: currentUserId, chatId: chat.chatId })
+                onClick={() =>{
+                  deleteChat({ userId: currentUserId, chatId: chat.chatId });
+                  navigate("/chat");
+                }
                 }
                 className="opacity-0 group-hover:opacity-100 mx-2 my-2 transition text-red-500 p-1 rounded-full hover:bg-red-50">
                 <FiTrash2 size={18} />

@@ -155,7 +155,7 @@ export default function ChatConversationPage() {
 
   return (
     <div
-      className="flex flex-col h-[100dvh] w-full max-w-full bg-background overflow-hidden"
+      className="flex flex-col h-[100vh] w-full max-w-full bg-background overflow-hidden"
       onClick={() => setOpenMenuId(null)}>
       {/* ── Header ── */}
       <div className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-3 border-b border-border shrink-0 bg-background z-20 w-full">
@@ -194,18 +194,6 @@ export default function ChatConversationPage() {
 
       {/* ── Messages list ── */}
       <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-3 flex flex-col gap-1.5 min-h-0 w-full">
-        {hasNextPage && (
-          <div className="flex justify-center mb-2 w-full">
-            <button
-              onClick={() => fetchNextPage()}
-              disabled={isFetchingNextPage}
-              className="text-xs text-foreground/50 hover:text-primary transition px-4 py-1.5 rounded-full">
-              {isFetchingNextPage
-                ? t("chat.loading")
-                : t("chat.loadOlderMessages")}
-            </button>
-          </div>
-        )}
 
         {allMessages.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center text-center select-none opacity-60 w-full">
@@ -248,6 +236,19 @@ export default function ChatConversationPage() {
             />
           ))
         )}
+        {hasNextPage && (
+          <div className="flex justify-center mb-2 w-full">
+            <button
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              className="text-xs text-foreground/50 hover:text-primary transition px-4 py-1.5 rounded-full">
+              {isFetchingNextPage
+                ? t("chat.loading")
+                : t("chat.loadOlderMessages")}
+            </button>
+          </div>
+        )}
+
         <div ref={bottomRef} />
       </div>
 
@@ -296,7 +297,7 @@ export default function ChatConversationPage() {
       )}
 
       {/* ── Input bar ── */}
-      <div className="shrink-0 w-full border-t border-border bg-background px-2 sm:px-3 py-2">
+      <div className="shrink-0 w-full border-t border-border bg-background px-2 sm:px-3 py-1">
         <div className="flex items-end gap-1.5 sm:gap-2 w-full max-w-full">
           {/* Attachment button — hidden in audio mode */}
           {!isAudioMode && (
@@ -321,7 +322,7 @@ export default function ChatConversationPage() {
 
           {/* Text input — hidden in audio mode */}
           {!isAudioMode && (
-            <div className="flex-1 min-w-0 bg-primary/10 rounded-2xl px-3 py-2">
+            <div className="flex-1 min-w-0 bg-primary/10 rounded-2xl px-3 py-1">
               <textarea
                 value={text}
                 onChange={(e) => handleTextChange(e.target.value)}
@@ -329,7 +330,7 @@ export default function ChatConversationPage() {
                 placeholder={t("chat.placeholderMessage")}
                 rows={1}
                 className="w-full bg-transparent text-sm outline-none resize-none placeholder:text-foreground/40 max-h-24"
-                style={{ minHeight: "36px" }}
+                style={{ minHeight: "30px" }}
               />
             </div>
           )}
