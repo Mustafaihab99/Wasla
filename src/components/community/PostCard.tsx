@@ -223,7 +223,8 @@ export default function PostCard({
                     src={file}
                     className="w-full object-cover rounded-2xl"
                     style={{ maxHeight: "400px" }}
-                    alt=""
+                    alt="post image"
+                    loading="lazy"
                   />
                 </div>
               ))}

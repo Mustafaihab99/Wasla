@@ -5,12 +5,12 @@ import { communityKeys } from "../../utils/community.keys";
 export function useGetPostByReaction(
   userId: string,
   currentUserId: string,
-  reactionType: number
+  reactionType?: number  // خليها optional
 ) {
   return useInfiniteQuery({
     queryKey: communityKeys.userPosts(userId, currentUserId, reactionType),
     queryFn: ({ pageParam = 1 }) =>
-      getPostByReact(pageParam as number, 10, userId, reactionType),
+      getPostByReact(pageParam as number, 10, userId, reactionType || 0),
     getNextPageParam: (lastPage) => {
       const { pageNumber, pageSize, totalCount } = lastPage;
       const totalPages = Math.ceil(totalCount / pageSize);

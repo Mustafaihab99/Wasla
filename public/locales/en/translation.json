@@ -645,6 +645,7 @@
   "savedPosts" : "Saved Posts",
   "Deleting..." : "Deleting...",
   "Delete" : "Delete",
+  "noSavedPosts" : "No Saved Posts",
    "goBack": "Go back",
     "nav": {
       "home": "Home",
@@ -678,7 +679,9 @@
   "otherEmptySubtitle": "When {{name}} posts, you'll see it here.",
   "noMorePosts": "No more posts",
   "nothingHere": "Nothing here yet",
-  "tabPlaceholder": "{{tab}} will appear here when available."
+  "tabPlaceholder": "{{tab}} will appear here when available.",
+  "noLikesYet" : "No Likes Yet",
+  "noLikesSubtitle" : "When you react to any post it's add here."
 },
   "comments": {
     "loadError": "Failed to load replies. Try refreshing.",
@@ -730,6 +733,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "noMessagesYet" : "No Messages Yet.",
-    "startConversationHint2" : "Start The Conversion Now."
+    "startConversationHint2" : "Start The Conversion Now.",
+    "online" : "Online"
   }
 }

@@ -9,7 +9,7 @@ export default function GymHomeDashboard() {
   return (
     <div className="space-y-8">
       <motion.h1
-        className="text-4xl font-bold"
+        className="text-4xl font-bold md:ml-1 ml-6"
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}>
         {t("doctor.overview")}

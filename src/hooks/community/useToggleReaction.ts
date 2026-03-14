@@ -23,10 +23,10 @@ export function useToggleReaction(currentUserId: string) {
       const isComment = variables.targetType === ReactionTargetType.comment;
 
       if (isPost) {
+        // 1. تحديث الفيد
         const feedKey = communityKeys.feed(currentUserId);
         await queryClient.cancelQueries({ queryKey: feedKey });
-
-        const previousData = queryClient.getQueryData<FeedCache>(feedKey);
+        const previousFeed = queryClient.getQueryData<FeedCache>(feedKey);
 
         queryClient.setQueryData<FeedCache>(feedKey, (old) => {
           if (!old) return old;
@@ -57,7 +57,56 @@ export function useToggleReaction(currentUserId: string) {
           };
         });
 
-        return { previousData, key: feedKey };
+        // 2. تحديث كل الـ userPosts caches (اللي فيها البوستات الخاصة)
+        const allUserPostsQueries = queryClient.getQueriesData<FeedCache>({
+          queryKey: communityKeys.userPosts(currentUserId, currentUserId),
+        });
+
+        allUserPostsQueries.forEach(([queryKey, oldData]) => {
+          if (!oldData) return;
+          
+          queryClient.setQueryData<FeedCache>(queryKey, (old) => {
+            if (!old) return old;
+            return {
+              ...old,
+              pages: old.pages.map((page) => ({
+                ...page,
+                data: page.data.map((post) => {
+                  if (post.postId !== variables.targetId) return post;
+
+                  if (variables.reactionType === ReactionType.love) {
+                    return {
+                      ...post,
+                      isLoved: !post.isLoved,
+                      numberofReacts: post.numberofReacts + (post.isLoved ? -1 : 1),
+                    };
+                  }
+                  if (variables.reactionType === ReactionType.save) {
+                    return {
+                      ...post,
+                      isSaved: !post.isSaved,
+                      numberofSaves: post.numberofSaves + (post.isSaved ? -1 : 1),
+                    };
+                  }
+                  return post;
+                }),
+              })),
+            };
+          });
+        });
+
+        // 3. تحديث الـ saved posts cache لو التفاعل من نوع save
+        if (variables.reactionType === ReactionType.save) {
+          const savedPostsKey = communityKeys.userPosts(currentUserId, currentUserId, ReactionType.save);
+          await queryClient.cancelQueries({ queryKey: savedPostsKey });
+          // هنا مش بنحدثها manual عشان في onSettled هنعملها invalidate عشان تيجي جديدة
+        }
+
+        return { 
+          previousData: previousFeed, 
+          key: feedKey,
+          previousUserPosts: allUserPostsQueries.map(([key, data]) => ({ key, data }))
+        };
       }
 
       if (isComment && variables.targetId != null) {
@@ -75,7 +124,6 @@ export function useToggleReaction(currentUserId: string) {
               data: page.data.map((comment) => {
                 if (comment.commentId !== variables.targetId) return comment;
 
-                // Comment uses isLove + numberOfLikes (different from post fields)
                 if (variables.reactionType === ReactionType.love) {
                   return {
                     ...comment,
@@ -97,14 +145,40 @@ export function useToggleReaction(currentUserId: string) {
       if (context?.previousData && context?.key) {
         queryClient.setQueryData(context.key, context.previousData);
       }
+      
+      // استعادة الـ userPosts caches القديمة
+      if (context?.previousUserPosts) {
+        context.previousUserPosts.forEach(({ key, data }) => {
+          queryClient.setQueryData(key, data);
+        });
+      }
     },
 
     onSettled: (_data, _err, variables) => {
       if (variables.targetType === ReactionTargetType.post) {
+        // 1. Invalidate الفيد
         queryClient.invalidateQueries({
           queryKey: communityKeys.feed(currentUserId),
         });
+        
+        // 2. Invalidate كل userPosts
+        queryClient.invalidateQueries({
+          queryKey: communityKeys.userPosts(currentUserId, currentUserId),
+        });
+        
+        // 3. Invalidate saved posts لو التفاعل save
+        if (variables.reactionType === ReactionType.save) {
+          queryClient.invalidateQueries({
+            queryKey: communityKeys.userPosts(currentUserId, currentUserId, ReactionType.save),
+          });
+        }
+
+        // 4. Invalidate بروفايل اليوزر (لأن عدد البوستات أو الreacts ممكن يتغير)
+        queryClient.invalidateQueries({
+          queryKey: communityKeys.userProfile(variables.targetId.toString()),
+        });
       }
+      
       if (variables.targetType === ReactionTargetType.comment && variables.targetId != null) {
         queryClient.invalidateQueries({
           queryKey: communityKeys.comments(variables.targetId , currentUserId),

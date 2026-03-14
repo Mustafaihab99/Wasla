@@ -281,10 +281,15 @@ export function useChatHub({
       onStopTypingRef.current?.(senderId);
     };
 
-    const handleUserOnline = (userId: string) =>
-      onUserOnlineRef.current?.(userId);
-    const handleUserOffline = (userId: string) =>
-      onUserOfflineRef.current?.(userId);
+const handleUserOnline = (userId: string) => {
+  if (sameId(userId, currentUserIdRef.current)) return; 
+  onUserOnlineRef.current?.(userId);
+};
+
+const handleUserOffline = (userId: string) => {
+  if (sameId(userId, currentUserIdRef.current)) return;
+  onUserOfflineRef.current?.(userId);
+};
 
     connection.on("ReceiveMessage", handleReceiveMessage);
     connection.on("MessageDeleted", handleMessageDeleted);

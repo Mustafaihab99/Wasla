@@ -645,6 +645,7 @@
     "Deleting..." : "يتم الحذف...",
     "savedPosts" : "المنشورات المحفوظة",
     "chat" : "المحادثات",
+    "noSavedPosts" : "لا توجد محفوظات",
      "goBack": "رجوع",
     "nav": {
       "home": "الصفحه الرئيسية",
@@ -678,7 +679,9 @@
   "otherEmptySubtitle": "عندما ينشر {{name}} سيظهر هنا.",
   "noMorePosts": "لا توجد منشورات أخرى",
   "nothingHere": "لا يوجد شيء هنا بعد",
-  "tabPlaceholder": "سيظهر {{tab}} هنا عند توفره."
+  "tabPlaceholder": "سيظهر {{tab}} هنا عند توفره.",
+  "noLikesYet" : "لا توجد اعجابات",
+  "noLikesSubtitle" : "عندما تتفاعل مع منشور يحفظ هنا."
 },
 "comments": {
     "loadError": "حدث خطأ أثناء تحميل الردود",
@@ -730,6 +733,7 @@
     "edit": "تعديل",
     "delete": "حذف",
     "noMessagesYet" : "لا توجد رسايل حتى الان.",
-    "startConversationHint2" : "ابدء المحادثه الان."
+    "startConversationHint2" : "ابدء المحادثه الان.",
+    "online" : "متصل الان"
   }
 }
