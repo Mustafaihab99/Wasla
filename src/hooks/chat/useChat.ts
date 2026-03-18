@@ -12,6 +12,7 @@ import {
   getChatUsers,
   getRecentChats,
   getUserProfile,
+  markRead,
   sendMessage,
   updateBio,
 } from "../../api/chat/chat-api";
@@ -84,6 +85,18 @@ export function useDeleteChat(userId: string) {
     mutationFn: (params: DeleteChatParams) => deleteChat(params),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(userId) });
+    },
+  });
+}
+
+export function useMarkasRead(userId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (chatId: number) => markRead(chatId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: chatKeys.recentChats(userId),
+      });
     },
   });
 }

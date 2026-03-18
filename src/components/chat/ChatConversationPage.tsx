@@ -87,7 +87,7 @@ onUserOffline: (userId) => {
   });
 
   const allMessages: Message[] =
-    data?.pages?.flatMap((p) => p?.messages?.data ?? []) ?? [];
+  data?.pages?.flatMap((p) => p?.messages?.data ?? []).reverse() ?? [];
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -196,7 +196,10 @@ onUserOffline: (userId) => {
               <p className="text-xs text-green-500">
                 {t("chat.online")}
               </p>
-            ) : null
+            ) :
+            <p className="text-xs text-red-500">
+                {t("chat.offline")}
+              </p>
             }
           </div>
         </button>
@@ -204,6 +207,19 @@ onUserOffline: (userId) => {
 
       {/* ── Messages list ── */}
       <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-3 flex flex-col gap-1.5 min-h-0 w-full">
+        {hasNextPage && (
+          <div className="flex justify-center mb-2 w-full">
+            <button
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              className="text-xs text-foreground/50 hover:text-primary transition px-4 py-1.5 rounded-full">
+              {isFetchingNextPage
+                ? t("chat.loading")
+                : t("chat.loadOlderMessages")}
+            </button>
+          </div>
+        )}
+        
         {allMessages.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center text-center select-none opacity-60 w-full">
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
@@ -244,18 +260,6 @@ onUserOffline: (userId) => {
               }}
             />
           ))
-        )}
-        {hasNextPage && (
-          <div className="flex justify-center mb-2 w-full">
-            <button
-              onClick={() => fetchNextPage()}
-              disabled={isFetchingNextPage}
-              className="text-xs text-foreground/50 hover:text-primary transition px-4 py-1.5 rounded-full">
-              {isFetchingNextPage
-                ? t("chat.loading")
-                : t("chat.loadOlderMessages")}
-            </button>
-          </div>
         )}
 
         <div ref={bottomRef} />

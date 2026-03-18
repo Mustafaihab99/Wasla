@@ -8,6 +8,7 @@ import { CHAT_ROUTES } from "../../routes/ChatRoutes";
 import ChatProfileSettings from "./ChatProfileSettings";
 import { toast } from "sonner";
 import { FaArrowRight } from "react-icons/fa";
+import { formatLastSeen } from "../../utils/chatUtils";
 
 export default function UserProfileChatPage() {
   const { userId } = useParams<{ userId: string }>();
@@ -74,6 +75,23 @@ export default function UserProfileChatPage() {
           <h3 className="text-xl font-bold">
             {profile?.name || t("chat.unknownUser")}
           </h3>
+
+          {profile?.isOnline ? (
+            <p className="text-sm text-green-500 mt-1 font-medium">
+              ● {t("chat.online")}
+            </p>
+          ) : profile?.lastSeen ? (
+            <p className="text-xs text-dried mt-1">
+              {formatLastSeen(profile.lastSeen, t)}
+            </p>
+          ) : null}
+
+          {profile?.phone && (
+            <p className="flex items-center gap-1 text-sm text-dried mt-1 justify-center">
+              <FiPhone size={13} />
+              {profile.phone}
+            </p>
+          )}
 
           {profile?.phone && (
             <p className="flex items-center gap-1 text-sm text-dried mt-1 justify-center">
@@ -151,16 +169,15 @@ export default function UserProfileChatPage() {
 
       {/* Theme + Language */}
       {isMe && <ChatProfileSettings />}
-      {isMe && 
+      {isMe && (
         <motion.button
           onClick={() => navigate("/dashboard")}
           className="w-[80%] m-auto px-6 py-3 rounded-full border border-[#2f3336] text-sky-500 hover:bg-white/10 transition font-bold flex justify-center items-center gap-2"
           whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-        >
+          whileTap={{ scale: 0.97 }}>
           <FaArrowRight /> {t("common.back")}
         </motion.button>
-      }
+      )}
     </div>
   );
 }

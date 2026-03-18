@@ -24,6 +24,8 @@ export interface UserProfile {
   profileImage: string | null;
   bio: string | null;
   phone: string | null;
+  isOnline : boolean;
+  lastSeen: string;
 }
 
 
@@ -50,10 +52,12 @@ export interface RecentChat {
   messageText: string | null;
   audio: string | null;
   isEdit: boolean;
+  isMine: boolean;
   type: MessageTypeValue;
   files: string[];
   sentAt: string;
   readAt: string | null;
+  unreadMessageCount : number;
 }
 
 export interface ChatConversation {

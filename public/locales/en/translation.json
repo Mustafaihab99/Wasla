@@ -725,7 +725,7 @@
     "noBio": "No bio yet",
     "longBio" : "Too Long Bio",
     "typing": "typing…",
-    "loadOlderMessages": "Load newer messages",
+    "loadOlderMessages": "Load older messages",
     "loading": "Loading…",
     "editing": "Editing",
     "placeholderMessage": "Message…",
@@ -734,6 +734,10 @@
     "delete": "Delete",
     "noMessagesYet" : "No Messages Yet.",
     "startConversationHint2" : "Start The Conversion Now.",
-    "online" : "Online"
+    "online" : "Online",
+    "offline" : "Offline",
+    "lastSeenToday" : "Last Seen Today",
+    "lastSeenYesterday" : "Last Seen Yesterday",
+    "lastSeen" : "Last Seen"
   }
 }

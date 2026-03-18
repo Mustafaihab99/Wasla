@@ -97,6 +97,17 @@ export async function deleteChat({ chatId, userId }: DeleteChatParams): Promise<
 }
 
 
+export async function markRead(chatId : number): Promise<void> {
+  try {
+    const { data } = await axiosInstance.put(`Chats/MarkAsRead/${chatId}`);
+    console.log(data?.message || "messages read");
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    toast.error(axiosError.response?.data?.message || "Failed to mark read");
+    throw error;
+  }
+}
+
 export async function updateBio({ userId, bio }: UpdateBioParams): Promise<void> {
   try {
     const { data } = await axiosInstance.put("Chats/Bio", { userId, bio });

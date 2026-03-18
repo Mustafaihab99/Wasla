@@ -725,7 +725,7 @@
     "noBio": "لا توجد نبذة بعد",
     "longBio" : "النبذة التعريفية طويلة جدا",
     "typing": "يكتب…",
-    "loadOlderMessages": "تحميل الرسائل الاحدث",
+    "loadOlderMessages": "تحميل الرسائل القديمة",
     "loading": "جارٍ التحميل…",
     "editing": "تعديل",
     "placeholderMessage": "رسالة…",
@@ -734,6 +734,10 @@
     "delete": "حذف",
     "noMessagesYet" : "لا توجد رسايل حتى الان.",
     "startConversationHint2" : "ابدء المحادثه الان.",
-    "online" : "متصل الان"
+    "online" : "متصل الان",
+    "offline" : "غير متصل",
+    "lastSeenToday" : "اخر ظهور اليوم",
+    "lastSeenYesterday" : "اخر ظهور بالامس",
+    "lastSeen" : "اخر ظهور"
   }
 }

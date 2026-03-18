@@ -117,9 +117,9 @@ export function useChatHub({
         });
       } else {
         queryClient.invalidateQueries({
-  queryKey: ["chat-conversation", myId, otherId],
-  refetchType: "none",
-});
+          queryKey: ["chat-conversation", myId, otherId],
+          refetchType: "none",
+        });
 
         queryClient.setQueryData(chatKeys.recentChats(myId), (oldData: any) => {
           if (!oldData) return oldData;
@@ -128,13 +128,15 @@ export function useChatHub({
           const existingIndex = oldData.findIndex((chat: any) =>
             sameId(chat.userId, otherId),
           );
-
+          const updated = [...oldData];
           const newRecent = {
             userId: otherId,
             lastMessage:
               msg.messageText || (msg.audio ? "🎤 Voice message" : "📎 File"),
             lastMessageTime: msg.sentAt,
-            unreadCount: !msg.isMine ? 1 : 0,
+            unreadCount: !msg.isMine
+              ? (updated[existingIndex]?.unreadCount ?? 0) + 1
+              : 0,
             ...(msg.isMine ? {} : { isTyping: false }),
           };
 
@@ -169,9 +171,9 @@ export function useChatHub({
         };
 
         queryClient.setQueryData(
-  ["chat-conversation", myId, otherId],
-  newConversationData
-);
+          ["chat-conversation", myId, otherId],
+          newConversationData,
+        );
       }
 
       if (!msg.isMine) {
@@ -236,6 +238,47 @@ export function useChatHub({
 
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
     };
+    // MessagesRead → نحدث الرسائل في الكاش إنها اتقرأت
+    const handleMessagesRead = ({
+      messageIds,
+    }: {
+      chatId: number;
+      readerId: string;
+      messageIds: number[];
+    }) => {
+      const myId = currentUserIdRef.current;
+      const messageIdSet = new Set(messageIds);
+
+      const allConvQueries = queryClient.getQueriesData<any>({
+        queryKey: ["chat-conversation"],
+      });
+
+      for (const [key, oldData] of allConvQueries) {
+        if (!oldData) continue;
+        queryClient.setQueryData(key, {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            messages: {
+              ...page.messages,
+              data: page.messages.data.map((m: Message) =>
+                messageIdSet.has(m.messageId!)
+                  ? { ...m, isRead: true, readAt: new Date().toISOString() }
+                  : m,
+              ),
+            },
+          })),
+        });
+      }
+
+      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
+    };
+
+    const handleChatUpdated = ({ chatId }: { chatId: number }) => {
+      const myId = currentUserIdRef.current;
+      console.log(chatId);
+      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
+    };
 
     // ── MessageUpdated ──────────────────────────────────────────────────────
     const handleMessageUpdated = (updatedMessage: Message) => {
@@ -281,15 +324,15 @@ export function useChatHub({
       onStopTypingRef.current?.(senderId);
     };
 
-const handleUserOnline = (userId: string) => {
-  if (sameId(userId, currentUserIdRef.current)) return; 
-  onUserOnlineRef.current?.(userId);
-};
+    const handleUserOnline = (userId: string) => {
+      if (sameId(userId, currentUserIdRef.current)) return;
+      onUserOnlineRef.current?.(userId);
+    };
 
-const handleUserOffline = (userId: string) => {
-  if (sameId(userId, currentUserIdRef.current)) return;
-  onUserOfflineRef.current?.(userId);
-};
+    const handleUserOffline = (userId: string) => {
+      if (sameId(userId, currentUserIdRef.current)) return;
+      onUserOfflineRef.current?.(userId);
+    };
 
     connection.on("ReceiveMessage", handleReceiveMessage);
     connection.on("MessageDeleted", handleMessageDeleted);
@@ -298,6 +341,8 @@ const handleUserOffline = (userId: string) => {
     connection.on("UserStopTyping", handleStopTyping);
     connection.on("UserOnline", handleUserOnline);
     connection.on("UserOffline", handleUserOffline);
+    connection.on("MessagesRead", handleMessagesRead);
+    connection.on("ChatUpdated", handleChatUpdated);
 
     const startConnection = async () => {
       try {
@@ -317,6 +362,8 @@ const handleUserOffline = (userId: string) => {
       connection.off("UserStopTyping", handleStopTyping);
       connection.off("UserOnline", handleUserOnline);
       connection.off("UserOffline", handleUserOffline);
+      connection.off("MessagesRead", handleMessagesRead);
+      connection.off("ChatUpdated", handleChatUpdated);
       connection.stop();
     };
   }, [token, currentUserId, queryClient]);
