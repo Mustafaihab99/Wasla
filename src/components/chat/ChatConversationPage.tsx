@@ -45,9 +45,13 @@ export default function ChatConversationPage() {
   } | null>(null);
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
+  // ✅ إصلاح ٢: تتبع ارتفاع الـ keyboard الفعلي
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     recording,
@@ -58,6 +62,24 @@ export default function ChatConversationPage() {
     stop: stopRec,
     clear: clearAudio,
   } = useAudioRecorder();
+
+  // ✅ إصلاح ٢: نتتبع ارتفاع الـ visualViewport عشان نعرف الـ keyboard height
+  useEffect(() => {
+    const onResize = () => {
+      if (window.visualViewport) {
+        const kbHeight = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+        setKeyboardHeight(Math.max(0, kbHeight));
+      }
+    };
+
+    window.visualViewport?.addEventListener("resize", onResize);
+    window.visualViewport?.addEventListener("scroll", onResize);
+
+    return () => {
+      window.visualViewport?.removeEventListener("resize", onResize);
+      window.visualViewport?.removeEventListener("scroll", onResize);
+    };
+  }, []);
 
   const { data: profile } = useGetUserProfile(receiverId || "");
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -70,29 +92,39 @@ export default function ChatConversationPage() {
   const { mutate: editMsg } = useEditMessage(currentUserId, receiverId || "");
   const { mutate: delMsg } = useDeleteMessage(currentUserId, receiverId || "");
 
- const { sendTyping, sendStopTyping } = useChatHub({
-  token,
-  currentUserId,
-  onTyping: (sid) => {
-    if (sameId(sid, receiverId)) setIsTyping(true);
-  },
-  onStopTyping: (sid) => {
-    if (sameId(sid, receiverId)) setIsTyping(false);
-  },
-  onUserOnline: (userId) => {
-    if (sameId(userId, receiverId)) setIsOnline(true);
-  },
-  onUserOffline: (userId) => {
-    if (sameId(userId, receiverId)) setIsOnline(false);
-  },
-});
+  const { sendTyping, sendStopTyping } = useChatHub({
+    token,
+    currentUserId,
+    onTyping: (sid) => {
+      if (sameId(sid, receiverId)) setIsTyping(true);
+    },
+    onStopTyping: (sid) => {
+      if (sameId(sid, receiverId)) setIsTyping(false);
+    },
+    onUserOnline: (userId) => {
+      if (sameId(userId, receiverId)) setIsOnline(true);
+    },
+    onUserOffline: (userId) => {
+      if (sameId(userId, receiverId)) setIsOnline(false);
+    },
+  });
 
   const allMessages: Message[] =
-  data?.pages?.flatMap((p) => p?.messages?.data ?? []).reverse() ?? [];
+    data?.pages?.flatMap((p) => p?.messages?.data ?? []).reverse() ?? [];
 
+  // scroll للأسفل لما تيجي رسالة جديدة
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [allMessages.length]);
+
+  // scroll للأسفل لما الـ keyboard يفتح
+  useEffect(() => {
+    if (keyboardHeight > 0) {
+      setTimeout(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  }, [keyboardHeight]);
 
   const handleTextChange = (val: string) => {
     setText(val);
@@ -152,18 +184,19 @@ export default function ChatConversationPage() {
     }
   };
 
-  // show send button only when there's text/files and no audio
   const hasTextOrFiles =
     (text.trim().length > 0 || files.length > 0) && !audioUrl;
-
-  // when recording or audio preview is active, hide text input & attachment
   const isAudioMode = recording || !!audioUrl;
 
   return (
+    // ✅ إصلاح ٢: بدل h-[100dvh] بنستخدم fixed positioning
+    // ده بيمنع الـ page من الـ zoom ومش بيأثر على الـ header
     <div
-      className="flex flex-col h-[100dvh] w-full max-w-full bg-background overflow-hidden"
+      className="fixed inset-0 flex flex-col bg-background"
+      style={{ bottom: keyboardHeight > 0 ? keyboardHeight : 0 }}
       onClick={() => setOpenMenuId(null)}>
-      {/* ── Header ── */}
+
+      {/* ── Header — دايماً ظاهر فوق ── */}
       <div className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-3 border-b border-border shrink-0 bg-background z-20 w-full">
         <button
           onClick={() => navigate(-1)}
@@ -194,20 +227,18 @@ export default function ChatConversationPage() {
                 {t("chat.typing")}
               </p>
             ) : isOnline ? (
-              <p className="text-xs text-green-500">
-                {t("chat.online")}
-              </p>
-            ) :
-            <p className="text-xs text-red-500">
-                {t("chat.offline")}
-              </p>
-            }
+              <p className="text-xs text-green-500">{t("chat.online")}</p>
+            ) : (
+              <p className="text-xs text-red-500">{t("chat.offline")}</p>
+            )}
           </div>
         </button>
       </div>
 
       {/* ── Messages list ── */}
-      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-3 flex flex-col gap-1.5 min-h-0 w-full">
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto px-2 sm:px-4 py-3 flex flex-col gap-1.5 min-h-0 w-full">
         {hasNextPage && (
           <div className="flex justify-center mb-2 w-full">
             <button
@@ -220,7 +251,7 @@ export default function ChatConversationPage() {
             </button>
           </div>
         )}
-        
+
         {allMessages.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center text-center select-none opacity-60 w-full">
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
@@ -313,7 +344,6 @@ export default function ChatConversationPage() {
       {/* ── Input bar ── */}
       <div className="shrink-0 w-full border-t border-border bg-background px-2 sm:px-3 py-1">
         <div className="flex items-end gap-1.5 sm:gap-2 w-full max-w-full">
-          {/* Attachment button — hidden in audio mode */}
           {!isAudioMode && (
             <>
               <button
@@ -334,7 +364,6 @@ export default function ChatConversationPage() {
             </>
           )}
 
-          {/* Text input — hidden in audio mode */}
           {!isAudioMode && (
             <div className="flex-1 min-w-0 bg-primary/10 rounded-2xl px-3 py-1">
               <textarea
@@ -343,13 +372,13 @@ export default function ChatConversationPage() {
                 onKeyDown={handleKey}
                 placeholder={t("chat.placeholderMessage")}
                 rows={1}
-                className="w-full bg-transparent text-sm outline-none resize-none placeholder:text-foreground/40 max-h-24"
-                style={{ minHeight: "30px" }}
+                // ✅ إصلاح ٢: font-size 16px يمنع الـ auto-zoom على iOS
+                className="w-full bg-transparent outline-none resize-none placeholder:text-foreground/40 max-h-24"
+                style={{ minHeight: "30px", fontSize: "16px" }}
               />
             </div>
           )}
 
-          {/* Audio recorder — takes full width in audio mode */}
           {isAudioMode && (
             <div className="flex-1 min-w-0">
               <AudioRecorderButton
@@ -365,7 +394,6 @@ export default function ChatConversationPage() {
             </div>
           )}
 
-          {/* Send / mic button */}
           <div className="shrink-0">
             {!isAudioMode ? (
               hasTextOrFiles ? (
@@ -389,4 +417,3 @@ export default function ChatConversationPage() {
     </div>
   );
 }
-

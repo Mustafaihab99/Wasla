@@ -9,7 +9,6 @@ export function useToggleReaction(currentUserId: string) {
   return useMutation({
     mutationFn: toggleReaction,
     onSuccess: (_, variables) => {
-      // إبطال جميع الاستعلامات المتعلقة بالبوستات
       queryClient.invalidateQueries({ queryKey: communityKeys.feed(currentUserId) });
       queryClient.invalidateQueries({ queryKey: communityKeys.userPosts(currentUserId, currentUserId) });
       if (variables.reactionType === ReactionType.save) {

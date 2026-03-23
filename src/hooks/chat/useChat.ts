@@ -66,12 +66,9 @@ export function useGetChatConversation(
       getChatConversation(senderId, receiverId, pageParam as number, pageSize),
     getNextPageParam: (lastPage) => {
       const messages = lastPage?.messages;
-
       if (!messages) return undefined;
-
       const hasMore =
         messages.pageNumber * messages.pageSize < messages.totalCount;
-
       return hasMore ? messages.pageNumber + 1 : undefined;
     },
     initialPageParam: 1,
@@ -118,9 +115,11 @@ export function useSendMessage(senderId: string, receiverId: string) {
   return useMutation({
     mutationFn: (params: SendMessageParams) => sendMessage(params),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: chatKeys.conversation(senderId, receiverId),
+      });
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(senderId) });
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(receiverId) });
-  
     },
   });
 }
@@ -130,6 +129,9 @@ export function useDeleteMessage(senderId: string, receiverId: string) {
   return useMutation({
     mutationFn: (params: DeleteMessageParams) => deleteMessage(params),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: chatKeys.conversation(senderId, receiverId),
+      });
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(senderId) });
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(receiverId) });
     },

@@ -3,36 +3,55 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiEdit, FiSearch, FiUser, FiTrash2 } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "@tanstack/react-query";
 import { chatKeys, useGetRecentChats } from "../../hooks/chat/useChat";
 import { CHAT_ROUTES } from "../../routes/ChatRoutes";
 import { formatChatTime } from "../../utils/chatUtils";
 import ChatListSkeleton from "./ChatListSkeleton";
 import { useDeleteChat, useMarkasRead } from "../../hooks/chat/useChat";
 import { RecentChat } from "../../types/chat/chat-types";
-import { QueryClient } from "@tanstack/react-query";
+import { sameId, useChatHub } from "../../utils/singlr/useChatHub";
 
 export default function ChatList() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   const currentUserId = sessionStorage.getItem("user_id") || "";
   const myPhoto = sessionStorage.getItem("profilePhoto") || "";
+  const token = localStorage.getItem("auth_token") || "";
   const [search, setSearch] = useState("");
 
+  // ✅ إصلاح ١: تشغيل useChatHub هنا في ChatList
+  // عشان لما المستخدم في الـ list يستقبل الرسايل الجديدة فوراً
+  useChatHub({
+    token,
+    currentUserId,
+    // مش محتاجين callbacks هنا، الـ hub نفسه بيحدث الـ cache تلقائياً
+  });
+
   const { data, isLoading } = useGetRecentChats(currentUserId);
-  const chats = data?.data ?? [];
+
+  // الـ API ممكن ترجع array مباشرة أو { data: [] }
+  const chats: RecentChat[] = Array.isArray(data)
+    ? data
+    : (data as any)?.data ?? [];
+
   const filtered = chats.filter((c) =>
     c.name?.toLowerCase().includes(search.toLowerCase()),
   );
 
   const { mutate: deleteChat } = useDeleteChat(currentUserId);
-
-  // في ChatList
   const { mutate: markAsRead } = useMarkasRead(currentUserId);
 
   const handleChatClick = (chat: RecentChat) => {
-    const otherUserId =
-      chat.senderId === currentUserId ? chat.receiverId : chat.senderId;
+    const otherUserId = sameId(chat.senderId, currentUserId)
+      ? chat.receiverId
+      : chat.senderId;
+
+    if (!otherUserId) {
+      console.error("ChatList: otherUserId missing", { chat, currentUserId });
+      return;
+    }
 
     if (!chat.isMine && chat.unreadMessageCount > 0) {
       markAsRead(chat.chatId, {
@@ -41,16 +60,18 @@ export default function ChatList() {
             chatKeys.recentChats(currentUserId),
             (oldData: any) => {
               if (!oldData) return oldData;
-              const updated = [...oldData];
-              const index = updated.findIndex(
-                (c: any) => c.chatId === chat.chatId,
+              const arr: RecentChat[] = Array.isArray(oldData)
+                ? oldData
+                : oldData?.data ?? [];
+              const updated = arr.map((c: RecentChat) =>
+                c.chatId === chat.chatId ? { ...c, unreadMessageCount: 0 } : c,
               );
-              if (index !== -1) {
-                updated[index] = { ...updated[index], unreadMessageCount: 0 };
-              }
-              return updated;
+              return Array.isArray(oldData) ? updated : { ...oldData, data: updated };
             },
           );
+          navigate(CHAT_ROUTES.conversation(otherUserId));
+        },
+        onError: () => {
           navigate(CHAT_ROUTES.conversation(otherUserId));
         },
       });
@@ -122,7 +143,6 @@ export default function ChatList() {
               <div
                 key={chat.chatId}
                 className="group w-full flex items-center justify-between px-4 py-3 hover:bg-border/40 transition">
-                {/* Go to conversation */}
                 <button
                   onClick={() => handleChatClick(chat)}
                   className="flex items-center gap-3 flex-1 text-left">
@@ -155,7 +175,6 @@ export default function ChatList() {
                         <span className="text-xs text-dried">
                           {formatChatTime(chat.sentAt)}
                         </span>
-
                         {!isMine && chat.unreadMessageCount > 0 && (
                           <span className="bg-primary text-white text-[10px] px-2 py-[2px] rounded-full min-w-[18px] text-center">
                             {chat.unreadMessageCount}
@@ -181,9 +200,9 @@ export default function ChatList() {
 
                 {/* Delete */}
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     deleteChat({ userId: currentUserId, chatId: chat.chatId });
-                    navigate("/chat");
                   }}
                   className="opacity-0 group-hover:opacity-100 mx-2 my-2 transition text-red-500 p-1 rounded-full hover:bg-red-50">
                   <FiTrash2 size={18} />

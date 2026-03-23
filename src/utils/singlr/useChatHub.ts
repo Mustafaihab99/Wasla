@@ -17,9 +17,19 @@ interface UseChatHubOptions {
   onUserOffline?: (userId: string) => void;
 }
 
-// مقارنة IDs بـ case-insensitive عشان نتجنب مشكلة UUID uppercase/lowercase
 export const sameId = (a?: string, b?: string) =>
   !!a && !!b && a.toLowerCase() === b.toLowerCase();
+
+// ✅ الإصلاح الثاني: الباك اند بيبعت "id" بس الفرونت بيتوقع "messageId"
+// هذه الدالة تعمل normalize للرسالة الجاية من SignalR
+function normalizeMessage(raw: any): Message {
+  return {
+    ...raw,
+    // الباك اند يبعت id في MessageHubDto بدل messageId
+    messageId: raw.messageId ?? raw.id,
+    files: raw.files ?? [],
+  };
+}
 
 export function useChatHub({
   token,
@@ -33,6 +43,7 @@ export function useChatHub({
   const queryClient = useQueryClient();
   const connectionRef = useRef<signalR.HubConnection | null>(null);
 
+  // ✅ الإصلاح الثالث: نحتفظ بـ refs للـ callbacks عشان ما يسببوش re-render
   const onTypingRef = useRef(onTyping);
   const onStopTypingRef = useRef(onStopTyping);
   const onNewMessageRef = useRef(onNewMessage);
@@ -40,29 +51,24 @@ export function useChatHub({
   const onUserOfflineRef = useRef(onUserOffline);
   const currentUserIdRef = useRef(currentUserId);
 
-  useEffect(() => {
-    onTypingRef.current = onTyping;
-  }, [onTyping]);
-  useEffect(() => {
-    onStopTypingRef.current = onStopTyping;
-  }, [onStopTyping]);
-  useEffect(() => {
-    onNewMessageRef.current = onNewMessage;
-  }, [onNewMessage]);
-  useEffect(() => {
-    onUserOnlineRef.current = onUserOnline;
-  }, [onUserOnline]);
-  useEffect(() => {
-    onUserOfflineRef.current = onUserOffline;
-  }, [onUserOffline]);
-  useEffect(() => {
-    currentUserIdRef.current = currentUserId;
-  }, [currentUserId]);
+  useEffect(() => { onTypingRef.current = onTyping; }, [onTyping]);
+  useEffect(() => { onStopTypingRef.current = onStopTyping; }, [onStopTyping]);
+  useEffect(() => { onNewMessageRef.current = onNewMessage; }, [onNewMessage]);
+  useEffect(() => { onUserOnlineRef.current = onUserOnline; }, [onUserOnline]);
+  useEffect(() => { onUserOfflineRef.current = onUserOffline; }, [onUserOffline]);
+  useEffect(() => { currentUserIdRef.current = currentUserId; }, [currentUserId]);
 
   useEffect(() => {
     if (!token || !currentUserId) return;
 
-    if (connectionRef.current) connectionRef.current.stop();
+    // ✅ الإصلاح الثالث: منوقفش connection موجود إلا لو بنعمل connection جديد فعلاً
+    // بنتحقق إن مفيش connection شغال بالفعل
+    if (
+      connectionRef.current &&
+      connectionRef.current.state !== signalR.HubConnectionState.Disconnected
+    ) {
+      connectionRef.current.stop();
+    }
 
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(CHAT_HUB_URL, { accessTokenFactory: () => token })
@@ -72,7 +78,10 @@ export function useChatHub({
 
     connectionRef.current = connection;
 
-    const handleReceiveMessage = (message: Message) => {
+    // ── ReceiveMessage ──────────────────────────────────────────────────────
+    const handleReceiveMessage = (raw: any) => {
+      // ✅ الإصلاح الثاني: normalize الرسالة قبل أي حاجة
+      const message = normalizeMessage(raw);
       const myId = currentUserIdRef.current;
       const otherId = sameId(message.senderId, myId)
         ? message.receiverId
@@ -99,10 +108,10 @@ export function useChatHub({
             break;
           }
         }
-        if (exists) return; // الرسالة موجودة، نخرج
+        if (exists) return;
       }
 
-      // 2. البحث عن المحادثة في الكاش الحالي
+      // 2. البحث عن المحادثة في الكاش
       const allConvQueries = queryClient.getQueriesData<any>({
         queryKey: ["chat-conversation"],
       });
@@ -113,7 +122,6 @@ export function useChatHub({
       });
 
       if (matchedEntry) {
-        // تحديث المحادثة الموجودة (إضافة الرسالة في بداية آخر صفحة)
         queryClient.setQueryData(matchedEntry[0], (oldData: any) => {
           if (!oldData) return oldData;
           const lastPageIdx = oldData.pages.length - 1;
@@ -125,7 +133,7 @@ export function useChatHub({
                     ...page,
                     messages: {
                       ...page.messages,
-                      data: [msg, ...page.messages.data], // prepend لأن الترتيب معكوس
+                      data: [msg, ...page.messages.data],
                       totalCount: page.messages.totalCount + 1,
                     },
                   }
@@ -134,8 +142,6 @@ export function useChatHub({
           };
         });
       } else {
-        // لا يوجد كاش للمحادثة، ننشئ كاش جديد
-        // ⚠️ يجب تعريف المتغير هنا قبل استخدامه
         const newConversationData = {
           pages: [
             {
@@ -150,17 +156,15 @@ export function useChatHub({
           ],
           pageParams: [1],
         };
-
         queryClient.setQueryData(
           ["chat-conversation", myId, otherId],
           newConversationData,
         );
       }
 
-      // 3. تحديث recent chats للمرسل
+      // 3. تحديث recent chats
       queryClient.setQueryData(chatKeys.recentChats(myId), (oldData: any) => {
         if (!oldData) return oldData;
-
         const existingIndex = oldData.findIndex((chat: any) =>
           sameId(chat.userId, otherId),
         );
@@ -183,7 +187,6 @@ export function useChatHub({
         }
       });
 
-      // 4. إذا كانت الرسالة من المستخدم الآخر، نحدث recent chats للمرسل إليه أيضاً
       if (!msg.isMine) {
         queryClient.setQueryData(
           chatKeys.recentChats(otherId),
@@ -213,16 +216,13 @@ export function useChatHub({
         );
       }
 
-      // 5. استدعاء الـ callback الخارجي
       onNewMessageRef.current?.(message);
     };
 
     // ── MessageDeleted ──────────────────────────────────────────────────────
-    // داخل useChatHub.ts – في handleMessageDeleted
     const handleMessageDeleted = (messageId: number) => {
       const myId = currentUserIdRef.current;
 
-      // 1. تحديث conversation cache (حذف الرسالة)
       const allConvQueries = queryClient.getQueriesData<any>({
         queryKey: ["chat-conversation"],
       });
@@ -280,19 +280,17 @@ export function useChatHub({
             chatKeys.recentChats(myId),
             (oldData: any) => {
               if (!oldData) return oldData;
-
               const existingIndex = oldData.findIndex((chat: any) =>
                 sameId(chat.userId, otherId),
               );
-
               if (existingIndex >= 0) {
                 const updated = [...oldData];
                 updated[existingIndex] = {
                   ...updated[existingIndex],
                   lastMessage:
-                    newLastMessage.messageText ||
-                    (newLastMessage.audio ? "🎤 Voice message" : "📎 File"),
-                  lastMessageTime: newLastMessage.sentAt,
+                    newLastMessage!.messageText ||
+                    (newLastMessage!.audio ? "🎤 Voice message" : "📎 File"),
+                  lastMessageTime: newLastMessage!.sentAt,
                 };
                 return updated;
               }
@@ -305,7 +303,7 @@ export function useChatHub({
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
     };
 
-    // MessagesRead → نحدث الرسائل في الكاش إنها اتقرأت
+    // ── MessagesRead ─────────────────────────────────────────────────────────
     const handleMessagesRead = ({
       messageIds,
     }: {
@@ -341,14 +339,17 @@ export function useChatHub({
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
     };
 
+    // ── ChatUpdated ──────────────────────────────────────────────────────────
     const handleChatUpdated = ({ chatId }: { chatId: number }) => {
       const myId = currentUserIdRef.current;
-      console.log(chatId);
+      console.log("ChatUpdated:", chatId);
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
     };
 
-    // ── MessageUpdated ──────────────────────────────────────────────────────
-    const handleMessageUpdated = (updatedMessage: Message) => {
+    // ── MessageUpdated ───────────────────────────────────────────────────────
+    const handleMessageUpdated = (raw: any) => {
+      // ✅ الإصلاح الثاني: normalize هنا كمان
+      const updatedMessage = normalizeMessage(raw);
       const myId = currentUserIdRef.current;
 
       const allConvQueries = queryClient.getQueriesData<any>({
@@ -377,8 +378,6 @@ export function useChatHub({
         });
       }
 
-      // 2. تحديث recent chats إذا كانت الرسالة المعدلة هي آخر رسالة في الشات
-      //    نبحث عن المحادثة بين الطرفين
       const otherId = sameId(updatedMessage.senderId, myId)
         ? updatedMessage.receiverId
         : updatedMessage.senderId;
@@ -386,11 +385,9 @@ export function useChatHub({
       if (otherId) {
         queryClient.setQueryData(chatKeys.recentChats(myId), (oldData: any) => {
           if (!oldData) return oldData;
-
           const existingIndex = oldData.findIndex((chat: any) =>
             sameId(chat.userId, otherId),
           );
-
           if (existingIndex >= 0) {
             const updated = [...oldData];
             updated[existingIndex] = {
@@ -409,7 +406,7 @@ export function useChatHub({
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
     };
 
-    // ── Typing ──────────────────────────────────────────────────────────────
+    // ── Typing ───────────────────────────────────────────────────────────────
     const handleTyping = (senderId: string) => {
       if (sameId(senderId, currentUserIdRef.current)) return;
       onTypingRef.current?.(senderId);
