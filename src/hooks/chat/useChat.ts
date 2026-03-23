@@ -120,7 +120,7 @@ export function useSendMessage(senderId: string, receiverId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(senderId) });
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(receiverId) });
-      queryClient.invalidateQueries({ queryKey: chatKeys.conversation(senderId , receiverId) });
+  
     },
   });
 }

@@ -18,7 +18,7 @@ interface UseChatHubOptions {
 }
 
 // مقارنة IDs بـ case-insensitive عشان نتجنب مشكلة UUID uppercase/lowercase
-const sameId = (a?: string, b?: string) =>
+export const sameId = (a?: string, b?: string) =>
   !!a && !!b && a.toLowerCase() === b.toLowerCase();
 
 export function useChatHub({
@@ -84,7 +84,25 @@ export function useChatHub({
         isMine: sameId(message.senderId, myId),
       };
 
-      // نلف على كل الـ conversation queries
+      // 1. التحقق من عدم وجود الرسالة مسبقاً (لتجنب التكرار)
+      const convKey = chatKeys.conversation(myId, otherId);
+      const existingConv = queryClient.getQueryData<any>(convKey);
+      if (existingConv) {
+        let exists = false;
+        for (const page of existingConv.pages) {
+          if (
+            page.messages.data.some(
+              (m: Message) => m.messageId === msg.messageId,
+            )
+          ) {
+            exists = true;
+            break;
+          }
+        }
+        if (exists) return; // الرسالة موجودة، نخرج
+      }
+
+      // 2. البحث عن المحادثة في الكاش الحالي
       const allConvQueries = queryClient.getQueriesData<any>({
         queryKey: ["chat-conversation"],
       });
@@ -95,7 +113,7 @@ export function useChatHub({
       });
 
       if (matchedEntry) {
-        // لو في cache -> نضيف الرسالة مباشرة
+        // تحديث المحادثة الموجودة (إضافة الرسالة في بداية آخر صفحة)
         queryClient.setQueryData(matchedEntry[0], (oldData: any) => {
           if (!oldData) return oldData;
           const lastPageIdx = oldData.pages.length - 1;
@@ -107,7 +125,7 @@ export function useChatHub({
                     ...page,
                     messages: {
                       ...page.messages,
-                      data: [...page.messages.data, msg],
+                      data: [msg, ...page.messages.data], // prepend لأن الترتيب معكوس
                       totalCount: page.messages.totalCount + 1,
                     },
                   }
@@ -116,45 +134,8 @@ export function useChatHub({
           };
         });
       } else {
-        queryClient.invalidateQueries({
-          queryKey: ["chat-conversation", myId, otherId],
-          refetchType: "none",
-        });
-
-        queryClient.setQueryData(chatKeys.recentChats(myId), (oldData: any) => {
-          if (!oldData) return oldData;
-
-          // نشوف لو الشات موجود في الـ recent
-          const existingIndex = oldData.findIndex((chat: any) =>
-            sameId(chat.userId, otherId),
-          );
-          const updated = [...oldData];
-          const newRecent = {
-            userId: otherId,
-            lastMessage:
-              msg.messageText || (msg.audio ? "🎤 Voice message" : "📎 File"),
-            lastMessageTime: msg.sentAt,
-            unreadCount: !msg.isMine
-              ? (updated[existingIndex]?.unreadCount ?? 0) + 1
-              : 0,
-            ...(msg.isMine ? {} : { isTyping: false }),
-          };
-
-          if (existingIndex >= 0) {
-            // لو موجود، نحدثه
-            const updated = [...oldData];
-            updated[existingIndex] = {
-              ...updated[existingIndex],
-              ...newRecent,
-            };
-            return updated;
-          } else {
-            // لو مش موجود، نضيفه جديد
-            return [newRecent, ...oldData];
-          }
-        });
-
-        // 3. نضيف الرسالة فوراً في الـ conversation cache (بنشئ cache جديد)
+        // لا يوجد كاش للمحادثة، ننشئ كاش جديد
+        // ⚠️ يجب تعريف المتغير هنا قبل استخدامه
         const newConversationData = {
           pages: [
             {
@@ -176,16 +157,41 @@ export function useChatHub({
         );
       }
 
+      // 3. تحديث recent chats للمرسل
+      queryClient.setQueryData(chatKeys.recentChats(myId), (oldData: any) => {
+        if (!oldData) return oldData;
+
+        const existingIndex = oldData.findIndex((chat: any) =>
+          sameId(chat.userId, otherId),
+        );
+        const updated = [...oldData];
+        const newRecent = {
+          userId: otherId,
+          lastMessage:
+            msg.messageText || (msg.audio ? "🎤 Voice message" : "📎 File"),
+          lastMessageTime: msg.sentAt,
+          unreadCount: !msg.isMine
+            ? (updated[existingIndex]?.unreadCount ?? 0) + 1
+            : 0,
+        };
+
+        if (existingIndex >= 0) {
+          updated[existingIndex] = { ...updated[existingIndex], ...newRecent };
+          return updated;
+        } else {
+          return [newRecent, ...oldData];
+        }
+      });
+
+      // 4. إذا كانت الرسالة من المستخدم الآخر، نحدث recent chats للمرسل إليه أيضاً
       if (!msg.isMine) {
         queryClient.setQueryData(
           chatKeys.recentChats(otherId),
           (oldData: any) => {
             if (!oldData) return oldData;
-
             const existingIndex = oldData.findIndex((chat: any) =>
               sameId(chat.userId, myId),
             );
-
             const newRecent = {
               userId: myId,
               lastMessage:
@@ -193,7 +199,6 @@ export function useChatHub({
               lastMessageTime: msg.sentAt,
               unreadCount: 1,
             };
-
             if (existingIndex >= 0) {
               const updated = [...oldData];
               updated[existingIndex] = {
@@ -208,19 +213,50 @@ export function useChatHub({
         );
       }
 
+      // 5. استدعاء الـ callback الخارجي
       onNewMessageRef.current?.(message);
     };
 
     // ── MessageDeleted ──────────────────────────────────────────────────────
+    // داخل useChatHub.ts – في handleMessageDeleted
     const handleMessageDeleted = (messageId: number) => {
       const myId = currentUserIdRef.current;
 
+      // 1. تحديث conversation cache (حذف الرسالة)
       const allConvQueries = queryClient.getQueriesData<any>({
         queryKey: ["chat-conversation"],
       });
 
+      let affectedChat: { senderId: string; receiverId: string } | null = null;
+
       for (const [key, oldData] of allConvQueries) {
         if (!oldData) continue;
+
+        const keyArr = key as string[];
+        const senderId = keyArr[1];
+        const receiverId = keyArr[2];
+
+        let deletedMessage: Message | undefined;
+        let newLastMessage: Message | undefined;
+
+        for (const page of oldData.pages) {
+          const messages = page.messages.data;
+          deletedMessage = messages.find(
+            (m: Message) => m.messageId === messageId,
+          );
+          if (deletedMessage) {
+            const index = messages.findIndex(
+              (m: Message) => m.messageId === messageId,
+            );
+            if (index > 0) newLastMessage = messages[index - 1];
+            break;
+          }
+        }
+
+        if (deletedMessage) {
+          affectedChat = { senderId, receiverId };
+        }
+
         queryClient.setQueryData(key, {
           ...oldData,
           pages: oldData.pages.map((page: any) => ({
@@ -234,10 +270,41 @@ export function useChatHub({
             },
           })),
         });
+
+        if (affectedChat && newLastMessage) {
+          const otherId = sameId(affectedChat.senderId, myId)
+            ? affectedChat.receiverId
+            : affectedChat.senderId;
+
+          queryClient.setQueryData(
+            chatKeys.recentChats(myId),
+            (oldData: any) => {
+              if (!oldData) return oldData;
+
+              const existingIndex = oldData.findIndex((chat: any) =>
+                sameId(chat.userId, otherId),
+              );
+
+              if (existingIndex >= 0) {
+                const updated = [...oldData];
+                updated[existingIndex] = {
+                  ...updated[existingIndex],
+                  lastMessage:
+                    newLastMessage.messageText ||
+                    (newLastMessage.audio ? "🎤 Voice message" : "📎 File"),
+                  lastMessageTime: newLastMessage.sentAt,
+                };
+                return updated;
+              }
+              return oldData;
+            },
+          );
+        }
       }
 
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
     };
+
     // MessagesRead → نحدث الرسائل في الكاش إنها اتقرأت
     const handleMessagesRead = ({
       messageIds,
@@ -310,6 +377,35 @@ export function useChatHub({
         });
       }
 
+      // 2. تحديث recent chats إذا كانت الرسالة المعدلة هي آخر رسالة في الشات
+      //    نبحث عن المحادثة بين الطرفين
+      const otherId = sameId(updatedMessage.senderId, myId)
+        ? updatedMessage.receiverId
+        : updatedMessage.senderId;
+
+      if (otherId) {
+        queryClient.setQueryData(chatKeys.recentChats(myId), (oldData: any) => {
+          if (!oldData) return oldData;
+
+          const existingIndex = oldData.findIndex((chat: any) =>
+            sameId(chat.userId, otherId),
+          );
+
+          if (existingIndex >= 0) {
+            const updated = [...oldData];
+            updated[existingIndex] = {
+              ...updated[existingIndex],
+              lastMessage:
+                updatedMessage.messageText ||
+                (updatedMessage.audio ? "🎤 Voice message" : "📎 File"),
+              lastMessageTime: updatedMessage.sentAt,
+            };
+            return updated;
+          }
+          return oldData;
+        });
+      }
+
       queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(myId) });
     };
 
@@ -324,14 +420,14 @@ export function useChatHub({
       onStopTypingRef.current?.(senderId);
     };
 
-    const handleUserOnline = (userId: string) => {
-      if (sameId(userId, currentUserIdRef.current)) return;
-      onUserOnlineRef.current?.(userId);
+    const handleUserOnline = (data: { userId: string }) => {
+      if (sameId(data.userId, currentUserIdRef.current)) return;
+      onUserOnlineRef.current?.(data.userId);
     };
 
-    const handleUserOffline = (userId: string) => {
-      if (sameId(userId, currentUserIdRef.current)) return;
-      onUserOfflineRef.current?.(userId);
+    const handleUserOffline = (data: { userId: string; lastSeen?: string }) => {
+      if (sameId(data.userId, currentUserIdRef.current)) return;
+      onUserOfflineRef.current?.(data.userId);
     };
 
     connection.on("ReceiveMessage", handleReceiveMessage);

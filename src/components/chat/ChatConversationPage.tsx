@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 import { useAudioRecorder } from "../../hooks/chat/useAudioRecorder";
 import { AudioRecorderButton } from "./AudioRecordButton";
 import MessageBubble from "./MessageBubble";
+import { sameId } from "../../utils/singlr/useChatHub";
 
 export default function ChatConversationPage() {
   const { t } = useTranslation();
@@ -69,22 +70,22 @@ export default function ChatConversationPage() {
   const { mutate: editMsg } = useEditMessage(currentUserId, receiverId || "");
   const { mutate: delMsg } = useDeleteMessage(currentUserId, receiverId || "");
 
-  const { sendTyping, sendStopTyping } = useChatHub({
-    token,
-    currentUserId,
- onTyping: (sid) => {
-  if (sid.toLowerCase() === receiverId?.toLowerCase()) setIsTyping(true);
-},
-onStopTyping: (sid) => {
-  if (sid.toLowerCase() === receiverId?.toLowerCase()) setIsTyping(false);
-},
-onUserOnline: (userId) => {
-  if (userId.toLowerCase() === receiverId?.toLowerCase()) setIsOnline(true);
-},
-onUserOffline: (userId) => {
-  if (userId.toLowerCase() === receiverId?.toLowerCase()) setIsOnline(false);
-},
-  });
+ const { sendTyping, sendStopTyping } = useChatHub({
+  token,
+  currentUserId,
+  onTyping: (sid) => {
+    if (sameId(sid, receiverId)) setIsTyping(true);
+  },
+  onStopTyping: (sid) => {
+    if (sameId(sid, receiverId)) setIsTyping(false);
+  },
+  onUserOnline: (userId) => {
+    if (sameId(userId, receiverId)) setIsOnline(true);
+  },
+  onUserOffline: (userId) => {
+    if (sameId(userId, receiverId)) setIsOnline(false);
+  },
+});
 
   const allMessages: Message[] =
   data?.pages?.flatMap((p) => p?.messages?.data ?? []).reverse() ?? [];

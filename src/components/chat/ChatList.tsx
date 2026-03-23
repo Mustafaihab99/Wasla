@@ -1,17 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiEdit, FiSearch, FiUser, FiTrash2 } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-import { useGetRecentChats } from "../../hooks/chat/useChat";
+import { chatKeys, useGetRecentChats } from "../../hooks/chat/useChat";
 import { CHAT_ROUTES } from "../../routes/ChatRoutes";
 import { formatChatTime } from "../../utils/chatUtils";
 import ChatListSkeleton from "./ChatListSkeleton";
 import { useDeleteChat, useMarkasRead } from "../../hooks/chat/useChat";
+import { RecentChat } from "../../types/chat/chat-types";
+import { QueryClient } from "@tanstack/react-query";
 
 export default function ChatList() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-
+  const queryClient = new QueryClient();
   const currentUserId = sessionStorage.getItem("user_id") || "";
   const myPhoto = sessionStorage.getItem("profilePhoto") || "";
   const [search, setSearch] = useState("");
@@ -24,7 +27,37 @@ export default function ChatList() {
 
   const { mutate: deleteChat } = useDeleteChat(currentUserId);
 
+  // في ChatList
   const { mutate: markAsRead } = useMarkasRead(currentUserId);
+
+  const handleChatClick = (chat: RecentChat) => {
+    const otherUserId =
+      chat.senderId === currentUserId ? chat.receiverId : chat.senderId;
+
+    if (!chat.isMine && chat.unreadMessageCount > 0) {
+      markAsRead(chat.chatId, {
+        onSuccess: () => {
+          queryClient.setQueryData(
+            chatKeys.recentChats(currentUserId),
+            (oldData: any) => {
+              if (!oldData) return oldData;
+              const updated = [...oldData];
+              const index = updated.findIndex(
+                (c: any) => c.chatId === chat.chatId,
+              );
+              if (index !== -1) {
+                updated[index] = { ...updated[index], unreadMessageCount: 0 };
+              }
+              return updated;
+            },
+          );
+          navigate(CHAT_ROUTES.conversation(otherUserId));
+        },
+      });
+    } else {
+      navigate(CHAT_ROUTES.conversation(otherUserId));
+    }
+  };
 
   return (
     <div className="flex flex-col h-full bg-background">
@@ -89,23 +122,10 @@ export default function ChatList() {
               <div
                 key={chat.chatId}
                 className="group w-full flex items-center justify-between px-4 py-3 hover:bg-border/40 transition">
-                
                 {/* Go to conversation */}
                 <button
-                  onClick={() => {
-                    const otherUserId =
-                      chat.senderId === currentUserId
-                        ? chat.receiverId
-                        : chat.senderId;
-
-                    if (!isMine && chat.unreadMessageCount > 0) {
-                      markAsRead(chat.chatId);
-                    }
-
-                    navigate(CHAT_ROUTES.conversation(otherUserId));
-                  }}
+                  onClick={() => handleChatClick(chat)}
                   className="flex items-center gap-3 flex-1 text-left">
-                  
                   <div className="relative shrink-0">
                     {chat.profileReceiver ? (
                       <img
@@ -123,8 +143,6 @@ export default function ChatList() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      
-                      {/* ✅ الاسم Bold لو unread */}
                       <span
                         className={`text-sm truncate ${
                           !isMine && chat.unreadMessageCount > 0
@@ -133,8 +151,6 @@ export default function ChatList() {
                         }`}>
                         {chat.name || t("chat.unknownUser")}
                       </span>
-
-                      {/* ✅ الوقت + badge */}
                       <div className="flex items-center gap-2 ml-2 shrink-0">
                         <span className="text-xs text-dried">
                           {formatChatTime(chat.sentAt)}
