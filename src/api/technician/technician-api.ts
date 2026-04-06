@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { techProfileData } from "../../types/technician/technician-types";
+import { showAllTechnicians, techProfileData } from "../../types/technician/technician-types";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
 
@@ -28,6 +28,42 @@ export async function EditTechnicianProfile(formData: FormData) {
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     const errorMessage = axiosError.response?.data?.message || "Updated failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// all technicians
+interface PaginatedResponse<T> {
+  data: T[];
+  totalCount: number;
+  currentPage: number;
+  pageSize: number;
+}
+
+export async function fetchAllTechnicians(
+  pageNumber: number = 1,
+  pageSize: number = 6,
+  specialityId? : number
+): Promise<PaginatedResponse<showAllTechnicians>> {
+  try {
+    const response = await axiosInstance.get(
+      specialityId ?
+      `Technician/GetBySpecialty?specialty=${specialityId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
+      :
+      `Technician/GetBySpecialty?&pageNumber=${pageNumber}&pageSize=${pageSize}`
+      ,
+    );
+    const result = response.data;
+    return {
+      data: result.data?.data || [],
+      totalCount: result.data?.totalCount || 0,
+      currentPage: result.data?.pageNumber || pageNumber,
+      pageSize: result.data?.pageSize || pageSize,
+    };
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "Failed to fetch technicians";
     toast.error(errorMessage);
     throw error;
   }

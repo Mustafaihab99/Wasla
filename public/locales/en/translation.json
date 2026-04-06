@@ -328,6 +328,7 @@
     "myFavourites": "My Favourites",
     "gyms": "All Gyms",
     "Prev": "Prev",
+    "loading" : "Loading....",
     "doctors": "All Doctors Books",
     "gymsb": "All Gyms Books",
     "Next": "Next",
@@ -788,6 +789,11 @@
   "specialization" : "Specialization",
   "editProfile" : "Edit Profile",
   "save" : "Save Profile",
-  "cancel" : "Cancel"
+  "cancel" : "Cancel",
+  "loading": "Loading...",
+  "prev": "Previous",
+  "next": "Next",
+  "about": "About Technician",
+  "bookNow": "Book Now"
 }
 }

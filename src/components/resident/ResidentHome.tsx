@@ -35,7 +35,7 @@ export default function ResidentHome() {
     {
       title: t("resident.technical"),
       icon: <FaTools />,
-      link: "/resident/service/technicans",
+      link: "/resident/service/technicians",
     },
     {
       title: t("resident.gym"),

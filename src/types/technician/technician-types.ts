@@ -10,3 +10,13 @@ export interface techProfileData{
     documentsUrls: string[],
     rate: number,
 }
+export interface showAllTechnicians{
+    id: string,
+    name: string,
+    description: string,
+    imageUrl: string,
+    phoneNumber: string,
+    rating: number,
+    specialization: string,
+    yearsOfExperience: number
+}
