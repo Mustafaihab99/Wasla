@@ -40,8 +40,8 @@ export async function EditGymProfile(formData: FormData) {
     throw error;
   }
 }
-// service managment
 
+// service managment
 export async function addGymService(formData: FormData) {
   try {
     const response = await axiosInstance.post("Package", formData, {

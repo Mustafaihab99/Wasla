@@ -6,6 +6,7 @@ import NavBar from "../../components/landing/NavBar";
 import FooterSection from "../../components/landing/Footer";
 import ResidentFormFields from "../../components/auth/ResidentFormFields";
 import GymFormFields from "../../components/auth/GymFormFields";
+import TechnicianFormFields from "../../components/auth/TechnicanFormFields";
 
 export default function CompleteProfile() {
   const location = useLocation();
@@ -26,7 +27,7 @@ export default function CompleteProfile() {
     resident: ResidentFormFields,
     gym: GymFormFields,
     // restaurant: RestaurantFormFields,
-    // technician: TechnicianFormFields,
+    technician: TechnicianFormFields,
   };
 
   const RoleForm = roleComponents[role];

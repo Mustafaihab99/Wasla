@@ -60,3 +60,25 @@ export async function setGymProfile(formData: FormData) {
     throw error;
   }
 }
+
+// technican
+export async function allTechnicanSpecialzed(): Promise<SpicialzedData[]> {
+  const response = await axiosInstance.get(`Technician/Specializations`);
+  return response.data.data;
+}
+
+export async function setTechnicanProfile(formData: FormData) {
+  try {
+    const response = await axiosInstance.post("Technician/CompleteRegister", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    toast.success(response.data.message || "Technican profile completed successfully!");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "Registration failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}

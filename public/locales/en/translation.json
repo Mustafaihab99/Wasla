@@ -247,7 +247,33 @@
       "phoneInvalid": "Invalid phone number",
       "phoneAtLeast": "Enter at least one phone number",
       "photoReq": "Main photo is required"
-    }
+    },
+    "tech": {
+    "name": "Full Name",
+    "entername": "Enter your full name",
+    "namereq": "Full name is required",
+    "specialization": "Specialization",
+    "select": "Select specialization",
+    "spireq": "Specialization is required",
+    "birthday": "Birth Date",
+    "birthreq": "Birth date is required",
+    "birthFuture": "Invalid date",
+    "phone": "Phone Number",
+    "phonereq": "Phone is required",
+    "phonemin": "Phone must be 11 digits",
+    "description": "About You",
+    "descreq": "Description is required",
+    "documents": "Work ID / Certificates",
+    "docsreq": "Documents are required",
+    "photoreq": "Photo is required",
+    "save": "Save Profile",
+    "failed": "Failed to complete technician profile",
+    "upload": "Upload",
+    "uploadDocs": "upload your Wrok Id / Certificates",
+    "removeFile" : "remove File",
+    "describePlaceholder": "write about your experience...",
+    "maxFiles": "You can upload up to 3 files only"
+  }
   },
   "resident": {
     "service": "Services",
@@ -739,5 +765,29 @@
     "lastSeenToday" : "Last Seen Today",
     "lastSeenYesterday" : "Last Seen Yesterday",
     "lastSeen" : "Last Seen"
-  }
+  },
+  "tech": {
+  "welcome": "Welcome aboard 👨‍🔧",
+  "welcome2": "Your account is ready. You can now start working easily",
+    "panel": "Technican Panel",
+  "dashboard": "OverView",
+  "jobs": "Jobs",
+  "services": "Services",
+  "reviews": "Reviews",
+  "profile": "Profile",
+  "manageProfile": "manage your data as professional technician",
+  "rating": "Rating",
+  "experience": "Experience",
+  "years": "Years",
+  "documents": "Documents",
+  "description": "Description",
+  "phone": "Phone Number",
+  "view": "View",
+  "name" : "Full Name",
+  "birthday" :"Birth Date",
+  "specialization" : "Specialization",
+  "editProfile" : "Edit Profile",
+  "save" : "Save Profile",
+  "cancel" : "Cancel"
+}
 }
