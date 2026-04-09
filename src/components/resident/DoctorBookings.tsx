@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { FaCalendarAlt, FaClock, FaMoneyBill } from "react-icons/fa";
 
 import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
-import ConfirmationModal from "../../components/doctor/modals/CancelBookPopup";
+import ConfirmationModal from "../doctor/modals/ConfirmationModel";
 import noData from "../../assets/images/nodata.webp";
 
 export default function DoctorBookings() {

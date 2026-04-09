@@ -51,6 +51,7 @@ const GymHomeDashboard = lazy(() => import ("../components/gym/GymHomeDashboard"
 // techniican dashboard
 const TechnicianDashboardLayout = lazy(() => import ("../components/serviceDashboards/TechnicanDashboard"));
 const TechnicianProfile = lazy(() => import ("../components/technician/TechnicianProfile"));
+const TechnicianOverView = lazy(() => import ("../components/technician/TechnicianOverView"));
 
 // social media
 const CommunityLoader = lazy(() => import ("../pages/community/CommunityLoader"));
@@ -153,10 +154,8 @@ export default function AppRoutes() {
         <Route element={<ProtectedRoute allowedRoles={["technician"]} />}>
         <Route path="/technician" element={<TechnicianDashboardLayout />}>
           <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<GymHomeDashboard />} />
-          <Route path="services" element={<GymServicesPage />} />
+          <Route path="overView" element={<TechnicianOverView />} />
           <Route path="profile" element={<TechnicianProfile />} />
-          <Route path="members" element={<GymMembers />} />
           <Route path="reviews" element={<ServiceProviderReviews />} />
         </Route>
       </Route> 

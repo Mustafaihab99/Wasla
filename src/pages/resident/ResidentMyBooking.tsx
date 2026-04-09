@@ -5,8 +5,9 @@ import { FaCalendarAlt } from "react-icons/fa";
 
 import DoctorBookings from "../../components/resident/DoctorBookings";
 import GymBookings from "../../components/resident/GymBookings";
+import TechBookings from "../../components/resident/TechniciansBooking";
 
-type BookingType = "doctor" | "gym";
+type BookingType = "doctor" | "gym" | "technician";
 
 export default function ResidentMyBooking() {
   const { t } = useTranslation();
@@ -15,6 +16,7 @@ export default function ResidentMyBooking() {
   const tabs = [
     { key: "doctor", label: t("resident.doctors") },
     { key: "gym", label: t("resident.gymsb") },
+    { key: "technician", label: t("resident.techsb") },
   ];
 
   return (
@@ -49,6 +51,7 @@ export default function ResidentMyBooking() {
       {/* Dynamic Content */}
       {bookingType === "doctor" && <DoctorBookings />}
       {bookingType === "gym" && <GymBookings />}
+      {bookingType === "technician" && <TechBookings />}
     </div>
   );
 }

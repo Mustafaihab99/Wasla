@@ -9,7 +9,7 @@ import i18next from "i18next";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
 
 import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
-import ConfirmationModal from "../../components/doctor/modals/CancelBookPopup";
+import ConfirmationModal from "../doctor/modals/ConfirmationModel";
 import noData from "../../assets/images/nodata.webp";
 
 export default function GymBookings() {

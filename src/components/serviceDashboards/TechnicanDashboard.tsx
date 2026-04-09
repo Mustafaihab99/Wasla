@@ -9,11 +9,10 @@ import {
   FaTimes,
   FaSnowflake,
   FaTools,
-  FaClipboardList,
   FaInbox,
 } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
-import { MdBuild, MdComment } from "react-icons/md";
+import { MdComment } from "react-icons/md";
 import { RiUserCommunityLine } from "react-icons/ri";
 import logo from "../../assets/images/icons/app-logo.png";
 import { useTranslation } from "react-i18next";
@@ -59,18 +58,8 @@ export default function TechnicianDashboardLayout() {
   const navItems = [
     {
       label: t("tech.dashboard"),
-      link: "/technician/dashboard",
+      link: "/technician/overView",
       icon: <FaTools />,
-    },
-    {
-      label: t("tech.jobs"),
-      link: "/technician/jobs",
-      icon: <FaClipboardList />,
-    },
-    {
-      label: t("tech.services"),
-      link: "/technician/services",
-      icon: <MdBuild />,
     },
     {
       label: t("tech.reviews"),

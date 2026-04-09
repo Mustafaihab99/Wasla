@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import useFetchDoctorBookingList from "../../hooks/doctor/useFetchDoctorBookingList";
 import useCancelDoctorBook from "../../hooks/doctor/useCancelBook";
-import ConfirmationModal from "./modals/CancelBookPopup";
+import ConfirmationModal from "./modals/ConfirmationModel";
 import EditBookingModal from "./modals/UpdateBookModal";
 import { FaPhone } from "react-icons/fa";
 
@@ -236,6 +236,7 @@ hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-[2p
         show={showConfirm}
         onClose={() => setShowConfirm(false)}
         onConfirm={handleConfirmCancel}
+
       />
       {editBookingData && (
         <EditBookingModal

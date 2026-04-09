@@ -20,3 +20,27 @@ export interface showAllTechnicians{
     specialization: string,
     yearsOfExperience: number
 }
+export interface BookData{
+    residentId: string,
+    technicianId: string,
+    price: number
+    bookingDate: string
+}
+export interface TechnicianBookingData{
+    bookingId: number,
+    technicianName: string,
+    technicianPhone: string,
+    technicianImage: string,
+    price: number,
+    bookingDate: string,
+    status: number
+}
+export interface TechnicianComingBookingData{
+    bookingId: number,
+    residentName: string,
+    residentPhone: string,
+    residentImage: string,
+    price: number,
+    bookingDate: string,
+    status: number
+}

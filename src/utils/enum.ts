@@ -25,3 +25,10 @@ export const MessageType = {
     audio: 3,
     mixed: 4 // text + file
 }
+export const TechBookStatus = {
+   Pending : 1,
+   Accepted: 2,
+   Rejected: 3,
+   Cancelled : 4,
+   Done: 5
+}
