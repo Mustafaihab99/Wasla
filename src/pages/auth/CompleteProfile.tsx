@@ -7,6 +7,7 @@ import FooterSection from "../../components/landing/Footer";
 import ResidentFormFields from "../../components/auth/ResidentFormFields";
 import GymFormFields from "../../components/auth/GymFormFields";
 import TechnicianFormFields from "../../components/auth/TechnicanFormFields";
+import RestaurantFormFields from "../../components/auth/RestaurantFormFields";
 
 export default function CompleteProfile() {
   const location = useLocation();
@@ -26,8 +27,8 @@ export default function CompleteProfile() {
     doctor: DoctorFormFields,
     resident: ResidentFormFields,
     gym: GymFormFields,
-    // restaurant: RestaurantFormFields,
     technician: TechnicianFormFields,
+    restaurant: RestaurantFormFields,
   };
 
   const RoleForm = roleComponents[role];

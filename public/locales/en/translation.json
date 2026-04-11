@@ -833,5 +833,24 @@
     "cancelTitle": "Cancel Booking",
     "cancelMessage": "Are you sure you want to cancel this booking?",
     "numberof" : "Number of Residents"
+  },
+    "restaurant": {
+    "name": "Restaurant Name",
+    "owner": "Owner Name",
+    "phone": "Phone Number",
+    "category": "Category",
+    "description": "Description",
+    "gallery": "Gallery Images",
+    "save": "Save Profile",
+    "nameReq": "Restaurant name is required",
+    "ownerReq": "Owner name is required",
+    "phoneReq": "Phone number is required",
+    "categoryReq": "Please select a category",
+    "descReq": "Description is required",
+    "profileReq": "Profile image is required",
+    "galleryReq": "At least one image is required",
+    "maxGallery": "Maximum 5 images allowed",
+    "failed": "Something went wrong",
+    "selectCategory": "Select Category"
   }
 }
