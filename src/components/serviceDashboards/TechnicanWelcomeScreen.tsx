@@ -13,7 +13,7 @@ export default function TechnicianWelcomeScreen() {
     const timer = setTimeout(() => {
       setVisible(false);
       setTimeout(() => {
-        navigate("/technician/dashboard");
+        navigate("/technician/overView");
       }, 600);
     }, 5000);
 

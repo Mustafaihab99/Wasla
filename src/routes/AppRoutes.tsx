@@ -153,7 +153,7 @@ export default function AppRoutes() {
         {/* tech Dashboard */}
         <Route element={<ProtectedRoute allowedRoles={["technician"]} />}>
         <Route path="/technician" element={<TechnicianDashboardLayout />}>
-          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route index element={<Navigate to="overView" replace />} />
           <Route path="overView" element={<TechnicianOverView />} />
           <Route path="profile" element={<TechnicianProfile />} />
           <Route path="reviews" element={<ServiceProviderReviews />} />

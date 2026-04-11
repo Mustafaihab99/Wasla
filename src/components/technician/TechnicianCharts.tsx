@@ -47,7 +47,8 @@ export default function TechnicianCharts() {
   }
 
   const stats = [
-    { title: t("tech.bookings"), value: data?.numberOfBookings || 0},
+    { title: t("tech.bookings"), value: data?.completedBookings || 0 },
+    { title: t("tech.numberof"), value: data?.numberOfResidents || 0 },
     {
       title: t("tech.totalRevenue"),
       value: `${data?.totalAmount} ${t("tech.egp")}`,

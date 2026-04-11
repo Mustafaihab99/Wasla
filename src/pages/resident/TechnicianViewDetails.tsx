@@ -20,6 +20,16 @@ export default function TechnicianViewDetails() {
 
   if (isLoading) return <DoctorCardSkeleton />;
 
+  const getFileType = (url: string) => {
+    const ext = url.split(".").pop()?.toLowerCase();
+
+    if (["jpg", "jpeg", "png", "webp"].includes(ext!)) return "image";
+    if (ext === "pdf") return "pdf";
+    if (["doc", "docx"].includes(ext!)) return "word";
+
+    return "other";
+  };
+
   return (
     <>
       <div
@@ -99,19 +109,45 @@ export default function TechnicianViewDetails() {
         )}
 
         {profile!.documentsUrls.length > 0 && (
-          <div>
-            <h2 className="font-bold text-lg mb-4">{t("tech.documents")}</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {profile?.documentsUrls.map((doc, index) => {
+              const type = getFileType(doc);
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {profile?.documentsUrls.map((doc) => (
-                <div className="overflow-hidden rounded-xl group cursor-pointer">
-                  <img
-                    src={doc}
-                    className="w-full h-36 object-cover group-hover:scale-110 transition"
-                  />
+              return (
+                <div
+                  key={index}
+                  className="overflow-hidden rounded-xl border p-2 flex items-center justify-center bg-background hover:shadow cursor-pointer"
+                  onClick={() => window.open(doc, "_blank")}>
+                  {type === "image" && (
+                    <img
+                      src={doc}
+                      className="w-full h-36 object-cover rounded-lg"
+                    />
+                  )}
+
+                  {type === "pdf" && (
+                    <div className="text-center text-primary">
+                      📄
+                      <p className="text-sm mt-2">PDF File</p>
+                    </div>
+                  )}
+
+                  {type === "word" && (
+                    <div className="text-center text-primary">
+                      📝
+                      <p className="text-sm mt-2">Word File</p>
+                    </div>
+                  )}
+
+                  {type === "other" && (
+                    <div className="text-center text-primary">
+                      📁
+                      <p className="text-sm mt-2">File</p>
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
         )}
         {/* Reviews */}
@@ -130,7 +166,7 @@ export default function TechnicianViewDetails() {
               residentId: sessionStorage.getItem("user_id")!,
               technicianId: techniciansId!,
               bookingDate,
-              price
+              price,
             });
 
             setOpenModal(false);

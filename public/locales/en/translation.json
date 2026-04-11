@@ -831,7 +831,7 @@
     "rejectTitle": "Reject Booking",
     "rejectMessage": "Are you sure you want to reject this booking?",
     "cancelTitle": "Cancel Booking",
-    "cancelMessage": "Are you sure you want to cancel this booking?"
-
+    "cancelMessage": "Are you sure you want to cancel this booking?",
+    "numberof" : "Number of Residents"
   }
 }

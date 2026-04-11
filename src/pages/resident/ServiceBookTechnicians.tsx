@@ -55,7 +55,7 @@ export default function ServiceBookTechnician() {
               setPage(1);
             }}
             className={`px-5 py-2 rounded-2xl ${
-              selectedSpec === null ? "bg-primary text-white" : "bg-gray-100"
+              selectedSpec === null ? "bg-primary text-white" : "bg-dried text-white"
             }`}>
             {t("resident.All")}
           </button>
@@ -71,7 +71,7 @@ export default function ServiceBookTechnician() {
               className={`px-5 py-2 rounded-2xl ${
                 selectedSpec === spec.id
                   ? "bg-primary text-white"
-                  : "bg-gray-100"
+                  : "bg-dried text-white"
               }`}>
               {spec.name}
             </button>
@@ -154,12 +154,11 @@ export default function ServiceBookTechnician() {
             ))}
           </div>
 
-          {/* 🔥 Pagination */}
           <div className="flex justify-center mt-8 gap-3">
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
-              className="px-4 py-2 bg-gray-200 rounded">
+              className="px-4 py-2 bg-dried text-white rounded">
               {t("tech.prev")}
             </button>
 
@@ -168,7 +167,7 @@ export default function ServiceBookTechnician() {
             <button
               disabled={page >= Math.ceil((data?.totalCount || 0) / 6)}
               onClick={() => setPage((p) => p + 1)}
-              className="px-4 py-2 bg-gray-200 rounded">
+              className="px-4 py-2 bg-dried text-white rounded">
               {t("tech.next")}
             </button>
           </div>
