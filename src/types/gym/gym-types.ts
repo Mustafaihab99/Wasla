@@ -48,6 +48,8 @@ export interface GymResidentBookingData{
     bookingStatus: number
 }
 export interface GymChartsData{
+    numberOfBookings:number,
+    numberOfTrainees:number,
     completedBookings: number,
     numberOfResidents: number,
     totalAmount: number,
