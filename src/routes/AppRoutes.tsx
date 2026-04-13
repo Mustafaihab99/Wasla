@@ -52,6 +52,8 @@ const GymHomeDashboard = lazy(() => import ("../components/gym/GymHomeDashboard"
 const TechnicianDashboardLayout = lazy(() => import ("../components/serviceDashboards/TechnicanDashboard"));
 const TechnicianProfile = lazy(() => import ("../components/technician/TechnicianProfile"));
 const TechnicianOverView = lazy(() => import ("../components/technician/TechnicianOverView"));
+// restaurant dashboard
+const RestaurantDashboard = lazy(() => import ("../components/serviceDashboards/RestaurantDashboard"));
 
 // social media
 const CommunityLoader = lazy(() => import ("../pages/community/CommunityLoader"));
@@ -161,8 +163,19 @@ export default function AppRoutes() {
       </Route> 
         {/* end tech Dashboard */}
 
+        {/* restaurant Dashboard */}
+        <Route element={<ProtectedRoute allowedRoles={["restaurant"]} />}>
+        <Route path="/restaurant" element={<RestaurantDashboard />}>
+          <Route index element={<Navigate to="overView" replace />} />
+          <Route path="overView" element={<TechnicianOverView />} />
+          <Route path="profile" element={<TechnicianProfile />} />
+          <Route path="reviews" element={<ServiceProviderReviews />} />
+        </Route>
+      </Route> 
+        {/* end restaurant Dashboard */}
+
         {/* socila media */}
-        <Route element={<ProtectedRoute allowedRoles={["gym" , "doctor" , "resident" , "technician"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["gym" , "doctor" , "resident" , "technician" , "restaurant"]} />}>
           <Route path="community-loader" element={<CommunityLoader />} />
           <Route path="community" element={<CommunityLayout />} >
           <Route path="home" index element={<MainFeed />} />
@@ -176,7 +189,7 @@ export default function AppRoutes() {
         {/* end socila media */}
 
         {/* Chatting*/}
-        <Route element={<ProtectedRoute allowedRoles={["gym" , "doctor" , "resident" , "technician"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["gym" , "doctor" , "resident" , "technician" ,  "restaurant"]} />}>
           <Route path="/chat" element={<ChatLayout />}>
             <Route index element={<ChatList />} />
             <Route path="new" element={<NewChatPage />}/>

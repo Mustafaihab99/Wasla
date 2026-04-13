@@ -6,6 +6,7 @@ import DoctorWelcomeScreen from "../../components/serviceDashboards/WelcomeScree
 import AdminWelcomeScreen from "../../components/serviceDashboards/AdminWelcomeScreen";
 import GymWelcomeScreen from "../../components/serviceDashboards/GymWelcomeScreen";
 import TechnicianWelcomeScreen from "../../components/serviceDashboards/TechnicanWelcomeScreen";
+import RestaurantWelcomeScreen from "../../components/serviceDashboards/RestaurantWelcomrScreen";
 
 export default function MainDashboard() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function MainDashboard() {
     admin: AdminWelcomeScreen,
     gym : GymWelcomeScreen,
     technician: TechnicianWelcomeScreen,
-    // restaurant: RestaurantDashboard,
+    restaurant: RestaurantWelcomeScreen,
   };
 
   useEffect(() => {

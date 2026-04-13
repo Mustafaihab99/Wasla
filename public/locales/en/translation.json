@@ -851,6 +851,14 @@
     "galleryReq": "At least one image is required",
     "maxGallery": "Maximum 5 images allowed",
     "failed": "Something went wrong",
-    "selectCategory": "Select Category"
+    "selectCategory": "Select Category",
+    "welcome": "Welcome to your Restaurant Dashboard",
+    "welcome2": "Get ready to serve delicious meals and manage your business easily",
+    "panel": "Restaurant Panel",
+    "dashboard": "Dashboard",
+    "menu": "Menu",
+    "orders": "Orders",
+    "reviews": "Reviews",
+    "profile": "Profile"
   }
 }
