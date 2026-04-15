@@ -1,14 +1,11 @@
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { showAllRestaurants } from "../../types/restaurant/restaurant-types";
+import { addTableData, restaurantDetailsData, showAllRestaurants } from "../../types/restaurant/restaurant-types";
 
 interface SpicialzedcatData {
   id:number,
-  name:{
-    english : string,
-    arabic: string,
-  }
+  name: string,
 };
 export async function allRestaurantSpecialzed(): Promise<SpicialzedcatData[]> {
   const response = await axiosInstance.get(`RestaurantCategory/GetAll`);
@@ -41,11 +38,12 @@ interface PaginatedResponse<T> {
 export async function fetchAllRestaurant(
   pageNumber: number = 1,
   pageSize: number = 6,
-  id : number
+  id:number,
+  filterId : number
 ): Promise<PaginatedResponse<showAllRestaurants>> {
   try {
     const response = await axiosInstance.get(
-      `Restaurant/Restaurants?id=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      `Restaurant/Restaurants?id=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}&filterId=${filterId}`,
     );
     const result = response.data;
     return {
@@ -58,6 +56,35 @@ export async function fetchAllRestaurant(
     const axiosError = error as AxiosError<{ message?: string }>;
     const errorMessage =
       axiosError.response?.data?.message || "Failed to fetch restaurants";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function getRestaurantProfile(id: string): Promise<restaurantDetailsData> {
+  try {
+    const response = await axiosInstance.get(`Restaurant?id=${id}`);
+    return response.data.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message || "Fetched failed";
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
+}
+
+export async function bookARestaurantTable(formData: addTableData) {
+  try {
+    const response = await axiosInstance.post("Reservation/Reservation", formData);
+
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
     toast.error(errorMessage);
     throw error;
   }

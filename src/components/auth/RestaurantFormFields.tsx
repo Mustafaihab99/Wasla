@@ -8,9 +8,9 @@ import { FaCamera, FaTrash } from "react-icons/fa";
 import { toast } from "sonner";
 import useSetRestaurantProfile from "../../hooks/restaurant/useSetRestaurantProfile";
 import useGetRestaurantSpecial from "../../hooks/restaurant/useGetRestaurantSpecial";
-import i18next from "i18next";
 
-export default function RestaurantForm() {
+
+export default function RestaurantForm({ email }: { email: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { mutateAsync, isPending } = useSetRestaurantProfile();
@@ -46,6 +46,7 @@ export default function RestaurantForm() {
   const handleSubmit = async (values: typeof initialValues) => {
     try {
       const formData = new FormData();
+      formData.append("email" , email);
       formData.append("name", values.name);
       formData.append("description", values.description);
       formData.append("phoneNumber", values.phoneNumber);
@@ -183,9 +184,7 @@ export default function RestaurantForm() {
                   categories?.map((cat) => (
                     <option key={cat.id} value={cat.id}
                 className="bg-background text-foreground">
-                      {i18next.language === "en"
-                        ? cat.name.english
-                        : cat.name.arabic}
+                         {cat.name}
                     </option>
                   ))}
               </Field>

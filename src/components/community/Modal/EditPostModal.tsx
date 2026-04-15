@@ -101,11 +101,11 @@ export default function EditPostModal({
     formData.append("content", content);
 
     existingFiles.forEach((file) => {
-      formData.append("existingFiles", file);
+      formData.append("files.existingFiles", file);
     });
 
     newFiles.forEach((file) => {
-      formData.append("newFiles", file);
+      formData.append("files.newFiles", file);
     });
 
     doEdit(formData, { onSuccess: onClose });

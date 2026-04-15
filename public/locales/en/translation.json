@@ -859,6 +859,22 @@
     "menu": "Menu",
     "orders": "Orders",
     "reviews": "Reviews",
-    "profile": "Profile"
+    "profile": "Profile",
+    "loading": "loading restaurants...",
+    "about": "About Restaurant",
+    "takeaway": "Takeaway",
+    "takeawayDesc": "Order and pick up your food بسرعة",
+    "reserveTable": "Reserve Table",
+    "reserveDesc": "Book your table and enjoy your time",
+    "tables": "Number of Tables",
+    "persons": "Number of Persons",
+    "date": "Date",
+    "time": "Time",
+    "confirm": "Confirm Booking",
+    "booking": "Booking...",
+    "required": "This field is required",
+    "maxTables": "Max 4 tables allowed",
+    "maxPersons": "Max 20 persons allowed",
+    "futureDate": "Date must be in the future"
   }
 }
