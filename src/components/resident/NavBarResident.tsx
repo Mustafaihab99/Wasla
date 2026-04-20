@@ -11,10 +11,12 @@ import {
   FaTimes,
   FaUser,
 } from "react-icons/fa";
+import { IoIosNotifications } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/icons/app-logo.png";
 import useLogout from "../../hooks/auth/useLogout";
+import useUnreadNotificationsCount from "../../hooks/notifications/useGetUnreadNotification";
 
 export default function ResidentNavBar() {
   const { theme, setTheme } = useContext(ThemeContext);
@@ -24,6 +26,11 @@ export default function ResidentNavBar() {
   const [themeOpen, setThemeOpen] = useState(false);
   const { mutate: logout, isPending } = useLogout();
   const navigate = useNavigate();
+
+  const userId = sessionStorage.getItem("user_id")!;
+
+  const { data: unreadCount = 0 } =
+    useUnreadNotificationsCount(userId);
 
   const themes = [
     { key: "light", label: t("nav.light") },
@@ -95,8 +102,27 @@ export default function ResidentNavBar() {
         ))}
       </nav>
 
+      {/* Desktop Actions */}
       <div className="hidden md:flex items-center gap-3 relative">
 
+        {/* 🔔 NOTIFICATIONS */}
+        <div className="relative">
+          <button
+            onClick={() => navigate("/resident/notifications")}
+            className="p-2 rounded-full border border-border text-primary hover:bg-primary/10 transition-all"
+          >
+            <IoIosNotifications className="text-xl" />
+          </button>
+
+          {/* 🔴 badge */}
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] min-w-[16px] h-[16px] flex items-center justify-center rounded-full px-1 animate-pulse">
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </span>
+          )}
+        </div>
+
+        {/* Theme */}
         <div className="relative">
           <button
             onClick={() => setThemeOpen(!themeOpen)}
@@ -130,6 +156,7 @@ export default function ResidentNavBar() {
           </AnimatePresence>
         </div>
 
+        {/* Language */}
         <button
           onClick={toggleLanguage}
           className="flex items-center gap-1 p-2 px-3 rounded-md border border-border hover:bg-primary/10 transition-all">
@@ -137,6 +164,7 @@ export default function ResidentNavBar() {
           <span className="font-semibold uppercase">{i18n.language}</span>
         </button>
 
+        {/* Profile */}
         <button
           onClick={() => navigate("/resident/profile")}
           className="flex items-center gap-1 p-2 px-3 rounded-md border border-border hover:bg-primary/10 transition-all">
@@ -144,10 +172,12 @@ export default function ResidentNavBar() {
         </button>
       </div>
 
+      {/* Mobile menu */}
       <button className="md:hidden text-foreground text-xl" onClick={() => setMenuOpen(!menuOpen)}>
         {menuOpen ? <FaTimes /> : <FaBars />}
       </button>
 
+      {/* باقي الكود زي ما هو ❌ لم يتم تغييره */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -162,7 +192,6 @@ export default function ResidentNavBar() {
               onClick={(e) => e.stopPropagation()}>
 
               <div>
-                {/* Close */}
                 <button className="absolute top-4 right-4 text-xl" onClick={() => setMenuOpen(false)}>
                   <FaTimes />
                 </button>
@@ -185,10 +214,8 @@ export default function ResidentNavBar() {
                 </div>
               </div>
 
-              {/* Bottom Actions */}
               <div className="flex flex-col gap-4 border-t border-border pt-6">
 
-                {/* Language */}
                 <button
                   onClick={toggleLanguage}
                   className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-primary/10 transition-all w-full">
@@ -221,13 +248,13 @@ export default function ResidentNavBar() {
                   <span>{t("nav.profile")}</span>
                 </button>
 
-                {/* Logout */}
                 <button
                   onClick={handleLogout}
                   disabled={isPending}
                   className="flex items-center justify-center gap-2 p-3 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition-all w-full">
                   {isPending ? t("nav.logged...") : t("nav.Logout")}
                 </button>
+
               </div>
 
             </motion.div>

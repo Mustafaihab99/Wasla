@@ -30,7 +30,7 @@ export default function ReviewSection({ doctorId, currentUserId }: Props) {
   const handleAdd = () => {
     if (!content.trim() || isPending) return;
 
-    if(content.length > 30){
+    if(content.length > 50){
         toast.error(t("resident.longRev"));
         return;
     }

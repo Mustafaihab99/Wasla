@@ -38,3 +38,32 @@ export const RestaurantBookStatus = {
    Cancelled : 2,
    Completed: 3
 }
+
+export const enum NotificationType{
+        reviewScreen,
+        gymPaymentSuccess,
+        gymPaymentFailed,
+        newRideRequest,
+        rideAccepted,
+        rideCancelled,
+        rideCompleted,
+        technicianNewBookingRequest,
+        doctorCompleteInfoScreen,
+        doctorBookingScreen,
+        doctorEditBookingScreen,
+        doctorCancelBookingScreen,
+        messageReceived,
+        driverCompleteInfoScreen,
+        gymCompleteInfoScreen,
+        gymPackageBooked,
+        gymPackageExpired,
+        gymBookingCancelled,
+        residentCompleteInfoScreen,
+        technicianCompleteInfoScreen,
+        technicianAcceptBooking,
+        technicianRejectBooking,
+        userTechnicianBookingCancelled,
+        technicianCancelBooking,
+        postCommented,
+        postReacted
+}

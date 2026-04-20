@@ -20,7 +20,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import useLogout from "../../hooks/auth/useLogout";
 import { RiUserCommunityLine } from "react-icons/ri";
-
+import { IoIosNotifications } from "react-icons/io";
 
 export default function GymDashboard() {
   const { t, i18n } = useTranslation();
@@ -92,6 +92,11 @@ export default function GymDashboard() {
       label: t("common.Community"),
       link: "/community-loader",
       icon: <RiUserCommunityLine />,
+    },
+    {
+      label: t("common.notify"),
+      link: "/gym/notifications",
+      icon: <IoIosNotifications />,
     },
   ];
 

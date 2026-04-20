@@ -674,6 +674,7 @@
     "savedPosts": "Saved Posts",
     "Deleting...": "Deleting...",
     "Delete": "Delete",
+    "notify" : "Notifications",
     "noSavedPosts": "No Saved Posts",
     "goBack": "Go back",
     "nav": {
@@ -945,5 +946,14 @@
     "imageTooLarge": "Image is too large (max 5MB)",
     "addError": "Error adding item",
     "editError": "Error editing item"
+  },
+    "notification": {
+    "title": "Notifications",
+    "emptyTitle": "No Notifications Yet",
+    "emptyDesc": "You're all caught up! New notifications will appear here when something happens.",
+    "loading": "Loading notifications...",
+    "markAll": "Mark all as read",
+    "prev": "Prev",
+    "next": "Next"
   }
 }

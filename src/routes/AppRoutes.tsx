@@ -31,6 +31,7 @@ const ServiceBookTechnician = lazy(() => import ("../pages/resident/ServiceBookT
 const TechnicianViewDetails = lazy(() => import ("../pages/resident/TechnicianViewDetails"));
 const ServiceBookRestaurants= lazy(() => import ("../pages/resident/ServiceBookRestaurants"));
 const RestaurnatViewDetails = lazy(() => import ("../pages/resident/RestaurantViewDetails"));
+const NotificationsPage = lazy(() => import ("../pages/notification/notificationPage"));
 // doctor dashboard
 const DoctorDashboard = lazy(() => import ("../components/serviceDashboards/DoctorDashboard"));
 const DoctorHomeDashboard = lazy(() => import ("../components/doctor/DoctorHomeDahboard"));
@@ -75,6 +76,7 @@ const UserProfileChatPage = lazy(() => import ("../components/chat/UserProfileCh
 const ChatConversationPage = lazy(() => import ("../components/chat/ChatConversationPage"));
 
 export default function AppRoutes() {
+  const userId = sessionStorage.getItem("user_id")!;
   return (
       <Routes>
         {/* welcome page */}
@@ -112,6 +114,7 @@ export default function AppRoutes() {
             <Route path="service/technicians/:techniciansId" element={<TechnicianViewDetails />} /> 
             <Route path="service/restaurants" element={<ServiceBookRestaurants />} /> 
             <Route path="service/restaurants/:restaurantId" element={<RestaurnatViewDetails />} /> 
+            <Route path="notifications" element={<NotificationsPage userId={userId} />} /> 
           </Route>
             <Route path="/resident/payment-success" element={<PaymentSuccessPage />} /> 
             <Route path="/resident/payment-failed" element={<PaymentFailedPage />} /> 
@@ -127,6 +130,7 @@ export default function AppRoutes() {
           <Route path="manage-service" element={<DoctorServiceManage />} />
           <Route path="profile" element={<DoctorProfile />} />
           <Route path="reviews" element={<ServiceProviderReviews />} />
+          <Route path="notifications" element={<NotificationsPage userId={userId} />} />
         </Route>
       </Route> 
         {/* end doctor Dashboard */}
@@ -154,6 +158,7 @@ export default function AppRoutes() {
           <Route path="profile" element={<GymProfile />} />
           <Route path="members" element={<GymMembers />} />
           <Route path="reviews" element={<ServiceProviderReviews />} />
+          <Route path="notifications" element={<NotificationsPage userId={userId} />} />
         </Route>
       </Route> 
         {/* end gym Dashboard */}
@@ -165,6 +170,7 @@ export default function AppRoutes() {
           <Route path="overView" element={<TechnicianOverView />} />
           <Route path="profile" element={<TechnicianProfile />} />
           <Route path="reviews" element={<ServiceProviderReviews />} />
+          <Route path="notifications" element={<NotificationsPage userId={userId} />} />
         </Route>
       </Route> 
         {/* end tech Dashboard */}
@@ -178,6 +184,7 @@ export default function AppRoutes() {
           <Route path="reviews" element={<ServiceProviderReviews />} />
           <Route path="orders" element={<RestaurantReversation />} />
           <Route path="menu" element={<RestaurantMenu />} />
+          <Route path="notifications" element={<NotificationsPage userId={userId} />} />
         </Route>
       </Route> 
         {/* end restaurant Dashboard */}

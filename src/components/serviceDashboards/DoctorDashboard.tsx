@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import useLogout from "../../hooks/auth/useLogout";
+import { IoIosNotifications } from "react-icons/io";
 
 export default function DoctorDashboardLayout() {
   const { t, i18n } = useTranslation();
@@ -78,6 +79,11 @@ export default function DoctorDashboardLayout() {
       label: t("common.Community"),
       link: "/community-loader",
       icon: <RiUserCommunityLine />,
+    },
+    {
+      label: t("common.notify"),
+      link: "/doctor/notifications",
+      icon: <IoIosNotifications />,
     },
   ];
 

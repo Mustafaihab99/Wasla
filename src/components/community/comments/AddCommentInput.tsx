@@ -5,13 +5,11 @@ import { useTranslation } from "react-i18next";
 
 interface Props {
   postId: number;
-  currentUserId: string;
   bottomOffset?: number;
 }
 
 export default function AddCommentInput({
   postId,
-  currentUserId
 }: Props) {
   const { t } = useTranslation();
 
@@ -19,9 +17,9 @@ export default function AddCommentInput({
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const userId = sessionStorage.getItem("user_id")!;
   const { mutate: addComment, isPending } =
-    useAddComment(postId, currentUserId);
+    useAddComment(postId, userId);
 
   const canSend =
     (content.trim().length > 0 || file) && !isPending;

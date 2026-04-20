@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import useLogout from "../../hooks/auth/useLogout";
+import { IoIosNotifications } from "react-icons/io";
 
 export default function TechnicianDashboardLayout() {
   const { t, i18n } = useTranslation();
@@ -80,6 +81,11 @@ export default function TechnicianDashboardLayout() {
       label: t("common.chat"),
       link: "/chat",
       icon: <FaInbox />,
+    },
+    {
+      label: t("common.notify"),
+      link: "/technician/notifications",
+      icon: <IoIosNotifications />,
     },
   ];
 

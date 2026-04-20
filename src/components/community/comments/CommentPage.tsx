@@ -58,7 +58,6 @@ export default function CommentPage({ currentUserId }: { currentUserId: string }
 
         <AddCommentInput
           postId={post.postId}
-          currentUserId={currentUserId}
           bottomOffset={64}
         />
       </div>

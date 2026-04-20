@@ -15,22 +15,18 @@ export default function PaymentSuccessPage() {
         transition={{ duration: 0.5 }}
         className="bg-white rounded-3xl shadow-xl p-12 max-w-md w-full text-center"
       >
-        {/* أيقونة النجاح */}
         <div className="flex justify-center mb-6">
           <FiCheckCircle className="text-green-600 text-9xl" />
         </div>
 
-        {/* العنوان */}
         <h1 className="text-3xl font-extrabold text-green-700 mb-3">
           {t("payment.successTitle")}
         </h1>
 
-        {/* الرسالة */}
         <p className="text-green-800 mb-8 text-md">
           {t("payment.successMessage")}
         </p>
 
-        {/* زر الرجوع */}
         <button
           onClick={() => navigate("/resident/profile/my-bookings")}
           className="w-full px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition"

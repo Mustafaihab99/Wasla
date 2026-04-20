@@ -44,11 +44,8 @@ export default function GymViewDetails() {
     bookGym(undefined, {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onSuccess: (res: any) => {
-        const qrUrl = res.data.qrCodeUrl;
         const bookingId = res.data.bookingId;
-
-        window.open(import.meta.env.VITE_QR_IMAGE + qrUrl, "_blank");
-
+        
         handleContinuePayment(service, bookingId);
       },
     });

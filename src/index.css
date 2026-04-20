@@ -188,13 +188,11 @@ input, textarea, select {
   }
 }
 
-/* للشاشات الصغيرة جداً */
 @media (max-width: 380px) {
   .max-w-\[85\%\] {
     max-width: 92% !important;
   }
   
-  /* الكلام الطويل جداً */
   .break-all {
     word-break: break-all !important;
   }
