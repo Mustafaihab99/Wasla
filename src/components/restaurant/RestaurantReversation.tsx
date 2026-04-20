@@ -118,7 +118,7 @@ export default function RestaurantReservationsDashboard() {
 
                 <div className="text-center sm:text-left">
                   <p className="font-semibold text-primary text-sm sm:text-base">
-                    {b.phone}
+                    {b.name}
                   </p>
 
                   <p className="flex items-center justify-center sm:justify-start gap-2 text-xs sm:text-sm text-gray-500">

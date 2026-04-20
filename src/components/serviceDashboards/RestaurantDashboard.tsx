@@ -65,7 +65,7 @@ export default function RestaurantDashboard() {
       icon: <MdDashboard />,
     },
     {
-      label: t("restaurant.menu"),
+      label: t("restaurant.menus"),
       link: "/restaurant/menu",
       icon: <FaHamburger />,
     },

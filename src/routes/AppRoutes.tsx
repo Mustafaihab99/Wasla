@@ -58,6 +58,7 @@ const TechnicianOverView = lazy(() => import ("../components/technician/Technici
 const RestaurantDashboard = lazy(() => import ("../components/serviceDashboards/RestaurantDashboard"));
 const RestaurantProfile = lazy(() => import ("../components/restaurant/RestaurantProfile"));
 const RestaurantReversation = lazy(() => import ("../components/restaurant/RestaurantReversation"));
+const RestaurantMenu = lazy(() => import ("../components/restaurant/RestaurantMenu"));
 // social media
 const CommunityLoader = lazy(() => import ("../pages/community/CommunityLoader"));
 const CommunityLayout = lazy(() => import ("../pages/community/CommuintyLayout"));
@@ -176,6 +177,7 @@ export default function AppRoutes() {
           <Route path="profile" element={<RestaurantProfile />} />
           <Route path="reviews" element={<ServiceProviderReviews />} />
           <Route path="orders" element={<RestaurantReversation />} />
+          <Route path="menu" element={<RestaurantMenu />} />
         </Route>
       </Route> 
         {/* end restaurant Dashboard */}
