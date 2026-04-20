@@ -115,7 +115,7 @@ export default function RestaurantDashboard() {
       <aside
         className={`border-r border-border flex flex-col justify-between transition-all duration-300 ${
           sidebarOpen ? "w-64" : "w-20"
-        } hidden md:flex`}
+        } hidden lg:flex`}
       >
         <div>
           <div className="flex items-center gap-3 p-4">
@@ -284,7 +284,7 @@ export default function RestaurantDashboard() {
 
       {/* Mobile button */}
       <button
-        className="md:hidden fixed top-4 left-4 z-50 text-2xl"
+        className="lg:hidden fixed top-4 left-4 z-50 text-2xl"
         onClick={() => setMobileOpen(true)}
       >
         <FaBars />
