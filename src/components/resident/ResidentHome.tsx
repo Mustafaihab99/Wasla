@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { FaStethoscope, FaTools, FaTaxi, FaSearch } from "react-icons/fa";
+import { FaStethoscope, FaTools, FaSearch } from "react-icons/fa";
 import { IoRestaurant } from "react-icons/io5";
 import { MdFitnessCenter } from "react-icons/md";
 import ResidentActivitySection from "./ResidentActivitySection";
@@ -41,12 +41,7 @@ export default function ResidentHome() {
       title: t("resident.gym"),
       icon: <MdFitnessCenter />,
       link: "/resident/service/gyms",
-    },
-    {
-      title: t("resident.driver"),
-      icon: <FaTaxi />,
-      link: "/resident/service/drivers",
-    },
+    }
   ];
 
   return (

@@ -42,7 +42,7 @@ export default function GymServicesPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-col md:flex-row gap-4 md:gap-0">
         <h2 className="text-2xl font-bold">{t("gym.gymserv")}</h2>
 
         <button

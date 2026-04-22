@@ -170,13 +170,15 @@ export default function UserProfileChatPage() {
       {/* Theme + Language */}
       {isMe && <ChatProfileSettings />}
       {isMe && (
+        <div className="mb-4 mt-4">
         <motion.button
           onClick={() => navigate("/dashboard")}
-          className="w-[80%] m-auto px-6 py-3 rounded-full border border-[#2f3336] text-sky-500 hover:bg-white/10 transition font-bold flex justify-center items-center gap-2"
+          className="w-[80%] m-auto mb-2 px-6 py-3 rounded-full border border-[#2f3336] text-sky-500 hover:bg-white/10 transition font-bold flex justify-center items-center gap-2"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}>
           <FaArrowRight /> {t("common.back")}
         </motion.button>
+        </div>
       )}
     </div>
   );

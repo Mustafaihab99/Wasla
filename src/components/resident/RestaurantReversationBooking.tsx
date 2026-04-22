@@ -76,22 +76,25 @@ export default function RestaurantBookings() {
           <motion.div
             key={b.id}
             whileHover={{ scale: 1.03, y: -3 }}
-            className="flex flex-col sm:flex-row p-6 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg">
+            className="flex flex-col sm:flex-row gap-4 p-4 sm:p-6 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg">
             {/* Image */}
-            <img
-              src={b.restaurantProfile}
-              className="w-20 h-20 rounded-full object-cover border-2 border-primary"
-            />
+            <div className="flex justify-center sm:justify-start">
+              <img
+                src={b.restaurantProfile}
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-primary"
+              />
+            </div>
 
-            <div className="flex-1 ml-6 flex flex-col justify-between">
+            {/* Content */}
+            <div className="flex-1 flex flex-col justify-between">
               {/* Header */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-bold text-primary">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="text-center sm:text-left">
+                  <h3 className="text-lg sm:text-xl font-bold text-primary">
                     {b.restaurantName}
                   </h3>
 
-                  <p className="text-dried flex items-center gap-2">
+                  <p className="text-dried flex items-center justify-center sm:justify-start gap-2 text-sm sm:text-base">
                     <FaPhone />
                     {b.restaurantPhone}
                   </p>
@@ -99,7 +102,7 @@ export default function RestaurantBookings() {
 
                 {/* Status */}
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                  className={`self-center sm:self-auto px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${
                     b.status === RestaurantBookStatus.Pending
                       ? "bg-yellow-100 text-yellow-800"
                       : b.status === RestaurantBookStatus.Accepted
@@ -119,7 +122,7 @@ export default function RestaurantBookings() {
               </div>
 
               {/* Info */}
-              <div className="mt-3 space-y-1 text-dried">
+              <div className="mt-3 space-y-1 text-dried text-sm sm:text-base">
                 <p>
                   <FaCalendarAlt className="inline mr-2 text-blue-400" />
                   {formatDate(b.reservationDate)} -{" "}
@@ -134,11 +137,11 @@ export default function RestaurantBookings() {
 
               {/* Actions */}
               {b.status === RestaurantBookStatus.Pending && (
-                <div className="flex justify-end mt-4">
+                <div className="flex justify-center sm:justify-end mt-4">
                   <button
                     onClick={() => handleCancel(b.id)}
                     disabled={isPending}
-                    className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">
+                    className="w-full sm:w-auto px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">
                     {t("restaurant.cancel")}
                   </button>
                 </div>

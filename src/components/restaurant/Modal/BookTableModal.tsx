@@ -72,7 +72,7 @@ export default function BookTableModal({ open, onClose, restaurantId }: Props) {
     <div
       className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
       style={{ marginTop: "0" }}>
-      <div className="bg-background w-full max-w-md rounded-2xl p-6 shadow-xl animate-fadeIn">
+      <div className="bg-background w-full max-w-md rounded-2xl p-6 shadow-xl animate-fadeIn ml-2 mr-2">
         {/* HEADER */}
         <h2 className="text-xl font-bold mb-4 text-center">
           🍽️ {t("restaurant.reserveTable")}

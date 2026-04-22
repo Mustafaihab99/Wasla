@@ -77,7 +77,10 @@ export default function ResidentActivitySection({ userId }: Props) {
                     item.roleName === "gym" ?
                     navigate(`/resident/service/gyms/${item.id}`)
                     :
+                    item.roleName === "technician" ?
                     navigate(`/resident/service/technicians/${item.id}`)
+                    :
+                    navigate(`/resident/service/restaurants/${item.id}`)
                   }
                   className="mt-auto w-full py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition">
                   {t("resident.viewProfile")}

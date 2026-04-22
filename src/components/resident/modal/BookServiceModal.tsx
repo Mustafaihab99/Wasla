@@ -190,9 +190,9 @@ const handleSubmit = async () => {
 
   return (
     <div
-      style={{ marginTop: "12px" }}
+      style={{ marginTop: "0px" }}
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 animate-fadeIn">
-      <div className="w-full max-w-md bg-white/90 dark:bg-background text-black shadow-2xl rounded-2xl p-6 space-y-6 border border-white/30 animate-scaleUp">
+      <div className="w-full max-w-md bg-background text-black mr-2 ml-2 shadow-2xl rounded-2xl p-6 space-y-6 border border-white/30 animate-scaleUp">
         <h2 className="text-2xl font-extrabold text-center text-primary">
           {t("doctor.bookService")}
         </h2>
@@ -320,7 +320,7 @@ const handleSubmit = async () => {
         <div className="flex justify-between mt-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg border hover:bg-gray-100 transition">
+            className="px-4 py-2 rounded-lg border bg-red-500 text-white transition">
             {t("doctor.Cancel")}
           </button>
 

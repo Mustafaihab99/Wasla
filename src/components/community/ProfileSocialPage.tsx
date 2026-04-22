@@ -9,19 +9,23 @@ import PostSkeleton from "./PostProfileSkeleton";
 import UserPostLikes from "./UserPostLikes";
 import { FiMessageCircle } from "react-icons/fi";
 
-const TABS = ["posts", "likes"] as const;
-type TabType = (typeof TABS)[number];
 
 export default function ProfileSocialPage() {
   const { t } = useTranslation();
   const { userId: routeUserId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
   const currentUserId = sessionStorage.getItem("user_id")!;
-
+  
   const targetUserId =
-    !routeUserId || routeUserId === "me" ? currentUserId : routeUserId;
+  !routeUserId || routeUserId === "me" ? currentUserId : routeUserId;
+  const baseTabs = ["posts", "likes"] as const;
 
+  
   const isOwner = targetUserId === currentUserId;
+  const TABS = isOwner 
+  ? baseTabs
+  : (["posts"] as const);
+  type TabType = (typeof TABS)[number];
   const [activeTab, setActiveTab] = useState<TabType>("posts");
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
@@ -40,6 +44,11 @@ export default function ProfileSocialPage() {
     observer.observe(loadMoreRef.current);
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  useEffect(() => {
+  if (!isOwner && activeTab === "likes") {
+    setActiveTab("posts");
+  }
+}, [isOwner, activeTab]);
 
   const firstPage = data?.pages[0];
   const userName = firstPage?.userName ?? "";
@@ -120,29 +129,32 @@ export default function ProfileSocialPage() {
 
         {/* Tabs */}
         <div
-          className="grid border-b"
-          style={{
-            gridTemplateColumns: `repeat(${TABS.length}, 1fr)`,
-            borderColor: "var(--border-color)",
-          }}>
-          {TABS.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className="py-4 text-sm font-medium transition relative"
-              style={{
-                color:
-                  activeTab === tab
-                    ? "var(--foreground)"
-                    : "var(--muted-foreground)",
-              }}>
-              {t(`cprofile.${tab}`)}
-              {activeTab === tab && (
-                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-sky-500 rounded-full" />
-              )}
-            </button>
-          ))}
-        </div>
+  className="grid border-b"
+  style={{
+    gridTemplateColumns: `repeat(${TABS.length}, 1fr)`,
+    borderColor: "var(--border-color)",
+  }}
+>
+  {TABS.map((tab) => (
+    <button
+      key={tab}
+      onClick={() => setActiveTab(tab)}
+      className="py-4 text-sm font-medium transition relative"
+      style={{
+        color:
+          activeTab === tab
+            ? "var(--foreground)"
+            : "var(--muted-foreground)",
+      }}
+    >
+      {t(`cprofile.${tab}`)}
+
+      {activeTab === tab && (
+        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-sky-500 rounded-full" />
+      )}
+    </button>
+  ))}
+</div>
 
         {/* ── Posts tab ── */}
         {activeTab === "posts" && (
@@ -196,7 +208,6 @@ export default function ProfileSocialPage() {
           <UserPostLikes currentUserId={currentUserId} />
         )}
 
-        {/* ── NO fallback placeholder here — each tab renders its own content ── */}
       </div>
     </div>
   );

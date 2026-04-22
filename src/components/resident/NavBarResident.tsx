@@ -105,7 +105,7 @@ export default function ResidentNavBar() {
       {/* Desktop Actions */}
       <div className="hidden md:flex items-center gap-3 relative">
 
-        {/* 🔔 NOTIFICATIONS */}
+        {/* NOTIFICATIONS */}
         <div className="relative">
           <button
             onClick={() => navigate("/resident/notifications")}
@@ -129,7 +129,7 @@ export default function ResidentNavBar() {
             className="p-2 rounded-full border border-border text-primary hover:bg-primary/10 transition-all">
             {themeIcon(theme)}
           </button>
-
+          
           <AnimatePresence>
             {themeOpen && (
               <motion.ul
@@ -173,11 +173,26 @@ export default function ResidentNavBar() {
       </div>
 
       {/* Mobile menu */}
+      <div className="flex items-center gap-3">
+         <div className="relative md:hidden">
+          <button
+            onClick={() => navigate("/resident/notifications")}
+            className="p-2 rounded-full border border-border text-primary hover:bg-primary/10 transition-all"
+          >
+            <IoIosNotifications className="text-xl" />
+          </button>
+
+          {/* 🔴 badge */}
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] min-w-[16px] h-[16px] flex items-center justify-center rounded-full px-1 animate-pulse">
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </span>
+          )}
+        </div>
       <button className="md:hidden text-foreground text-xl" onClick={() => setMenuOpen(!menuOpen)}>
         {menuOpen ? <FaTimes /> : <FaBars />}
       </button>
-
-      {/* باقي الكود زي ما هو ❌ لم يتم تغييره */}
+      </div>
       <AnimatePresence>
         {menuOpen && (
           <motion.div

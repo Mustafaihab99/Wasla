@@ -19,10 +19,6 @@ export default function TechnicianOverView() {
 
       {/* Jobs Section */}
       <section className="space-y-4">
-        <h2 className="text-xl font-bold">
-          {t("tech.jobsTitle")}
-        </h2>
-
         <TechnicianJobs />
       </section>
 

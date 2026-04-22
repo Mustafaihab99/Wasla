@@ -64,7 +64,7 @@ export default function GymWelcomeScreen() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="text-3xl font-bold tracking-wide"
+            className="text-3xl font-bold tracking-wide ml-4 mr-4"
           >
             {t("gym.welcome")}
           </motion.h1>
@@ -73,7 +73,7 @@ export default function GymWelcomeScreen() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 1 }}
-            className="mt-3 text-lg text-white/70 text-center px-4"
+            className="mt-3 text-lg text-white/70 text-center px-4 ml-4 mr-4"
           >
             {t("gym.welcome2")}
           </motion.p>

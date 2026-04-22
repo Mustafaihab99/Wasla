@@ -31,7 +31,6 @@ export default function BookTechModal({
     price?: string;
   }>({});
 
-  // ⏱️ auto hide intro بعد 4 ثواني
   useEffect(() => {
     if (open) {
       setShowIntro(true);
@@ -84,12 +83,8 @@ export default function BookTechModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-
-      <div className="bg-background rounded-3xl p-6 w-full max-w-md shadow-xl overflow-hidden">
-
+      <div className="bg-background rounded-3xl mr-2 ml-2 p-6 w-full max-w-md shadow-xl overflow-hidden">
         <AnimatePresence mode="wait">
-
-          {/* 🟡 Intro Screen */}
           {showIntro ? (
             <motion.div
               key="intro"

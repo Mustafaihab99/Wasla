@@ -5,6 +5,7 @@ import clsx from "clsx";
 import useMarkNotifyAsRead from "../../hooks/notifications/useMarkNotifyAsRead";
 import useDeleteNotify from "../../hooks/notifications/useDeleteNotify";
 import { FiTrash2, FiCheck } from "react-icons/fi";
+import incomeImage from "../../assets/images/income.png";
 
 export default function NotificationCard({
   notification,
@@ -51,7 +52,7 @@ export default function NotificationCard({
       <div className="flex gap-3 items-start">
         {/* Image */}
         <img
-          src={notification.imageUrl}
+          src={notification.imageUrl ?? incomeImage}
           className="w-12 h-12 rounded-full object-cover border border-border"
         />
 

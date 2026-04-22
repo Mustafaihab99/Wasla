@@ -13,7 +13,7 @@ export default function RestaurantWelcomeScreen() {
     const timer = setTimeout(() => {
       setVisible(false);
       setTimeout(() => {
-        navigate("/restaurant/");
+        navigate("/restaurant/profile");
       }, 600);
     }, 5000);
 
@@ -67,7 +67,7 @@ export default function RestaurantWelcomeScreen() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="text-3xl font-bold tracking-wide"
+            className="text-3xl font-bold tracking-wide mr-4 ml-4"
           >
             {t("restaurant.welcome")}
           </motion.h1>

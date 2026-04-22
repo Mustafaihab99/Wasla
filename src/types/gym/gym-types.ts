@@ -41,6 +41,7 @@ export interface GymResidentBookingData{
     imageUrl: string,
     bookingTime: string,
     durationInMonths: 2,
+    isPaid: boolean,
     serviceName: {
         english: string,
         arabic: string

@@ -51,8 +51,13 @@ export default function ResidentMyFavourites() {
                 fav.serviceProviderType === "Doctor" ?
                 navigate(`/resident/service/doctors/${fav.serviceProviderId}`)
                 :
-                navigate(`/resident/service/gyms/${fav.serviceProviderId}`
-                )
+                fav.serviceProviderType === "Gym" ?
+                navigate(`/resident/service/gyms/${fav.serviceProviderId}`)
+                :
+                fav.serviceProviderType === "Technician" ?
+                navigate(`/resident/service/technicians/${fav.serviceProviderId}`)
+                :
+                navigate(`/resident/service/restaurants/${fav.serviceProviderId}`)
                  }
               >
               {/* Remove Button */}

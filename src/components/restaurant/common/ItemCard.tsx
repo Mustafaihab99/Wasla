@@ -89,15 +89,15 @@ const categoryName = i18next.language == "en" ?  category?.name?.english : categ
               {item.discountPrice > 0 ? (
                 <>
                   <span className="text-primary font-bold">
-                    ${item.discountPrice}
+                    {item.discountPrice} {t("doctor.EGP")}
                   </span>
                   <span className="text-sm text-dried line-through ml-1">
-                    ${item.price}
+                    ${item.price} {t("doctor.EGP")}
                   </span>
                 </>
               ) : (
                 <span className="text-primary font-bold">
-                  ${item.price}
+                  ${item.price} {t("doctor.EGP")}
                 </span>
               )}
             </div>

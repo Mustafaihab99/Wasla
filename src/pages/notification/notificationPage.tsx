@@ -27,6 +27,9 @@ export default function NotificationsPage({ userId }: Props) {
       </div>
     );
   }
+  if(userId === null){
+    window.location.reload();
+  }
 
   return (
     <div className="p-4 bg-background min-h-full">

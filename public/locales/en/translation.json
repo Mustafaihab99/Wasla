@@ -629,7 +629,9 @@
     "close": "Close",
     "loading": "Processing...",
     "membersByService": "Members By Service",
-    "noMembers": "No Members yet"
+    "noMembers": "No Members yet",
+    "paid": "Paid",
+    "notPaid": "Not Paid Yet"
   },
   "payment": {
     "successTitle": "Payment Successful!",
@@ -656,6 +658,7 @@
     "settings": "Settings",
     "language": "Language",
     "english": "English",
+    "loading" : "Loading....",
     "arabic": "Arabic",
     "theme": "Theme",
     "light": "Light",
@@ -674,7 +677,7 @@
     "savedPosts": "Saved Posts",
     "Deleting...": "Deleting...",
     "Delete": "Delete",
-    "notify" : "Notifications",
+    "notify": "Notifications",
     "noSavedPosts": "No Saved Posts",
     "goBack": "Go back",
     "nav": {
@@ -834,7 +837,8 @@
     "rejectMessage": "Are you sure you want to reject this booking?",
     "cancelTitle": "Cancel Booking",
     "cancelMessage": "Are you sure you want to cancel this booking?",
-    "numberof": "Number of Residents"
+    "numberof": "Number of Residents",
+    "jobsDesc": "Manage your incoming and active bookings"
   },
   "restaurant": {
     "name": "Restaurant Name",
@@ -947,7 +951,7 @@
     "addError": "Error adding item",
     "editError": "Error editing item"
   },
-    "notification": {
+  "notification": {
     "title": "Notifications",
     "emptyTitle": "No Notifications Yet",
     "emptyDesc": "You're all caught up! New notifications will appear here when something happens.",
@@ -955,5 +959,11 @@
     "markAll": "Mark all as read",
     "prev": "Prev",
     "next": "Next"
+  },
+  "driver": {
+    "webNoticeTitle": "Driver Dashboard is Available on Mobile Only",
+    "webNoticeDesc": "You can log in here, but managing trips, tracking earnings, and accessing your dashboard are only available through our mobile app.",
+    "downloadApp": "Download the App",
+    "alreadyHaveApp": "Back to Login"
   }
 }

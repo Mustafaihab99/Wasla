@@ -34,7 +34,9 @@ export default function RestaurantReservationsDashboard() {
   const totalPages = Math.ceil((data?.totalCount || 0) / 6);
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [actionType, setActionType] = useState<"accept" | "cancel" | null>(null);
+  const [actionType, setActionType] = useState<"accept" | "cancel" | null>(
+    null,
+  );
   const [showConfirm, setShowConfirm] = useState(false);
 
   const formatDate = (date: string) =>
@@ -78,13 +80,11 @@ export default function RestaurantReservationsDashboard() {
 
   return (
     <div className="max-w-6xl mx-auto px-3 sm:px-6 pb-10">
-
       {/* TITLE */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-6 sm:mb-8 mr-2 ml-2"
-      >
+        className="mb-6 sm:mb-8 mr-2 ml-2">
         <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2 text-primary">
           <FaClipboardList />
           {t("restaurant.reservationsDashboard")}
@@ -97,14 +97,12 @@ export default function RestaurantReservationsDashboard() {
 
       {/* CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-
         {bookings.map((b: reversationDashboardData) => (
           <motion.div
             key={b.id}
+            style={{direction:"ltr"}}
             whileHover={{ scale: 1.01 }}
-            className="p-4 sm:p-5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg flex flex-col md:flex-row gap-3 sm:gap-4"
-          >
-
+            className="p-4 sm:p-5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg flex flex-col md:flex-row gap-3 sm:gap-4">
             {/* IMAGE */}
             <img
               src={b.profile}
@@ -112,10 +110,8 @@ export default function RestaurantReservationsDashboard() {
             />
 
             <div className="flex-1 flex flex-col justify-between gap-3">
-
               {/* HEADER */}
               <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
-
                 <div className="text-center sm:text-left">
                   <p className="font-semibold text-primary text-sm sm:text-base">
                     {b.name}
@@ -132,19 +128,18 @@ export default function RestaurantReservationsDashboard() {
                     b.status === RestaurantBookStatus.Pending
                       ? "bg-yellow-100 text-yellow-800"
                       : b.status === RestaurantBookStatus.Accepted
-                      ? "bg-blue-100 text-blue-800"
-                      : b.status === RestaurantBookStatus.Completed
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
-                >
+                        ? "bg-blue-100 text-blue-800"
+                        : b.status === RestaurantBookStatus.Completed
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                  }`}>
                   {b.status === RestaurantBookStatus.Pending
                     ? t("restaurant.pending")
                     : b.status === RestaurantBookStatus.Accepted
-                    ? t("restaurant.accepted")
-                    : b.status === RestaurantBookStatus.Completed
-                    ? t("restaurant.completed")
-                    : t("restaurant.cancelled")}
+                      ? t("restaurant.accepted")
+                      : b.status === RestaurantBookStatus.Completed
+                        ? t("restaurant.completed")
+                        : t("restaurant.cancelled")}
                 </span>
               </div>
 
@@ -152,7 +147,8 @@ export default function RestaurantReservationsDashboard() {
               <div className="space-y-1 text-xs sm:text-sm text-gray-400 text-center sm:text-left">
                 <p className="flex items-center justify-center sm:justify-start gap-2">
                   <FaCalendarAlt />
-                  {formatDate(b.reservationDate)} - {formatTime(b.reservationTime)}
+                  {formatDate(b.reservationDate)} -{" "}
+                  {formatTime(b.reservationTime)}
                 </p>
 
                 <p className="flex items-center justify-center sm:justify-start gap-2">
@@ -164,23 +160,19 @@ export default function RestaurantReservationsDashboard() {
               {/* ACTIONS */}
               {b.status === RestaurantBookStatus.Pending && (
                 <div className="flex flex-col sm:flex-row gap-2 sm:justify-end">
-
                   <button
                     onClick={() => handleAction(b.id, "accept")}
                     disabled={isPending}
-                    className="w-full sm:w-auto px-3 py-2 bg-green-600 text-white rounded-lg flex items-center justify-center gap-2 text-sm"
-                  >
+                    className="w-full sm:w-auto px-3 py-2 bg-green-600 text-white rounded-lg flex items-center justify-center gap-2 text-sm">
                     <FaCheck /> {t("restaurant.accept")}
                   </button>
 
                   <button
                     onClick={() => handleAction(b.id, "cancel")}
                     disabled={isPending}
-                    className="w-full sm:w-auto px-3 py-2 bg-red-600 text-white rounded-lg flex items-center justify-center gap-2 text-sm"
-                  >
+                    className="w-full sm:w-auto px-3 py-2 bg-red-600 text-white rounded-lg flex items-center justify-center gap-2 text-sm">
                     <FaTimes /> {t("restaurant.cancel")}
                   </button>
-
                 </div>
               )}
             </div>
@@ -199,8 +191,7 @@ export default function RestaurantReservationsDashboard() {
                 page === i + 1
                   ? "bg-primary text-white"
                   : "bg-gray-200 hover:bg-gray-300"
-              }`}
-            >
+              }`}>
               {i + 1}
             </button>
           ))}

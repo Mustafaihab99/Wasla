@@ -60,48 +60,67 @@ export default function GymBookings() {
           <motion.div
             key={g.bookingId}
             whileHover={{ scale: 1.03, y: -3 }}
-            className="flex flex-col sm:flex-row p-6 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg">
-            <img
-              src={import.meta.env.VITE_USER_IMAGE + g.imageUrl}
-              className="w-20 h-20 rounded-full object-cover border-2 border-primary"
-            />
+            className="flex flex-col sm:flex-row gap-4 p-4 sm:p-6 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg">
+            {/* Image */}
+            <div className="flex justify-center sm:justify-start">
+              <img
+                src={import.meta.env.VITE_USER_IMAGE + g.imageUrl}
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-primary"
+              />
+            </div>
 
-            <div className="flex-1 ml-6 flex flex-col justify-between">
+            {/* Content */}
+            <div className="flex-1 flex flex-col justify-between">
               {/* Header */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-bold text-primary">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="text-center sm:text-left">
+                  <h3 className="text-lg sm:text-xl font-bold text-primary">
                     {g.gymName}
                   </h3>
 
-                  <p className="text-dried">
+                  <p className="text-dried text-sm sm:text-base">
                     {i18next.language === "ar"
                       ? g.serviceName.arabic
                       : g.serviceName.english}
                   </p>
                 </div>
 
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                    g.bookingStatus === 0
-                      ? "bg-blue-100 text-blue-800"
+                {/* Badges */}
+                <div className="flex flex-wrap justify-center sm:justify-end gap-2">
+                  {/* Status */}
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${
+                      g.bookingStatus === 0
+                        ? "bg-blue-100 text-blue-800"
+                        : g.bookingStatus === 1
+                          ? "bg-green-100 text-green-800"
+                          : g.bookingStatus === 2
+                            ? "bg-red-100 text-red-800"
+                            : "bg-gray-100 text-gray-800"
+                    }`}>
+                    {g.bookingStatus === 0
+                      ? t("gym.active")
                       : g.bookingStatus === 1
-                        ? "bg-green-100 text-green-800"
+                        ? t("doctor.completed")
                         : g.bookingStatus === 2
-                          ? "bg-red-100 text-red-800"
-                          : "bg-gray-100 text-gray-800"
-                  }`}>
-                  {g.bookingStatus === 0
-                    ? t("gym.active")
-                    : g.bookingStatus === 1
-                      ? t("doctor.completed")
-                      : g.bookingStatus === 2
-                        ? t("doctor.canceled")
-                        : t("admin.unknown")}
-                </span>
+                          ? t("doctor.canceled")
+                          : t("admin.unknown")}
+                  </span>
+
+                  {/* isPaid */}
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${
+                      g.isPaid
+                        ? "bg-green-100 text-green-800"
+                        : "bg-yellow-100 text-yellow-800"
+                    }`}>
+                    {g.isPaid ? t("gym.paid") : t("gym.notPaid")}
+                  </span>
+                </div>
               </div>
 
-              <div className="mt-3 space-y-1 text-dried">
+              {/* Info */}
+              <div className="mt-3 space-y-1 text-dried text-sm sm:text-base">
                 <p>
                   <FaCalendarAlt className="inline mr-2 text-blue-400" />
                   {formatDateTime(g.bookingTime)}
@@ -113,12 +132,13 @@ export default function GymBookings() {
                 </p>
               </div>
 
+              {/* Cancel */}
               {g.bookingStatus === 0 && (
-                <div className="flex justify-end mt-4">
+                <div className="flex justify-center sm:justify-end mt-4">
                   <button
                     onClick={() => handleCancel(g.bookingId)}
                     disabled={isPending}
-                    className="px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 disabled:opacity-50">
+                    className="w-full sm:w-auto px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 disabled:opacity-50">
                     {t("doctor.cancelBooking")}
                   </button>
                 </div>

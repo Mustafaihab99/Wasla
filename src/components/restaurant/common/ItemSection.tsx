@@ -84,7 +84,6 @@ export default function ItemsSection({ restaurantId }: any) {
             ))}
           </div>
 
-          {/* PAGINATION - Only show if more than 1 page */}
           {totalPages > 1 && (
             <div className="flex justify-center gap-3 mt-8">
               <button

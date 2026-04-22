@@ -7,6 +7,7 @@ import AdminWelcomeScreen from "../../components/serviceDashboards/AdminWelcomeS
 import GymWelcomeScreen from "../../components/serviceDashboards/GymWelcomeScreen";
 import TechnicianWelcomeScreen from "../../components/serviceDashboards/TechnicanWelcomeScreen";
 import RestaurantWelcomeScreen from "../../components/serviceDashboards/RestaurantWelcomrScreen";
+import DriverNotFound from "../../components/serviceDashboards/DriverNotFound";
 
 export default function MainDashboard() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function MainDashboard() {
     gym : GymWelcomeScreen,
     technician: TechnicianWelcomeScreen,
     restaurant: RestaurantWelcomeScreen,
+    driver : DriverNotFound,
   };
 
   useEffect(() => {

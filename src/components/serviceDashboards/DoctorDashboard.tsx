@@ -227,7 +227,7 @@ export default function DoctorDashboardLayout() {
               </div>
       
                       <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-3xl mt-4"></div>
-              <div className="flex flex-col gap-4 border-t border-border pt-6">
+              <div className="flex flex-col gap-4 border-t border-border pt-6 mb-4">
                 <button
                   onClick={toggleLanguage}
                   className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-primary/10 transition-all w-full">
@@ -246,7 +246,7 @@ export default function DoctorDashboardLayout() {
 
                 <button
                   onClick={handleLogout}
-                  className="flex items-center justify-center gap-2 p-3 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition-all w-full">
+                  className="flex items-center justify-center mb-3 gap-2 p-3 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition-all w-full">
                   <SlLogout className="text-white w-6 h-6" />
                   {t("nav.Logout")}
                 </button>

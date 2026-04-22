@@ -76,54 +76,67 @@ export default function TechnicianJobs() {
 
   return (
     <>
+      <div className="max-w-6xl mx-auto mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-primary">
+            {t("tech.jobsTitle")}
+          </h1>
+          <p className="text-sm text-gray-400 mt-1">{t("tech.jobsDesc")}</p>
+        </div>
+      </div>
       <div className="grid lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
         {bookings.map((b: TechnicianComingBookingData) => (
           <motion.div
             key={b.bookingId}
             whileHover={{ scale: 1.02 }}
-            className="p-5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/20 shadow-lg">
-            {/* Header */}
-            <div className="flex items-center gap-4">
-              <img
-                src={b.residentImage}
-                className="w-16 h-16 rounded-full object-cover border-2 border-primary"
-              />
+            className="p-4 sm:p-5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/20 shadow-lg">
+            {/* HEADER */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              {/* User */}
+              <div className="flex items-center gap-3 flex-1">
+                <img
+                  src={b.residentImage}
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-primary"
+                />
 
-              <div className="flex-1">
-                <h3 className="text-lg font-bold flex items-center gap-2">
-                  <FaUser /> {b.residentName}
-                </h3>
+                <div>
+                  <h3 className="text-base sm:text-lg font-bold flex items-center gap-2">
+                    <FaUser /> {b.residentName}
+                  </h3>
 
-                <p className="text-sm flex items-center gap-2 text-dried">
-                  <FaPhone /> {b.residentPhone}
-                </p>
+                  <p className="text-sm flex items-center gap-2 text-dried">
+                    <FaPhone /> {b.residentPhone}
+                  </p>
+                </div>
               </div>
 
               {/* Status */}
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                  b.status === TechBookStatus.Pending
-                    ? "bg-yellow-100 text-yellow-800"
+              <div className="self-start sm:self-auto">
+                <span
+                  className={`px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${
+                    b.status === TechBookStatus.Pending
+                      ? "bg-yellow-100 text-yellow-800"
+                      : b.status === TechBookStatus.Accepted
+                        ? "bg-blue-100 text-blue-800"
+                        : b.status === TechBookStatus.Done
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                  }`}>
+                  {b.status === TechBookStatus.Pending
+                    ? t("tech.pending")
                     : b.status === TechBookStatus.Accepted
-                      ? "bg-blue-100 text-blue-800"
+                      ? t("tech.accepted")
                       : b.status === TechBookStatus.Done
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                }`}>
-                {b.status === TechBookStatus.Pending
-                  ? t("tech.pending")
-                  : b.status === TechBookStatus.Accepted
-                    ? t("tech.accepted")
-                    : b.status === TechBookStatus.Done
-                      ? t("tech.done")
-                      : b.status === TechBookStatus.Rejected
-                        ? t("tech.rejected")
-                        : t("tech.cancelled")}
-              </span>
+                        ? t("tech.done")
+                        : b.status === TechBookStatus.Rejected
+                          ? t("tech.rejected")
+                          : t("tech.cancelled")}
+                </span>
+              </div>
             </div>
 
-            {/* Info */}
-            <div className="mt-4 space-y-2 text-dried">
+            {/* INFO */}
+            <div className="mt-4 space-y-2 text-dried text-sm">
               <p>
                 <FaCalendarAlt className="inline mr-2 text-blue-400" />
                 {formatDate(b.bookingDate)}
@@ -135,22 +148,22 @@ export default function TechnicianJobs() {
               </p>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-2 justify-end mt-5 flex-wrap">
+            {/* ACTIONS */}
+            <div className="flex flex-col sm:flex-row gap-2 justify-end mt-5">
               {/* Pending */}
               {b.status === TechBookStatus.Pending && (
                 <>
                   <button
                     onClick={() => handleAction(b.bookingId, "accept")}
                     disabled={acceptLoading}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                    className="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                     {t("tech.accept")}
                   </button>
 
                   <button
                     onClick={() => handleAction(b.bookingId, "reject")}
                     disabled={rejectLoading}
-                    className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">
+                    className="w-full sm:w-auto px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">
                     {t("tech.reject")}
                   </button>
                 </>
@@ -161,14 +174,14 @@ export default function TechnicianJobs() {
                 <button
                   onClick={() => handleAction(b.bookingId, "cancel")}
                   disabled={cancelLoading}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                  className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
                   {t("tech.cancel")}
                 </button>
               )}
 
               {/* Done */}
               {b.status === TechBookStatus.Done && (
-                <span className="text-green-500 font-semibold">
+                <span className="text-green-500 font-semibold text-center sm:text-right">
                   ✔ {t("tech.completed")}
                 </span>
               )}
@@ -176,7 +189,6 @@ export default function TechnicianJobs() {
           </motion.div>
         ))}
       </div>
-
       {/* Confirm Modal */}
       <ConfirmationModal
         show={showConfirm}

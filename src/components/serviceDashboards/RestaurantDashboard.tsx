@@ -138,7 +138,7 @@ export default function RestaurantDashboard() {
             )}
           </div>
 
-          <nav className="flex flex-col mt-6 gap-2 px-3">
+          <nav className="flex flex-col mt-6 gap-1 px-3">
             {navItems.map((item, i) => (
               <NavLink
                 key={i}

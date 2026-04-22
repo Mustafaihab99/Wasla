@@ -45,7 +45,6 @@ export default function ChatConversationPage() {
   } | null>(null);
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
-  // ✅ إصلاح ٢: تتبع ارتفاع الـ keyboard الفعلي
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -63,7 +62,6 @@ export default function ChatConversationPage() {
     clear: clearAudio,
   } = useAudioRecorder();
 
-  // ✅ إصلاح ٢: نتتبع ارتفاع الـ visualViewport عشان نعرف الـ keyboard height
   useEffect(() => {
     const onResize = () => {
       if (window.visualViewport) {
@@ -112,12 +110,10 @@ export default function ChatConversationPage() {
   const allMessages: Message[] =
     data?.pages?.flatMap((p) => p?.messages?.data ?? []).reverse() ?? [];
 
-  // scroll للأسفل لما تيجي رسالة جديدة
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [allMessages.length]);
 
-  // scroll للأسفل لما الـ keyboard يفتح
   useEffect(() => {
     if (keyboardHeight > 0) {
       setTimeout(() => {
@@ -189,14 +185,11 @@ export default function ChatConversationPage() {
   const isAudioMode = recording || !!audioUrl;
 
   return (
-    // ✅ إصلاح ٢: بدل h-[100dvh] بنستخدم fixed positioning
-    // ده بيمنع الـ page من الـ zoom ومش بيأثر على الـ header
     <div
       className="fixed inset-0 flex flex-col bg-background"
       style={{ bottom: keyboardHeight > 0 ? keyboardHeight : 0 }}
       onClick={() => setOpenMenuId(null)}>
 
-      {/* ── Header — دايماً ظاهر فوق ── */}
       <div className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-3 border-b border-border shrink-0 bg-background z-20 w-full">
         <button
           onClick={() => navigate(-1)}
@@ -228,9 +221,9 @@ export default function ChatConversationPage() {
               </p>
             ) : isOnline ? (
               <p className="text-xs text-green-500">{t("chat.online")}</p>
-            ) : (
-              <p className="text-xs text-red-500">{t("chat.offline")}</p>
-            )}
+            )
+          :
+          <></>}
           </div>
         </button>
       </div>
@@ -372,7 +365,6 @@ export default function ChatConversationPage() {
                 onKeyDown={handleKey}
                 placeholder={t("chat.placeholderMessage")}
                 rows={1}
-                // ✅ إصلاح ٢: font-size 16px يمنع الـ auto-zoom على iOS
                 className="w-full bg-transparent outline-none resize-none placeholder:text-foreground/40 max-h-24"
                 style={{ minHeight: "30px", fontSize: "16px" }}
               />
