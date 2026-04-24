@@ -62,7 +62,7 @@ export default function RestaurantDashboard() {
   const navItems = [
     {
       label: t("restaurant.dashboard"),
-      link: "/restaurant/dashboard",
+      link: "/restaurant/overView",
       icon: <MdDashboard />,
     },
     {

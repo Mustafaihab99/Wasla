@@ -7,8 +7,9 @@ import DoctorBookings from "../../components/resident/DoctorBookings";
 import GymBookings from "../../components/resident/GymBookings";
 import TechBookings from "../../components/resident/TechniciansBooking";
 import RestaurantBookings from "../../components/resident/RestaurantReversationBooking";
+import TakeAwayOrder from "../../components/resident/TakeAwayOrder";
 
-type BookingType = "doctor" | "gym" | "technician" | "resRev";
+type BookingType = "doctor" | "gym" | "technician" | "resRev" | "order";
 
 export default function ResidentMyBooking() {
   const { t } = useTranslation();
@@ -19,6 +20,7 @@ export default function ResidentMyBooking() {
     { key: "gym", label: t("resident.gymsb") },
     { key: "technician", label: t("resident.techsb") },
     { key: "resRev", label: t("resident.resRev") },
+    { key: "order", label: t("resident.order") },
   ];
 
   return (
@@ -56,6 +58,7 @@ export default function ResidentMyBooking() {
         {bookingType === "gym" && <GymBookings />}
         {bookingType === "technician" && <TechBookings />}
         {bookingType === "resRev" && <RestaurantBookings />}
+        {bookingType === "order" && <TakeAwayOrder />}
       </div>
     </div>
   );

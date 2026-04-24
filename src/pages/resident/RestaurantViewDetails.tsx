@@ -111,7 +111,7 @@ export default function RestaurantViewDetails() {
         <div
           onClick={() => {
             setSelectedBooking("takeaway");
-            navigate(`/restaurant/${restaurantId}/takeaway`);
+            navigate(`/resident/service/restaurants/${restaurantId}/takeaway`);
           }}
           className={`cursor-pointer p-6 rounded-2xl border transition group ${
             selectedBooking === "takeaway"

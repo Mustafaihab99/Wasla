@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { addCategoryMenuData, addTableData, categoryMenuData, editCategoryMenuData, itemMenuData, restaurantDetailsData, reversationDashboardData, reversationData, showAllRestaurants } from "../../types/restaurant/restaurant-types";
+import { addCategoryMenuData, addTableData, addToCartData, cartData, categoryMenuData, checkoutData, editCategoryMenuData, itemMenuData, menuData, residentTakeAway, restaurantChartsData, restaurantDetailsData, restaurantTakeAway, reversationDashboardData, reversationData, showAllRestaurants } from "../../types/restaurant/restaurant-types";
 
 interface SpicialzedcatData {
   id:number,
@@ -286,6 +286,152 @@ export async function getMenuItems(
     const axiosError = error as AxiosError<{ message?: string }>;
     const errorMessage =
       axiosError.response?.data?.message || "Failed to fetch menu items";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function fetchChartsRestaurantData(id :string) : Promise<restaurantChartsData> {
+    try{
+    const response = await axiosInstance.get(`Restaurant/Charts?id=${id}`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
+}
+
+export async function getMenuDataForResident(id :string) : Promise<menuData[]> {
+    try{
+    const response = await axiosInstance.get(`RestaurantMenu/ItemsByCategory?id=${id}`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
+}
+
+export async function AddToCart(formData: addToCartData) {
+  try {
+    const response = await axiosInstance.post("RestaurantOrder/add-to-cart", formData);
+
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+export async function getCart(residentId :string , restaurantId:string) : Promise<cartData[]> {
+    try{
+    const response = await axiosInstance.get(`RestaurantOrder/cart-items?residentId=${residentId}&restaurantId=${restaurantId}`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("Unexpected error occurred");
+    }
+    throw error;
+  }
+}
+export async function deleteItemCart(cartItemId:number , residentId:string) {
+  try {
+    const response = await axiosInstance.delete(`RestaurantOrder/remove-from-cart?cartItemId=${cartItemId}&residentId=${residentId}`);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+export async function editItemCart(cartItemId:number , residentId:string , quantity:number) {
+  try {
+    const response = await axiosInstance.put(`RestaurantOrder/quantity-cart-item?cartItemId=${cartItemId}&residentId=${residentId}&quantity=${quantity}`);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function checkoutOrder(formData: checkoutData) {
+  try {
+    const response = await axiosInstance.post("RestaurantOrder/checkout", formData);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function getResidentOrders(
+  pageNumber: number = 1,
+  pageSize: number = 6,
+  id: string,
+): Promise<PaginatedResponse<residentTakeAway>> {
+  try {
+    const response = await axiosInstance.get(
+      `RestaurantOrder/orders-resident?id=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    );
+    const result = response.data;
+    return {
+      data: result.data?.data || [],
+      totalCount: result.data?.totalCount || 0,
+      currentPage: result.data?.pageNumber || pageNumber,
+      pageSize: result.data?.pageSize || pageSize,
+    };
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "Failed to fetch your orders";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+export async function getRestaurantOrders(
+  pageNumber: number = 1,
+  pageSize: number = 6,
+  id: string,
+): Promise<PaginatedResponse<restaurantTakeAway>> {
+  try {
+    const response = await axiosInstance.get(
+      `RestaurantOrder/orders-restaurant?id=${id}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    );
+    const result = response.data;
+    return {
+      data: result.data?.data || [],
+      totalCount: result.data?.totalCount || 0,
+      currentPage: result.data?.pageNumber || pageNumber,
+      pageSize: result.data?.pageSize || pageSize,
+    };
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "Failed to fetch your orders";
     toast.error(errorMessage);
     throw error;
   }

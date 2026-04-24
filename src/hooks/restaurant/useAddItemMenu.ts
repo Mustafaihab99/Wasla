@@ -10,6 +10,7 @@ export default function useAddItemMenu() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["item-menu"] });
+      queryClient.invalidateQueries({ queryKey: ["restaurant-menu"] });
     },
   });
 }

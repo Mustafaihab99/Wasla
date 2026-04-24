@@ -31,6 +31,7 @@ const ServiceBookTechnician = lazy(() => import ("../pages/resident/ServiceBookT
 const TechnicianViewDetails = lazy(() => import ("../pages/resident/TechnicianViewDetails"));
 const ServiceBookRestaurants= lazy(() => import ("../pages/resident/ServiceBookRestaurants"));
 const RestaurnatViewDetails = lazy(() => import ("../pages/resident/RestaurantViewDetails"));
+const RestaurantTakeAway = lazy(() => import ("../pages/resident/RestaurantTakeAway"));
 const NotificationsPage = lazy(() => import ("../pages/notification/notificationPage"));
 // doctor dashboard
 const DoctorDashboard = lazy(() => import ("../components/serviceDashboards/DoctorDashboard"));
@@ -58,8 +59,9 @@ const TechnicianOverView = lazy(() => import ("../components/technician/Technici
 // restaurant dashboard
 const RestaurantDashboard = lazy(() => import ("../components/serviceDashboards/RestaurantDashboard"));
 const RestaurantProfile = lazy(() => import ("../components/restaurant/RestaurantProfile"));
-const RestaurantReversation = lazy(() => import ("../components/restaurant/RestaurantReversation"));
+const RestaurantOrders = lazy(() => import ("../components/restaurant/RestaurantOrders"));
 const RestaurantMenu = lazy(() => import ("../components/restaurant/RestaurantMenu"));
+const RestaurantCharts = lazy(() => import ("../components/restaurant/RestaurantCharts"));
 // social media
 const CommunityLoader = lazy(() => import ("../pages/community/CommunityLoader"));
 const CommunityLayout = lazy(() => import ("../pages/community/CommuintyLayout"));
@@ -114,6 +116,7 @@ export default function AppRoutes() {
             <Route path="service/technicians/:techniciansId" element={<TechnicianViewDetails />} /> 
             <Route path="service/restaurants" element={<ServiceBookRestaurants />} /> 
             <Route path="service/restaurants/:restaurantId" element={<RestaurnatViewDetails />} /> 
+            <Route path="service/restaurants/:restaurantId/takeaway" element={<RestaurantTakeAway />} /> 
             <Route path="notifications" element={<NotificationsPage userId={userId} />} /> 
           </Route>
             <Route path="/resident/payment-success" element={<PaymentSuccessPage />} /> 
@@ -179,10 +182,10 @@ export default function AppRoutes() {
         <Route element={<ProtectedRoute allowedRoles={["restaurant"]} />}>
         <Route path="/restaurant" element={<RestaurantDashboard />}>
           <Route index element={<Navigate to="overView" replace />} />
-          <Route path="overView" element={<TechnicianOverView />} />
+          <Route path="overView" element={<RestaurantCharts />} />
           <Route path="profile" element={<RestaurantProfile />} />
           <Route path="reviews" element={<ServiceProviderReviews />} />
-          <Route path="orders" element={<RestaurantReversation />} />
+          <Route path="orders" element={<RestaurantOrders />} />
           <Route path="menu" element={<RestaurantMenu />} />
           <Route path="notifications" element={<NotificationsPage userId={userId} />} />
         </Route>

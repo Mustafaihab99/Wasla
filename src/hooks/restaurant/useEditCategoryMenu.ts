@@ -11,6 +11,7 @@ export default function useEditCategoryMenu() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["category-menu"] });
+      queryClient.invalidateQueries({ queryKey: ["restaurant-menu"] });
     },
   });
 }

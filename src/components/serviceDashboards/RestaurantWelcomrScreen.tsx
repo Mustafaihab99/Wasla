@@ -13,7 +13,7 @@ export default function RestaurantWelcomeScreen() {
     const timer = setTimeout(() => {
       setVisible(false);
       setTimeout(() => {
-        navigate("/restaurant/profile");
+        navigate("/restaurant/overView");
       }, 600);
     }, 5000);
 

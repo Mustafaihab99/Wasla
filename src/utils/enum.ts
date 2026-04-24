@@ -67,3 +67,17 @@ export const enum NotificationType{
         postCommented,
         postReacted
 }
+export const  enum PaymentStatus{
+        Pending,
+        Completed,
+        Failed,
+        Refunded
+}
+export const enum OrderStatus{
+        Pending,
+        Paid,
+        Preparing,
+        OnTheWay,
+        Delivered,
+        Cancelled
+}

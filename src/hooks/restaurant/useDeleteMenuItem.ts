@@ -10,6 +10,7 @@ export default function useDeleteMenuItem() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["item-menu"] });
+      queryClient.invalidateQueries({ queryKey: ["restaurant-menu"] });
     },
   });
 }
