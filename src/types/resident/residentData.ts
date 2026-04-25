@@ -87,11 +87,9 @@ export interface contactUsData{
 }
 // payment
 export interface userCreatePaymentData{
-  userId: string,
-  serviceProviderId: string,
-  serviceId: number,
-  amount: number,
-  paymentMethod: number,
-  serviceProviderType: number,
-  bookingId: number
+    userId: string,
+    amount: number,
+    paymentMethod: number,
+    entityId: number,
+    entityType: number
 }

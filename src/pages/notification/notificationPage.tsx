@@ -5,14 +5,10 @@ import useMarkAllAsRead from "../../hooks/notifications/useMarkAllAsRead";
 import { EmptyNotifications } from "../../components/notifications/EmptyNotification";
 import { useTranslation } from "react-i18next";
 
-interface Props {
-  userId: string;
-}
-
-export default function NotificationsPage({ userId }: Props) {
+export default function NotificationsPage() {
   const [page, setPage] = useState(1);
   const pageSize = 10;
-
+  const userId = sessionStorage.getItem("user_id")!;
   const { t } = useTranslation();
 
   const { data, isLoading } = useGetNotifications(page, pageSize, userId);

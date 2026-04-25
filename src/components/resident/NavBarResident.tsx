@@ -89,7 +89,7 @@ export default function ResidentNavBar() {
       </motion.div>
 
       {/* Desktop Nav */}
-      <nav className="hidden md:flex gap-6 text-foreground font-medium">
+      <nav className="hidden md:flex gap-6 text-foreground font-medium ml-auto">
         {navItems.map((item, i) => (
           <NavLink
             key={i}
@@ -103,7 +103,7 @@ export default function ResidentNavBar() {
       </nav>
 
       {/* Desktop Actions */}
-      <div className="hidden md:flex items-center gap-3 relative">
+      <div className="hidden md:flex items-center gap-3 relative ml-auto">
 
         {/* NOTIFICATIONS */}
         <div className="relative">

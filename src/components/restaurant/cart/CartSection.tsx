@@ -25,6 +25,7 @@ export default function CartSection({
   const total = data.reduce((sum, item) => sum + item.totalPrice, 0);
 
   return (
+    <>
     <div
       className="
 fixed bottom-2 sm:bottom-4 
@@ -120,12 +121,13 @@ shadow-2xl z-50
   {t("restaurant.checkout")}
 </button>
 </div>
+    </div>
 <CheckoutModal
   open={open}
   onClose={() => setOpen(false)}
   residentId={residentId}
   restaurantId={restaurantId}
 />
-    </div>
+</>
   );
 }

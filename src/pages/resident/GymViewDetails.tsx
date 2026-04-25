@@ -45,7 +45,6 @@ export default function GymViewDetails() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onSuccess: (res: any) => {
         const bookingId = res.data.bookingId;
-        
         handleContinuePayment(service, bookingId);
       },
     });
@@ -62,12 +61,10 @@ export default function GymViewDetails() {
     createPaymentMutation(
       {
         userId: residentId,
-        serviceProviderId: gymId!,
-        serviceId: serviceData.id,
         amount: serviceData.newPrice || serviceData.price,
         paymentMethod: 1,
-        serviceProviderType: 2,
-        bookingId: bookingIdData,
+        entityType: 0,
+        entityId: bookingIdData,
       },
       {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

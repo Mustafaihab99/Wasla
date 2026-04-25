@@ -68,7 +68,7 @@ export default function CheckoutModal({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 bg-black/50 z-[60] flex items-end sm:items-center justify-center"
+          className="fixed inset-0 bg-black/50 z-[90] flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

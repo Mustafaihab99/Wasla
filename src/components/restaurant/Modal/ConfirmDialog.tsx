@@ -1,5 +1,7 @@
 // ConfirmDialog.tsx
 
+import { useTranslation } from "react-i18next";
+
 interface ConfirmDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -15,8 +17,8 @@ export function ConfirmDialog({
   title,
   description,
 }: ConfirmDialogProps) {
+  const {t} = useTranslation();
   if (!open) return null;
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
 
@@ -37,7 +39,7 @@ export function ConfirmDialog({
             onClick={() => onOpenChange(false)}
             className="px-4 py-2 rounded-lg border border-border hover:bg-background/60 transition"
           >
-            Cancel
+           {t("resident.Cancel")}
           </button>
 
           <button
@@ -47,7 +49,7 @@ export function ConfirmDialog({
             }}
             className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-error/90 transition"
           >
-            Delete
+            {t("resident.Delete")}
           </button>
         </div>
       </div>

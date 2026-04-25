@@ -2,8 +2,10 @@
 import { useState } from "react";
 import useBookService from "../../../hooks/resident/useBookService";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 import useCreatePayment from "../../../hooks/resident/payment/useCreatePayment";
+import { FaMoneyBillWave } from "react-icons/fa";
+import { CiCreditCard1 } from "react-icons/ci";
+import { toast } from "sonner";
 
 interface BookServiceModalProps {
   serviceId: number;
@@ -17,7 +19,6 @@ interface BookServiceModalProps {
 }
 
 export default function BookServiceModal({
-  serviceId,
   serviceProviderId,
   price,
   availableDays,
@@ -27,8 +28,11 @@ export default function BookServiceModal({
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [bookingType, setBookingType] = useState<1 | 2>(1);
+
+  const [payment, setPayment] = useState<number>(3);
+
   const { mutate: createPaymentMutation } = useCreatePayment();
-  
+
   const [images, setImages] = useState<{ file: File; preview: string }[]>([]);
   const [availableTimesForDay, setAvailableTimesForDay] = useState<
     { id: number; start: string; end: string; isBooking: boolean }[]
@@ -37,7 +41,6 @@ export default function BookServiceModal({
     null
   );
 
-  //error states for each section
   const [dayError, setDayError] = useState("");
   const [timeError, setTimeError] = useState("");
   const [imgError, setImgError] = useState("");
@@ -99,10 +102,9 @@ export default function BookServiceModal({
       today.getDate() + diff
     );
 
-    const bookingDateStr = `${bookingDate.getFullYear()}-${pad(
+    return `${bookingDate.getFullYear()}-${pad(
       bookingDate.getMonth() + 1
     )}-${pad(bookingDate.getDate())}`;
-    return bookingDateStr;
   };
 
   const removeImage = (index: number) => {
@@ -112,81 +114,82 @@ export default function BookServiceModal({
     });
   };
 
-const handleSubmit = async () => {
-  setDayError("");
-  setTimeError("");
-  setImgError("");
+  const handleSubmit = async () => {
+    setDayError("");
+    setTimeError("");
+    setImgError("");
 
-  let hasError = false;
+    let hasError = false;
 
-  if (!selectedDay && availableDays.length > 0) {
-    setDayError(t("doctor.error.selectDay"));
-    hasError = true;
-  }
-
-  if (!selectedTime) {
-    setTimeError(t("doctor.selectTimeSlot"));
-    hasError = true;
-  }
-
-  if (bookingType === 2 && images.length === 0) {
-    setImgError(t("doctor.error.uploadImages"));
-    hasError = true;
-  }
-
-  if (hasError) return;
-
-  try {
-    const selectedDayInt = Number(selectedDay);
-    const bookingDateStr = getNextBookingDate(selectedDayInt);
-
-    const formData = new FormData();
-
-    const userId = sessionStorage.getItem("user_id") || "";
-
-    formData.append("userId", userId);
-    formData.append("serviceProviderId", serviceProviderId);
-    formData.append("serviceDayId", selectedTimeSlotId?.toString() || "");
-    formData.append("price", price.toString());
-    formData.append("serviceProviderType", "1");
-    formData.append("bookingType", bookingType.toString());
-    formData.append("bookingDate", bookingDateStr);
-
-    if (bookingType === 2) {
-      images.forEach((img) => formData.append("Images", img.file));
+    if (!selectedDay && availableDays.length > 0) {
+      setDayError(t("doctor.error.selectDay"));
+      hasError = true;
     }
 
-    const res: any = await mutation(formData);
-
-    console.log("BOOKING RESPONSE", res);
-
-    const bookingId = res?.data;
-
-    if (!bookingId) {
-      toast.error(t("doctor.error.bookingFailed"));
-      return;
+    if (!selectedTime) {
+      setTimeError(t("doctor.selectTimeSlot"));
+      hasError = true;
     }
 
-    createPaymentMutation(
-      {
-        userId,
-        serviceProviderId,
-        serviceId,
-        amount: price,
-        paymentMethod: 1,
-        serviceProviderType: 1,
-        bookingId,
-      },
-      {
-        onSuccess: (paymentRes: any) => {
-          window.location.href = paymentRes.data;
-        },
+    if (bookingType === 2 && images.length === 0) {
+      setImgError(t("doctor.error.uploadImages"));
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    try {
+      const selectedDayInt = Number(selectedDay);
+      const bookingDateStr = getNextBookingDate(selectedDayInt);
+
+      const formData = new FormData();
+
+      const userId = sessionStorage.getItem("user_id") || "";
+
+      formData.append("userId", userId);
+      formData.append("serviceProviderId", serviceProviderId);
+      formData.append("serviceDayId", selectedTimeSlotId?.toString() || "");
+      formData.append("price", price.toString());
+      formData.append("serviceProviderType", "1");
+      formData.append("bookingType", bookingType.toString());
+      formData.append("bookingDate", bookingDateStr);
+
+      if (bookingType === 2) {
+        images.forEach((img) => formData.append("Images", img.file));
       }
-    );
-  } catch {
-    toast.error(t("doctor.error.bookingFailed"));
-  }
-};
+
+      const res: any = await mutation(formData);
+      const bookingId = res?.data;
+
+      if (!bookingId) {
+        toast.error(t("doctor.error.bookingFailed"));
+        return;
+      }
+
+      if (payment === 1) {
+        // CARD
+        createPaymentMutation(
+          {
+            userId,
+            amount: price,
+            paymentMethod: 1,
+            entityId: bookingId,
+            entityType: 0,
+          },
+          {
+            onSuccess: (paymentRes: any) => {
+              window.location.href = paymentRes.data;
+            },
+          }
+        );
+      } else {
+        // CASH
+        onClose();
+      }
+    } catch {
+      toast.error(t("doctor.error.bookingFailed"));
+    }
+  };
 
   return (
     <div
@@ -315,6 +318,35 @@ const handleSubmit = async () => {
             {imgError && <p className="text-red-500 text-sm">{imgError}</p>}
           </div>
         )}
+        <div className="space-y-2">
+          <p className="font-semibold">{t("restaurant.paymentMethod")}</p>
+
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPayment(1)}
+              className={`flex-1 flex items-center justify-center gap-2 border rounded-lg py-2 text-sm font-medium ${
+                payment === 1
+                  ? "bg-primary text-white border-primary shadow-md"
+                  : "bg-background text-foreground border-border hover:border-primary hover:text-primary"
+              }`}
+            >
+              <CiCreditCard1 />
+              {t("restaurant.card")}
+            </button>
+
+            <button
+              onClick={() => setPayment(3)}
+              className={`flex-1 flex items-center justify-center gap-2 border rounded-lg py-2 text-sm font-medium ${
+                payment === 3
+                  ? "bg-primary text-white border-primary shadow-md"
+                  : "bg-background text-foreground border-border hover:border-primary hover:text-primary"
+              }`}
+            >
+              <FaMoneyBillWave />
+              {t("restaurant.cash")}
+            </button>
+          </div>
+        </div>
 
         {/* Footer Buttons */}
         <div className="flex justify-between mt-2">

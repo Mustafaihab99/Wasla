@@ -155,7 +155,6 @@ export default function ItemModal({ open, onClose, restaurantId, categories, ini
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, initialData]);
 
-  // ✅ FIXED: Type-safe error checker
   const showError = (fieldName: keyof FormValues): string | false => {
     return touchedFields[fieldName] && formik.errors[fieldName] 
       ? formik.errors[fieldName] as string 

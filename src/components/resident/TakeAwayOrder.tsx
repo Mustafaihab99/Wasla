@@ -138,7 +138,7 @@ export default function TakeAwayOrder() {
 
                 <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs bg-gray-100 text-gray-700">
                   {PaymentIcon(order.paymentMethod)}
-                  {order.paymentMethod === 1 ? "Card" : "Cash"}
+                  {order.paymentMethod === 1 ? t("restaurant.card") : t("restaurant.cash")}
                 </span>
 
               </div>
@@ -147,7 +147,7 @@ export default function TakeAwayOrder() {
             {/* Price */}
             <div className="mt-3 flex justify-between items-center">
               <p className="font-bold text-lg text-primary">
-                {order.totalPrice} EGP
+                {order.totalPrice} {t("restaurant.EGP")}
               </p>
 
               <button
@@ -195,7 +195,7 @@ export default function TakeAwayOrder() {
     onClick={() => setPage((p) => p - 1)}
     className="px-4 py-2 rounded-lg border border-border disabled:opacity-40"
   >
-    Prev
+    {t("restaurant.prev")}
   </button>
 
   <span className="text-sm text-dried">
@@ -207,7 +207,7 @@ export default function TakeAwayOrder() {
     onClick={() => setPage((p) => p + 1)}
     className="px-4 py-2 rounded-lg border border-border disabled:opacity-40"
   >
-    Next
+    {t("restaurant.next")}
   </button>
 
 </div>
