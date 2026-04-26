@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import { FaCreditCard, FaMoneyBillWave } from "react-icons/fa";
-
 import {
   MdPendingActions,
   MdRestaurant,
@@ -11,8 +9,9 @@ import {
   MdCancel,
   MdLocationOn,
 } from "react-icons/md";
-
 import useGetRestaurantOrders from "../../hooks/restaurant/cart/useGetRestaurantOrders";
+import useChangeToPrpare from "../../hooks/restaurant/useChangeToPrepare";
+import useChangeToDeliverd from "../../hooks/restaurant/useChangeToDeliverd";
 import { restaurantTakeAway } from "../../types/restaurant/restaurant-types";
 
 const getPaymentIcon = (method: number) =>
@@ -78,7 +77,11 @@ export default function RestaurantDeliveryOrders() {
   const [open, setOpen] = useState<number | null>(null);
 
   const pageSize = 6;
+
   const { data, isLoading } = useGetRestaurantOrders(page, pageSize, id);
+
+  const prepareMutation = useChangeToPrpare();
+  const deliveredMutation = useChangeToDeliverd();
 
   if (isLoading)
     return (
@@ -89,7 +92,9 @@ export default function RestaurantDeliveryOrders() {
 
   if (!data?.data?.length)
     return (
-      <p className="text-center mt-10 text-dried">{t("restaurant.noOrders")}</p>
+      <p className="text-center mt-10 text-dried">
+        {t("restaurant.noOrders")}
+      </p>
     );
 
   const totalPages = Math.ceil((data.totalCount || 0) / pageSize);
@@ -102,7 +107,9 @@ export default function RestaurantDeliveryOrders() {
           {t("restaurant.deliveryOrders")}
         </h1>
 
-        <p className="text-sm text-dried">{t("restaurant.manageOrders")}</p>
+        <p className="text-sm text-dried">
+          {t("restaurant.manageOrders")}
+        </p>
       </div>
 
       {/* ORDERS */}
@@ -112,21 +119,28 @@ export default function RestaurantDeliveryOrders() {
         return (
           <div
             key={order.id}
-            className="bg-background border border-border rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+            className="bg-background border border-border rounded-2xl p-5 shadow-sm hover:shadow-md transition"
+          >
             {/* HEADER */}
             <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
               <div className="space-y-1">
-                <h2 className="font-bold text-primary">{order.residentName}</h2>
+                <h2 className="font-bold text-primary">
+                  {order.residentName}
+                </h2>
+
                 <p className="text-xs text-dried">
                   <a
                     href={`tel:${order.residentPhone}`}
-                    className="hover:text-primary transition">
+                    className="hover:text-primary transition"
+                  >
                     {order.residentPhone}
                   </a>
                 </p>
 
                 <p className="text-xs text-dried">
-                  {new Date(order.createdAt).toLocaleString(i18n.language)}
+                  {new Date(order.createdAt).toLocaleString(
+                    i18n.language
+                  )}
                 </p>
 
                 <p className="text-xs text-dried flex items-center gap-1">
@@ -138,7 +152,8 @@ export default function RestaurantDeliveryOrders() {
               {/* BADGES */}
               <div className="flex flex-wrap gap-2">
                 <span
-                  className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${status.style}`}>
+                  className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${status.style}`}
+                >
                   {status.icon}
                   {status.label}
                 </span>
@@ -152,6 +167,27 @@ export default function RestaurantDeliveryOrders() {
               </div>
             </div>
 
+            {/* ACTION BUTTONS */}
+            <div className="flex gap-2 mt-4">
+              {order.status === 1 && (
+                <button
+                  onClick={() => prepareMutation.mutate(order.id)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition"
+                >
+                  {t("restaurant.toPreparing")}
+                </button>
+              )}
+
+              {order.status === 3 && (
+                <button
+                  onClick={() => deliveredMutation.mutate(order.id)}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition"
+                >
+                  {t("restaurant.toDelivered")}
+                </button>
+              )}
+            </div>
+
             {/* PRICE */}
             <div className="flex justify-between items-center mt-4">
               <p className="font-bold text-primary text-lg">
@@ -159,8 +195,11 @@ export default function RestaurantDeliveryOrders() {
               </p>
 
               <button
-                onClick={() => setOpen(open === order.id ? null : order.id)}
-                className="text-sm text-primary hover:underline">
+                onClick={() =>
+                  setOpen(open === order.id ? null : order.id)
+                }
+                className="text-sm text-primary hover:underline"
+              >
                 {open === order.id
                   ? t("restaurant.hideItems")
                   : t("restaurant.viewItems")}
@@ -173,7 +212,8 @@ export default function RestaurantDeliveryOrders() {
                 {order.items.map((item) => (
                   <div
                     key={item.orderItemId}
-                    className="flex justify-between text-sm">
+                    className="flex justify-between text-sm"
+                  >
                     <span>{item.orderItemName}</span>
                     <span className="text-dried">
                       {item.quantity} × {item.price}
@@ -191,7 +231,8 @@ export default function RestaurantDeliveryOrders() {
         <button
           disabled={page === 1}
           onClick={() => setPage((p) => p - 1)}
-          className="px-4 py-2 rounded-lg border border-border disabled:opacity-40 hover:bg-muted transition">
+          className="px-4 py-2 rounded-lg border border-border disabled:opacity-40 hover:bg-muted transition"
+        >
           {t("restaurant.prev")}
         </button>
 
@@ -202,7 +243,8 @@ export default function RestaurantDeliveryOrders() {
         <button
           disabled={page === totalPages}
           onClick={() => setPage((p) => p + 1)}
-          className="px-4 py-2 rounded-lg border border-border disabled:opacity-40 hover:bg-muted transition">
+          className="px-4 py-2 rounded-lg border border-border disabled:opacity-40 hover:bg-muted transition"
+        >
           {t("restaurant.next")}
         </button>
       </div>

@@ -147,7 +147,7 @@ export default function TakeAwayOrder() {
             {/* Price */}
             <div className="mt-3 flex justify-between items-center">
               <p className="font-bold text-lg text-primary">
-                {order.totalPrice} {t("restaurant.EGP")}
+                {order.totalPrice} {t("doctor.EGP")}
               </p>
 
               <button

@@ -436,3 +436,28 @@ export async function getRestaurantOrders(
     throw error;
   }
 }
+
+export async function changeToPrepare(id:number) {
+  try {
+    const response = await axiosInstance.put(`RestaurantOrder/start-preparing-order?id=${id}`);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+export async function changeToDeliverd(id:number) {
+  try {
+    const response = await axiosInstance.put(`RestaurantOrder/mark-order-delivered?id=${id}`);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
+}
