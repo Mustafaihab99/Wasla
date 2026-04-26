@@ -11,6 +11,7 @@ import {
   FaCalendarAlt,
   FaHeart,
 } from "react-icons/fa";
+import { MdOutlinePayment } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import ResidentCharts from "./ResidentCharts";
 import useLogout from "../../hooks/auth/useLogout";
@@ -108,6 +109,16 @@ export default function ResidentProfile() {
             {t("resident.myFavorites")}
           </span>
           <FaHeart className="text-red-500 text-3xl" />
+        </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="p-6 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-white/20 rounded-2xl shadow-lg cursor-pointer flex items-center justify-between"
+          onClick={() => navigate("payment-history")}>
+          <span className="font-semibold text-lg text-purple-600">
+            {t("resident.paymentHist")}
+          </span>
+          <MdOutlinePayment  className="text-blue-900 text-3xl" />
         </motion.div>
 
         <motion.div

@@ -19,6 +19,7 @@ const MainDashboard = lazy(() => import ("../pages/dashboard/MainDashboard"));
 const ResidentDashboard = lazy(() => import ("../components/layouts/ResidentLayout"));
 const ResidentProfile = lazy(() => import ("../components/resident/ResidentProfile"));
 const ResidentServices = lazy(() => import ("../components/resident/ResidentServices"));
+const PaymentHistory = lazy(() => import ("../components/resident/PaymentHistory"));
 const ServiceBookDoctor = lazy(() => import ("../pages/resident/ServiceBookDoctor"));
 const DoctorViewDetailes = lazy(() => import ("../pages/resident/DoctorViewDetailes"));
 const ResidentMyBooking = lazy(() => import ("../pages/resident/ResidentMyBooking"));
@@ -110,6 +111,7 @@ export default function AppRoutes() {
             <Route path="profile" element={<ResidentProfile />} />
             <Route path="profile/my-bookings" element={<ResidentMyBooking />} />
             <Route path="profile/my-favorites" element={<ResidentMyFavourites />} />
+            <Route path="profile/payment-history" element={<PaymentHistory />} />
             <Route path="service" element={<ResidentServices />} /> 
             <Route path="service/doctors" element={<ServiceBookDoctor />} /> 
             <Route path="service/doctors/:doctorId" element={<DoctorViewDetailes />} /> 

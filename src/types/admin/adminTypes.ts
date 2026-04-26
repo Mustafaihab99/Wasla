@@ -1,15 +1,15 @@
-export interface ReportsData{
-    id : number,
-    fullName : string,
-    email: string,
-    message : string
+export interface ReportsData {
+  id: number;
+  fullName: string;
+  email: string;
+  message: string;
 }
-export interface adminUsersData{
-    id: string,
-    name: string,
-    email: string,
-    status: number,
-    createdAt:string
+export interface adminUsersData {
+  id: string;
+  name: string;
+  email: string;
+  status: number;
+  createdAt: string;
 }
 export interface AdminUsersResponse {
   pageNumber: number;
@@ -18,21 +18,21 @@ export interface AdminUsersResponse {
   data: adminUsersData[];
 }
 
-export interface AdminOverviewData{
-    completedBookingsCount: number,
-    canceledBookingsCount: number,
-    countOfUsers: number,
-    years: [
+export interface AdminOverviewData {
+  completedBookingsCount: number;
+  canceledBookingsCount: number;
+  countOfUsers: number;
+  years: [
     {
-        year: number,
-        months: [
+      year: number;
+      months: [
         {
-            month: number,
-            amount: number
-        }
-        ]
-    }
-    ]
+          month: number;
+          amount: number;
+        },
+      ];
+    },
+  ];
 }
 
 export interface UserBase {
@@ -51,13 +51,43 @@ export interface DoctorDetails {
   description: string;
   cv: string;
 }
-export interface GymDetails{
-      businessName: string,
-      email: string,
-      description: string,
-      phones: string[],
-      images: string[]
+export interface GymDetails {
+  businessName: string;
+  email: string;
+  description: string;
+  phones: string[];
+  images: string[];
 }
+export interface RestaurantDetails {
+  businessName: string;
+  description: string;
+  email: string;
+  images: string[];
+}
+export interface TechnicianDetails {
+  description: string;
+  documents: string[];
+  experienceYears: number;
+  isAvailable: boolean;
+  rate: number;
+  specialization: number;
+}
+export interface RestaurantDetails {
+  businessName: string;
+  description: string;
+  email: string;
+  images: string[];
+}
+export interface DriverDetails {
+  carImages: string[];
+  drivingExperienceYears: number;
+  email: string;
+  name: string;
+  tripsCount: number;
+  vehicleModel: string;
+  vehicleNumber: string;
+}
+
 export type UserDetailsData =
   | {
       role: "resident";
@@ -73,8 +103,22 @@ export type UserDetailsData =
       role: "gym";
       userBase: UserBase;
       details: GymDetails;
-    }  
-    ;
+    }
+  | {
+      role: "driver";
+      userBase: UserBase;
+      details: DriverDetails;
+    }
+  | {
+      role: "restaurant";
+      userBase: UserBase;
+      details: RestaurantDetails;
+    }
+  | {
+      role: "technician";
+      userBase: UserBase;
+      details: TechnicianDetails;
+    };
 export interface GetUserDetailsResponse {
   success: boolean;
   message: string;

@@ -93,3 +93,20 @@ export interface userCreatePaymentData{
     entityId: number,
     entityType: number
 }
+export interface serviceSearchData{
+    id: string,
+    name: string,
+    email: string,
+    photo: string,
+    description: string,
+    rating: number,
+    phone: string,
+    role: string
+}
+export interface paymentHistoryData{
+    serviceProviderName: string,
+    totalAmount: number,
+    paymentDate: string,
+    paymentMethod: number,
+    status: number
+}

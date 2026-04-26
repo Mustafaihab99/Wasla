@@ -1,17 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import useGetUserDetails from "../../hooks/admin/useAdminViewDetails";
 import {
   FaUser,
-  FaPhone,
-  FaBirthdayCake,
   FaIdCard,
   FaFileAlt,
   FaArrowLeft,
   FaSpinner,
-  FaEnvelope,
   FaBuilding,
-  FaImages,
+  FaCar,
+  FaTools,
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
@@ -38,11 +37,11 @@ export default function AdminViewDetails() {
     );
   }
 
-  const { userBase, role, details } = data.data;
+  const { userBase, role, details }: any = data.data;
 
   return (
     <div className="space-y-6 p-4 md:p-6">
-      {/* ================= Header ================= */}
+      {/* HEADER */}
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -54,13 +53,7 @@ export default function AdminViewDetails() {
               <div className="w-28 h-28 rounded-2xl overflow-hidden border-4 border-primary/20 shadow-lg">
                 {userBase.profilePhoto ? (
                   <img
-                    src={
-                      role === "gym" ?
-                      import.meta.env.VITE_GYM_IMAGE + userBase.profilePhoto
-                      :
-                      import.meta.env.VITE_USER_IMAGE + userBase.profilePhoto
-                    }
-                    alt="profile"
+                    src={import.meta.env.VITE_USER_IMAGE + userBase.profilePhoto}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -87,7 +80,7 @@ export default function AdminViewDetails() {
 
           <button
             onClick={() => navigate(-1)}
-            className="self-start md:self-center flex items-center gap-2 px-4 py-2 rounded-lg border hover:bg-muted transition"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border hover:bg-muted transition"
           >
             <FaArrowLeft />
             {t("admin.Back")}
@@ -95,199 +88,152 @@ export default function AdminViewDetails() {
         </div>
       </motion.div>
 
-      {/* ================= Basic Info ================= */}
-      {
-        role === "gym" ? <></>
-        :
-      <div className="bg-card border border-border rounded-xl p-6">
+      {/* BASIC INFO */}
+      <div className="bg-card border rounded-xl p-6">
         <h3 className="font-semibold text-lg mb-4">
           {t("admin.basicInfo")}
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InfoRow
-            label={t("profile.doctor.Phone")}
-            value={
-              <span className="flex items-center gap-2">
-                <FaPhone className="text-primary" />
-                {userBase.phone}
-              </span>
-            }
-          />
-          <InfoRow
-            label={t("profile.doctor.Birthday")}
-            value={
-              <span className="flex items-center gap-2">
-                <FaBirthdayCake className="text-primary" />
-                {userBase.birthDay}
-              </span>
-            }
-          />
+        <div className="grid md:grid-cols-2 gap-4">
+          <InfoRow label="Phone" value={userBase.phone} />
+          <InfoRow label="Birthday" value={userBase.birthDay} />
         </div>
       </div>
-    }
 
-      {/* ================= Resident Details ================= */}
+      {/* RESIDENT */}
       {role === "resident" && (
-        <motion.div className="bg-card border border-border rounded-xl p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <FaIdCard className="text-primary" />
-            {t("admin.resDet")}
-          </h3>
-
-          <InfoRow
-            label={t("profile.resident.national")}
-            value={details.nationalId}
-          />
-        </motion.div>
+        <Section title={t("admin.resDet")} icon={<FaIdCard />}>
+          <InfoRow label="National ID" value={details.nationalId} />
+        </Section>
       )}
 
-      {/* ================= Doctor Details ================= */}
+      {/* DOCTOR */}
       {role === "doctor" && (
-        <motion.div className="bg-card border border-border rounded-xl p-6 space-y-6">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <FaUser className="text-primary" />
-            {t("admin.docDet")}
-          </h3>
+        <Section title={t("admin.docDet")} icon={<FaUser />}>
+          <Grid>
+            <InfoRow label="Experience" value={`${details.experienceYears} years`} />
+            <InfoRow label="University" value={details.universityName} />
+            <InfoRow label="Hospital" value={details.hospitalName} />
+          </Grid>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <InfoRow
-              label={t("profile.doctor.Experience")}
-              value={`${details.experienceYears} years`}
-            />
-            <InfoRow
-              label={t("profile.doctor.Graduation")}
-              value={details.graduationYear}
-            />
-            <InfoRow
-              label={t("profile.doctor.University")}
-              value={details.universityName}
-            />
-            <InfoRow
-              label={t("profile.doctor.hos")}
-              value={details.hospitalName}
-            />
-          </div>
-
-          <div>
-            <p className="text-sm text-muted-foreground mb-2">
-              {t("profile.doctor.Description")}
-            </p>
-            <p className="text-foreground bg-muted/30 p-4 rounded-lg">
-              {details.description || "—"}
-            </p>
-          </div>
+          <Description text={details.description} />
 
           {details.cv && (
             <a
               href={import.meta.env.VITE_DOCTOR_CV + details.cv}
               target="_blank"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition"
+              className="btn-primary-outline"
             >
-              <FaFileAlt />
-              {t("doctor.ViewCV")}
+              <FaFileAlt /> View CV
             </a>
           )}
-        </motion.div>
+        </Section>
       )}
 
-      {/* ================= Gym Details ================= */}
+      {/* DRIVER  */}
+      {role === "driver" && (
+        <Section title="Driver Details" icon={<FaCar />}>
+          <Grid>
+            <InfoRow label="Name" value={details.name} />
+            <InfoRow label="Email" value={details.email} />
+            <InfoRow label="Experience" value={`${details.drivingExperienceYears} years`} />
+            <InfoRow label="Trips" value={details.tripsCount} />
+            <InfoRow label="Vehicle Model" value={details.vehicleModel} />
+            <InfoRow label="Vehicle Number" value={details.vehicleNumber} />
+          </Grid>
+
+          <ImageGrid images={details.carImages} />
+        </Section>
+      )}
+
+      {/* RESTAURANT */}
+      {role === "restaurant" && (
+        <Section title="Restaurant Details" icon={<FaBuilding />}>
+          <Grid>
+            <InfoRow label="Name" value={details.businessName} />
+            <InfoRow label="Email" value={details.email} />
+          </Grid>
+
+          <Description text={details.description} />
+          <ImageGrid images={details.images} />
+        </Section>
+      )}
+
+      {/* TECHNICIAN */}
+      {role === "technician" && (
+        <Section title="Technician Details" icon={<FaTools />}>
+          <Grid>
+            <InfoRow label="Experience" value={`${details.experienceYears} years`} />
+            <InfoRow label="Rate" value={details.rate} />
+            <InfoRow label="Available" value={details.isAvailable ? "Yes" : "No"} />
+          </Grid>
+
+          <Description text={details.description} />
+        </Section>
+      )}
+
+      {/* GYM */}
       {role === "gym" && (
-        <motion.div className="bg-card border border-border rounded-xl p-6 space-y-6">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <FaBuilding className="text-primary" />
-            {t("admin.gymDetails")}
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <InfoRow
-              label={t("profile.gym.businessName")}
-              value={
-                <span className="flex items-center gap-2">
-                  <FaBuilding className="text-primary" />
-                  {details.businessName}
-                </span>
-              }
-            />
-
-            <InfoRow
-              label={t("login.Email")}
-              value={
-                <span className="flex items-center gap-2">
-                  <FaEnvelope className="text-primary" />
-                  {details.email}
-                </span>
-              }
-            />
-          </div>
-
-          {/* Phones */}
-          {details.phones?.length > 0 && (
-            <div>
-              <p className="text-sm text-muted-foreground mb-2">
-                {t("gym.phones")}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {details.phones.map((phone: string, idx: number) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 rounded-lg bg-muted text-sm"
-                  >
-                    {phone}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Description */}
-          <div>
-            <p className="text-sm text-muted-foreground mb-2">
-              {t("gym.description")}
-            </p>
-            <p className="bg-muted/30 p-4 rounded-lg">
-              {details.description || "—"}
-            </p>
-          </div>
-
-          {/* Images */}
-          {details.images?.length > 0 && (
-            <div>
-              <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
-                <FaImages className="text-primary" />
-                {t("gym.gallery")}
-              </p>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {details.images.map((img: string, idx: number) => (
-                  <img
-                    key={idx}
-                    src={import.meta.env.VITE_GYM_IMAGE + img}
-                    className="h-28 w-full object-cover rounded-lg border"
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-        </motion.div>
+        <Section title={t("admin.gymDetails")} icon={<FaBuilding />}>
+          <Grid>
+            <InfoRow label="Business Name" value={details.businessName} />
+            <InfoRow label="Email" value={details.email} />
+          </Grid>
+          <Description text={details.description} />
+          <ImageGrid images={details.images} />
+        </Section>
       )}
     </div>
   );
 }
 
-/* ================= Helpers ================= */
+/* ================= Components ================= */
 
-function InfoRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
+function Section({ title, icon, children }: any) {
   return (
-    <div className="space-y-1">
+    <motion.div className="bg-card border rounded-xl p-6 space-y-5">
+      <h3 className="text-lg font-semibold flex items-center gap-2 text-primary">
+        {icon} {title}
+      </h3>
+      {children}
+    </motion.div>
+  );
+}
+
+function Grid({ children }: any) {
+  return <div className="grid md:grid-cols-2 gap-4">{children}</div>;
+}
+
+function Description({ text }: { text: string }) {
+  return (
+    <div>
+      <p className="text-sm text-muted-foreground mb-2">Description</p>
+      <p className="bg-muted/30 p-4 rounded-lg">{text || "—"}</p>
+    </div>
+  );
+}
+
+function ImageGrid({ images = [] }: { images: string[] }) {
+  if (!images?.length) return null;
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {images.map((img, i) => (
+        <img
+          key={i}
+          src={import.meta.env.VITE_USER_IMAGE + img}
+          className="h-28 w-full object-cover rounded-lg border"
+        />
+      ))}
+    </div>
+  );
+}
+
+function InfoRow({ label, value }: any) {
+  return (
+    <div>
       <p className="text-sm text-muted-foreground">{label}</p>
-      <p className="font-medium text-foreground">{value || "—"}</p>
+      <p className="font-medium">{value || "—"}</p>
     </div>
   );
 }

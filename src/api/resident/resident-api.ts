@@ -1,7 +1,8 @@
 import axios, { AxiosError } from "axios";
-import { contactUsData, doctorsToResidentData, myBookingDoctor, residentChartsData, residentProfile, reviewAddData, reviewEditData, reviewGet } from "../../types/resident/residentData";
+import { contactUsData, doctorsToResidentData, myBookingDoctor, paymentHistoryData, residentChartsData, residentProfile, reviewAddData, reviewEditData, reviewGet, serviceSearchData } from "../../types/resident/residentData";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
+import { PaginatedResponse } from "../restaurant/restaurant-api";
 
 // profile
 export async function getResidentProfile(id :string) : Promise<residentProfile> {
@@ -152,4 +153,70 @@ export async function addContactUs(data: contactUsData) {
     toast.error(errorMessage);
     throw error;
   }
+}
+
+// search services
+export async function getAllServices(
+  pageNumber: number = 1,
+  pageSize: number = 7,
+): Promise<PaginatedResponse<serviceSearchData>> {
+  try {
+    const response = await axiosInstance.get(
+      `ServiceProvider/All?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    );
+    const result = response.data;
+    return {
+      data: result.data?.data || [],
+      totalCount: result.data?.totalCount || 0,
+      currentPage: result.data?.pageNumber || pageNumber,
+      pageSize: result.data?.pageSize || pageSize,
+    };
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "Failed to fetch services";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function getServicesBySearh(
+  pageNumber: number = 1,
+  pageSize: number = 7,
+  query: string,
+): Promise<PaginatedResponse<serviceSearchData>> {
+  try {
+    const response = await axiosInstance.get(
+      `ServiceProvider/Search?query=${query}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+    );
+    const result = response.data;
+    return {
+      data: result.data?.data || [],
+      totalCount: result.data?.totalCount || 0,
+      currentPage: result.data?.pageNumber || pageNumber,
+      pageSize: result.data?.pageSize || pageSize,
+    };
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "Failed to fetch services";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+// get paymentHistory
+export async function getPaymentHistory(id :string) : Promise<paymentHistoryData[]> {
+    try{
+    const response = await axiosInstance.get(`payment/AllPayment/${id}`);
+    return response.data.data;
+    }
+    catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      const message = error.response?.data?.message;
+      toast.error(message);
+    } else {
+      toast.error("failed to fetch payment history");
+    }
+    throw error;
+    }
 }

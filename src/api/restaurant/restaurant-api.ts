@@ -43,7 +43,7 @@ export async function EditRestaurnatProfile(formData: FormData) {
   }
 }
 
-interface PaginatedResponse<T> {
+export interface PaginatedResponse<T> {
   data: T[];
   totalCount: number;
   currentPage: number;

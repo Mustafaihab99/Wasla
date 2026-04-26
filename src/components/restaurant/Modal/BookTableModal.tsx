@@ -15,7 +15,6 @@ export default function BookTableModal({ open, onClose, restaurantId }: Props) {
   const userId = sessionStorage.getItem("user_id")!;
 
   const [form, setForm] = useState({
-    numberOfTables: 1,
     numberOfPersons: 1,
     date: "",
     time: "",
@@ -35,9 +34,6 @@ export default function BookTableModal({ open, onClose, restaurantId }: Props) {
 
     today.setHours(0, 0, 0, 0);
     selectedDate.setHours(0, 0, 0, 0);
-
-    if (form.numberOfTables > 4)
-      newErrors.numberOfTables = t("restaurant.maxTables");
 
     if (form.numberOfPersons > 20)
       newErrors.numberOfPersons = t("restaurant.maxPersons");
@@ -77,23 +73,6 @@ export default function BookTableModal({ open, onClose, restaurantId }: Props) {
         <h2 className="text-xl font-bold mb-4 text-center">
           🍽️ {t("restaurant.reserveTable")}
         </h2>
-
-        {/* TABLES */}
-        <div className="mb-3">
-          <label className="text-sm">{t("restaurant.tables")}</label>
-          <input
-            type="number"
-            max={4}
-            value={form.numberOfTables}
-            onChange={(e) =>
-              setForm({ ...form, numberOfTables: +e.target.value })
-            }
-            className="bg-background text-foreground w-full border rounded-lg p-2 mt-1"
-          />
-          {errors.numberOfTables && (
-            <p className="text-red-500 text-xs">{errors.numberOfTables}</p>
-          )}
-        </div>
 
         {/* PERSONS */}
         <div className="mb-3">

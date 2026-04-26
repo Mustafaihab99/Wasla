@@ -80,7 +80,9 @@ export default function ResidentNavBar() {
   };
 
   return (
-    <header className="w-full bg-background shadow-md border-b border-border py-3 px-6 lg:px-20 flex justify-between items-center fixed top-0 left-0 z-50">
+    <header className="w-full bg-background shadow-md border-b border-border py-3 px-6 lg:px-20 flex justify-between items-center fixed top-0 left-0 z-50"
+    style={{direction:"ltr"}}
+    >
 
       {/* Logo */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2">
