@@ -69,6 +69,7 @@ export default function CheckoutModal({
       {open && (
         <motion.div
           className="fixed inset-0 bg-black/50 z-[90] flex items-center justify-center p-4"
+          style={{marginTop : "0"}}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

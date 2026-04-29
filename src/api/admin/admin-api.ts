@@ -1,7 +1,8 @@
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../axios-instance";
 import { toast } from "sonner";
-import { AdminOverviewData, AdminUsersResponse, GetUserDetailsResponse, ReportsData } from "../../types/admin/adminTypes";
+import { AdminOverviewData, AdminUsersResponse, GetUserDetailsResponse, ReportsData, ReportsTargetData } from "../../types/admin/adminTypes";
+import { PaginatedResponse } from "../restaurant/restaurant-api";
 
 // reports
 export async function getAdminReports() : Promise<ReportsData[]> {
@@ -86,6 +87,45 @@ export async function getAdminUserDetails(
     } else {
       toast.error("Unexpected error occurred");
     }
+    throw error;
+  }
+}
+// post reports
+export async function toogleReport(id:number) {
+  try{
+      const response = await axiosInstance.post(`Social/Toggle_Hide?id=${id}`);
+      toast.success(response?.data?.message || "changed successfully");
+    return response;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "changed failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}
+
+export async function getReportsByHidden(
+  pageNumber: number = 1,
+  pageSize: number = 6,
+  flag: boolean,
+): Promise<PaginatedResponse<ReportsTargetData>> {
+  try {
+    const response = await axiosInstance.get(
+      `Social/Reports?PageNumber=${pageNumber}&PageSize=${pageSize}&flag=${flag}`,
+    );
+    const result = response.data;
+    return {
+      data: result.data?.data || [],
+      totalCount: result.data?.totalCount || 0,
+      currentPage: result.data?.pageNumber || pageNumber,
+      pageSize: result.data?.pageSize || pageSize,
+    };
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "Failed to fetch reports data";
+    toast.error(errorMessage);
     throw error;
   }
 }

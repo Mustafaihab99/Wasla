@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import axiosInstance from "../axios-instance";
 import { AxiosError } from "axios";
-import { mainPostData, PaginationResponse, singleCommentData, toggleReactionData, UserPostsResponse } from "../../types/commuinty/community-types";
+import { mainPostData, makeReportData, PaginationResponse, singleCommentData, toggleReactionData, UserPostsResponse } from "../../types/commuinty/community-types";
 
 export async function AddPost(formData: FormData) {
   try {
@@ -220,6 +220,20 @@ export async function getPostByReact(
     toast.error(
       axiosError.response?.data?.message || "Failed to fetch posts"
     );
+    throw error;
+  }
+}
+
+export async function reportTarget(params: makeReportData) {
+  try{
+      const response = await axiosInstance.post("Social/Report" , params);
+      toast.success(response.data.message);
+    return response;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage =
+      axiosError.response?.data?.message || "report failed";
+    toast.error(errorMessage);
     throw error;
   }
 }

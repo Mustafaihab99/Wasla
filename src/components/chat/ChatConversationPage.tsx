@@ -14,6 +14,7 @@ import {
   useEditMessage,
   useGetChatConversation,
   useGetUserProfile,
+  useMarkasRead,
   useSendMessage,
 } from "../../hooks/chat/useChat";
 import { useChatHub } from "../../utils/singlr/useChatHub";
@@ -25,6 +26,7 @@ import { useAudioRecorder } from "../../hooks/chat/useAudioRecorder";
 import { AudioRecorderButton } from "./AudioRecordButton";
 import MessageBubble from "./MessageBubble";
 import { sameId } from "../../utils/singlr/useChatHub";
+import { formatLastSeen } from "../../utils/chatUtils";
 
 export default function ChatConversationPage() {
   const { t } = useTranslation();
@@ -89,10 +91,12 @@ export default function ChatConversationPage() {
   );
   const { mutate: editMsg } = useEditMessage(currentUserId, receiverId || "");
   const { mutate: delMsg } = useDeleteMessage(currentUserId, receiverId || "");
+  const { mutate: markAsRead } = useMarkasRead(currentUserId);
 
   const { sendTyping, sendStopTyping } = useChatHub({
     token,
     currentUserId,
+    activeChatUserId: receiverId,
     onTyping: (sid) => {
       if (sameId(sid, receiverId)) setIsTyping(true);
     },
@@ -121,6 +125,20 @@ export default function ChatConversationPage() {
       }, 100);
     }
   }, [keyboardHeight]);
+
+useEffect(() => {
+  if (!receiverId || !data?.pages) return;
+
+  const allMessages = data.pages.flatMap(p => p.messages?.data ?? []);
+  
+  const unreadMessages = allMessages.filter(
+    (msg: Message) => !msg.isMine && !msg.readAt
+  );
+
+  if (unreadMessages.length > 0) {
+    markAsRead(data.pages?.[0]?.chatId);
+  }
+}, [receiverId, data, markAsRead]);
 
   const handleTextChange = (val: string) => {
     setText(val);
@@ -222,8 +240,9 @@ export default function ChatConversationPage() {
             ) : isOnline ? (
               <p className="text-xs text-green-500">{t("chat.online")}</p>
             )
-          :
-          <></>}
+            :
+            <p className="text-xs text-dried">{formatLastSeen(profile?.lastSeen)}</p>
+          }
           </div>
         </button>
       </div>

@@ -541,6 +541,7 @@
     "EGP": "جنيه",
     "monthlyRevenue": "الإيرادات الشهرية",
     "revenue": "الإيراد",
+    "viewers" : "رسائل الزوار",
     "vieDe": "عرض التفاصيل",
     "userdet": "عرض المستخدم",
     "Back": "تراجع",
@@ -676,6 +677,7 @@
     "editPost": "تعديل المنشور",
     "deletePost": "حذف المنشور",
     "back": "العودة الى صفحة الادارة",
+    "report" : "الابلاغ",
     "settings": "الاعدادات",
     "language": "اللغة",
     "english": "الانجليزية",
@@ -998,7 +1000,9 @@
     "myOrders": "طلباتي",
     "manageYourOrdersAndReservations": "إدارة طلبات الدليفري وحجوزات الترابيزات",
     "deliveryOrders": "طلبات الدليفري",
-    "tableReservations": "حجوزات الترابيزات"
+    "tableReservations": "حجوزات الترابيزات",
+    "toPreparing" : "الى التحضير",
+    "toDelivered" : "تم التوصيل"
   },
   "validation": {
     "required": "هذا الحقل مطلوب",
@@ -1027,5 +1031,20 @@
     "webNoticeDesc": "يمكنك تسجيل الدخول من هنا، لكن إدارة الرحلات ومتابعة الأرباح ولوحة التحكم متاحة فقط من خلال تطبيق الموبايل.",
     "downloadApp": "حمّل التطبيق",
     "alreadyHaveApp": "الرجوع لصفحة التسجيل"
+  },
+  "report": {
+    "title": "الإبلاغ",
+    "subtitle": "لماذا تريد الإبلاغ عن هذا؟",
+    "placeholder": "اكتب تفاصيل إضافية...",
+    "submit": "إرسال",
+    "submitting": "جاري الإرسال...",
+    "reasons": {
+      "spam": "محتوى مزعج",
+      "harassment": "تحرش",
+      "hateSpeech": "خطاب كراهية",
+      "falseInfo": "معلومات مضللة",
+      "violence": "عنف",
+      "other": "أخرى"
+    }
   }
 }

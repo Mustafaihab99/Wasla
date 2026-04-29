@@ -549,6 +549,7 @@
     "resDet": "Resident Details",
     "docDet": "Doctor Details",
     "CV": "CV",
+    "viewers" : "Viewers Messages",
     "basicInfo": "basic Info",
     "serv": "Services Overview",
     "serviceDashboard": "Service Providers Overview",
@@ -698,6 +699,7 @@
     "close": "Close",
     "savedPosts": "Saved Posts",
     "Deleting...": "Deleting...",
+    "report" : "Report",
     "cancel" : "Cancel",
     "Delete": "Delete",
     "notify": "Notifications",
@@ -1002,7 +1004,9 @@
     "preparing": "Preparing",
     "onWay": "On the way",
     "delivered": "Delivered",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "toPreparing" : "To Preparing",
+    "toDelivered" : "To Delivered"
     },
   "validation": {
     "required": "This field is required",
@@ -1031,5 +1035,20 @@
     "webNoticeDesc": "You can log in here, but managing trips, tracking earnings, and accessing your dashboard are only available through our mobile app.",
     "downloadApp": "Download the App",
     "alreadyHaveApp": "Back to Login"
+  },
+    "report": {
+    "title": "Report",
+    "subtitle": "Why are you reporting this?",
+    "placeholder": "Write more details...",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "reasons": {
+      "spam": "Spam",
+      "harassment": "Harassment",
+      "hateSpeech": "Hate speech",
+      "falseInfo": "False information",
+      "violence": "Violence",
+      "other": "Other"
+    }
   }
 }

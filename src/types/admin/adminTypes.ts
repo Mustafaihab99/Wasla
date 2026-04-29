@@ -124,3 +124,7 @@ export interface GetUserDetailsResponse {
   message: string;
   data: UserDetailsData;
 }
+
+export interface ReportsTargetData{
+  id:number
+}

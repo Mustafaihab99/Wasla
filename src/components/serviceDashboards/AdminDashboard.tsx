@@ -10,6 +10,7 @@ import {
   FaSnowflake,
 } from "react-icons/fa";
 import {
+  FaCommentSms,
   FaUserShield,
   FaUsers,
 } from "react-icons/fa6";
@@ -71,6 +72,11 @@ export default function AdminDashboard() {
       label: t("admin.serv"),
       link: "/admin/services-overview",
       icon: <GrServices />,
+    },
+    {
+      label: t("admin.viewers"),
+      link: "/admin/viewers-messages",
+      icon: <FaCommentSms />,
     },
     {
       label: t("admin.reports"),

@@ -17,20 +17,25 @@ import DeleteConfirmModal from "./Modal/DeleteConfirmModal";
 import EditPostModal from "./Modal/EditPostModal";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
+import ReportModal from "./Modal/ReportModal";
 
 Modal.setAppElement("#root");
 
 function OptionsMenu({
   t,
+  isOwner,
   onEdit,
   onDelete,
+  onReport,
   isDeleting,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   t: any;
-  onEdit: () => void;
-  onDelete: () => void;
-  isDeleting: boolean;
+  isOwner: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  onReport?: () => void;
+  isDeleting?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -54,25 +59,41 @@ function OptionsMenu({
       </button>
       {open && (
         <div className="absolute right-0 top-full mt-1 w-52 bg-black border border-[#2f3336] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.8)] overflow-hidden z-50">
-          <button
-            onClick={() => {
-              setOpen(false);
-              onEdit();
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3.5 text-[15px] font-medium text-white hover:bg-white/5 transition">
-            <FaPencil className="w-4 h-4 text-gray-400" />{" "}
-            {t("common.editPost")}
-          </button>
-          <div className="h-px bg-[#2f3336]" />
-          <button
-            onClick={() => {
-              setOpen(false);
-              onDelete();
-            }}
-            disabled={isDeleting}
-            className="w-full flex items-center gap-3 px-4 py-3.5 text-[15px] font-bold text-red-500 hover:bg-red-500/10 transition disabled:opacity-50">
-            <FaTrash className="w-4 h-4" /> {t("common.deletePost")}
-          </button>
+          {isOwner ? (
+            <>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  onEdit?.();
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-[15px] font-medium text-white hover:bg-white/5 transition">
+                <FaPencil className="w-4 h-4 text-gray-400" />
+                {t("common.editPost")}
+              </button>
+
+              <div className="h-px bg-[#2f3336]" />
+
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  onDelete?.();
+                }}
+                disabled={isDeleting}
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-[15px] font-bold text-red-500 hover:bg-red-500/10 transition disabled:opacity-50">
+                <FaTrash className="w-4 h-4" />
+                {t("common.deletePost")}
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => {
+                setOpen(false);
+                onReport?.();
+              }}
+              className="w-full flex items-center gap-3 px-4 py-3.5 text-[15px] font-bold text-red-500 hover:bg-red-500/10 transition">
+              🚩 {t("common.report")}
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -127,7 +148,8 @@ export default function PostCard({
   const [isSaved, setIsSaved] = useState(post.isSaved);
   const [reactCount, setReactCount] = useState(post.numberofReacts);
   const [saveCount, setSaveCount] = useState(post.numberofSaves);
-  const [commentCount,] = useState(post.numberofComments);
+  const [commentCount] = useState(post.numberofComments);
+  const [showReport, setShowReport] = useState(false);
 
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -194,16 +216,18 @@ export default function PostCard({
                 · {timeAgo}
               </span>
             </div>
-            {isOwner && (
+            {
               <div className="opacity-0 group-hover:opacity-100 transition flex-shrink-0">
                 <OptionsMenu
                   t={t}
+                  isOwner={isOwner}
                   onEdit={() => setShowEdit(true)}
                   onDelete={() => setShowDelete(true)}
+                  onReport={() => setShowReport(true)}
                   isDeleting={isDeleting}
                 />
               </div>
-            )}
+            }
           </div>
 
           {post.content && (
@@ -289,7 +313,7 @@ export default function PostCard({
           }
         />
       )}
-
+      
       <Modal
         isOpen={lightboxOpen}
         onRequestClose={() => setLightboxOpen(false)}
@@ -302,6 +326,15 @@ export default function PostCard({
           className="w-full h-[80vh] object-contain rounded-xl"
         />
       </Modal>
+      {showReport && (
+        <ReportModal
+          isOpen={showReport}
+          onClose={() => setShowReport(false)}
+          targetId={post.postId}
+          targetType={1}
+          userId={currentUserId}
+        />
+      )}
     </>
   );
 }

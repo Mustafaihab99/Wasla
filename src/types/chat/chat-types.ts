@@ -64,6 +64,7 @@ export interface ChatConversation {
   chatId: number;
   senderId: string;
   receiverId: string;
+  lastSeenReciver : string;
   messages: PaginationResponse<Message>;
 }
 

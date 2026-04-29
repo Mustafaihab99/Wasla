@@ -74,3 +74,9 @@ export interface singleCommentData{
     createdAt: string,
     updatedAt: string
 }
+export interface makeReportData{
+    userId: string,
+    reason: string,
+    targetId: number,
+    targetType: number
+}

@@ -3,35 +3,30 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiEdit, FiSearch, FiUser, FiTrash2 } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
-import { useQueryClient } from "@tanstack/react-query";
-import { chatKeys, useGetRecentChats } from "../../hooks/chat/useChat";
+import { useGetRecentChats } from "../../hooks/chat/useChat";
 import { CHAT_ROUTES } from "../../routes/ChatRoutes";
 import { formatChatTime } from "../../utils/chatUtils";
 import ChatListSkeleton from "./ChatListSkeleton";
-import { useDeleteChat, useMarkasRead } from "../../hooks/chat/useChat";
+import { useDeleteChat } from "../../hooks/chat/useChat";
 import { RecentChat } from "../../types/chat/chat-types";
 import { sameId, useChatHub } from "../../utils/singlr/useChatHub";
 
 export default function ChatList() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const currentUserId = sessionStorage.getItem("user_id") || "";
   const myPhoto = sessionStorage.getItem("profilePhoto") || "";
   const token = localStorage.getItem("auth_token") || "";
   const [search, setSearch] = useState("");
 
-  // ✅ إصلاح ١: تشغيل useChatHub هنا في ChatList
-  // عشان لما المستخدم في الـ list يستقبل الرسايل الجديدة فوراً
   useChatHub({
     token,
     currentUserId,
-    // مش محتاجين callbacks هنا، الـ hub نفسه بيحدث الـ cache تلقائياً
+    activeChatUserId: undefined,
   });
 
   const { data, isLoading } = useGetRecentChats(currentUserId);
 
-  // الـ API ممكن ترجع array مباشرة أو { data: [] }
   const chats: RecentChat[] = Array.isArray(data)
     ? data
     : (data as any)?.data ?? [];
@@ -41,44 +36,16 @@ export default function ChatList() {
   );
 
   const { mutate: deleteChat } = useDeleteChat(currentUserId);
-  const { mutate: markAsRead } = useMarkasRead(currentUserId);
 
   const handleChatClick = (chat: RecentChat) => {
-    const otherUserId = sameId(chat.senderId, currentUserId)
-      ? chat.receiverId
-      : chat.senderId;
+  const otherUserId = sameId(chat.senderId, currentUserId)
+    ? chat.receiverId
+    : chat.senderId;
 
-    if (!otherUserId) {
-      console.error("ChatList: otherUserId missing", { chat, currentUserId });
-      return;
-    }
+  if (!otherUserId) return;
 
-    if (!chat.isMine && chat.unreadMessageCount > 0) {
-      markAsRead(chat.chatId, {
-        onSuccess: () => {
-          queryClient.setQueryData(
-            chatKeys.recentChats(currentUserId),
-            (oldData: any) => {
-              if (!oldData) return oldData;
-              const arr: RecentChat[] = Array.isArray(oldData)
-                ? oldData
-                : oldData?.data ?? [];
-              const updated = arr.map((c: RecentChat) =>
-                c.chatId === chat.chatId ? { ...c, unreadMessageCount: 0 } : c,
-              );
-              return Array.isArray(oldData) ? updated : { ...oldData, data: updated };
-            },
-          );
-          navigate(CHAT_ROUTES.conversation(otherUserId));
-        },
-        onError: () => {
-          navigate(CHAT_ROUTES.conversation(otherUserId));
-        },
-      });
-    } else {
-      navigate(CHAT_ROUTES.conversation(otherUserId));
-    }
-  };
+  navigate(CHAT_ROUTES.conversation(otherUserId));
+};
 
   return (
     <div className="flex flex-col h-full bg-background">

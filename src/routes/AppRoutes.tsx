@@ -148,6 +148,7 @@ export default function AppRoutes() {
           <Route index element={<Navigate to="overview" replace />} />
           <Route path="overview" element={<AdminOverview />} />
           <Route path="reports" element={<AdminReports />} />
+          <Route path="viewers-messages" element={<AdminReports />} />
           <Route path="manage-users" element={<AdminManageUsers />} />
           <Route path="services-overview" element={<AdminServiceDashboard />} />
           <Route path="manage-users/:userId" element={<AdminViewDetails />} />
