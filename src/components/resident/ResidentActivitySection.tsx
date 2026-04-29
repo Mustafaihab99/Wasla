@@ -46,6 +46,7 @@ export default function ResidentActivitySection({ userId }: Props) {
                     import.meta.env.VITE_USER_IMAGE + item.image
                   }
                   alt={item.name}
+                  loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                 />
               </div>

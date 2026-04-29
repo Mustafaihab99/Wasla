@@ -111,6 +111,7 @@ export default function DoctorReviews() {
                       src={
                         import.meta.env.VITE_USER_IMAGE + review.userImageUrl
                       }
+                      loading="lazy"
                       alt={review.reviewerName}
                       className="w-12 h-12 rounded-full object-cover border"
                     />

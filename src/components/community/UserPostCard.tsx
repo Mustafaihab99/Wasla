@@ -192,6 +192,7 @@ export default function UserPostCard({
           <img
             src={profilePhoto}
             alt={userName}
+            loading="lazy"
             className="w-10 h-10 rounded-full object-cover hover:opacity-90 transition"
           />
         </button>
@@ -303,7 +304,8 @@ export default function UserPostCard({
           <img
             src={lightboxImg}
             className="max-h-[90vh] max-w-[95vw] rounded-2xl object-contain"
-            alt=""
+            alt="light box"
+            loading="lazy"
           />
         </div>
       )}

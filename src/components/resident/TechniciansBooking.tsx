@@ -57,7 +57,7 @@ export default function TechBookings() {
   if (!bookings || bookings.length === 0)
     return (
       <div className="flex flex-col items-center mt-20 gap-4">
-        <img src={noData} className="w-48 opacity-70" />
+        <img src={noData} loading="lazy" className="w-48 opacity-70" />
         <p className="text-gray-400">{t("tech.noBookings")}</p>
       </div>
     );
@@ -74,6 +74,7 @@ export default function TechBookings() {
             <div className="flex justify-center sm:justify-start">
               <img
                 src={b.technicianImage}
+                loading="lazy"
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-primary"
               />
             </div>

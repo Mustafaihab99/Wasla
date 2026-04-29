@@ -74,6 +74,7 @@ export default function AddCommentInput({
             <img
               src={preview}
               alt="preview"
+              loading="lazy"
               className="h-24 rounded-xl object-cover border border-border"
             />
             <button

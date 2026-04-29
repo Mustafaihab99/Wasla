@@ -42,9 +42,9 @@ export default function GallerySection() {
             className="overflow-hidden rounded-2xl shadow-lg">
             <img
               src={src}
+              loading="lazy"
               alt={`Gallery ${i}`}
               className="w-full h-full object-cover"
-              loading="lazy"
             />
           </motion.div>
         ))}

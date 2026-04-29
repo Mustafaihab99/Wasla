@@ -53,6 +53,7 @@ export default function NotificationCard({
         {/* Image */}
         <img
           src={notification.imageUrl ?? incomeImage}
+          loading="lazy"
           className="w-12 h-12 rounded-full object-cover border border-border"
         />
 

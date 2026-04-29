@@ -37,7 +37,7 @@ export default function FooterSection() {
         {/* logo */}
         <motion.div variants={fadeInUp} className="space-y-4">
           <div className="flex items-center gap-2">
-          <img src={logo} alt="logo" className="w-10 h-10 hover:cursor-pointer" onClick={()=> navigate("/")} />  
+          <img src={logo} alt="logo" loading="lazy" className="w-10 h-10 hover:cursor-pointer" onClick={()=> navigate("/")} />  
           <h3 className="text-2xl font-extrabold text-primary">Wasla</h3>
           </div>
           <p className="text-muted-foreground text-sm leading-relaxed">

@@ -63,6 +63,7 @@ export default function UserProfileChatPage() {
           <img
             src={profile.profileImage}
             alt={profile.name || ""}
+            loading="lazy"
             className="w-28 h-28 rounded-full object-cover ring-4 ring-primary/20"
           />
         ) : (

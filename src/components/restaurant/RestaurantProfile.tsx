@@ -27,7 +27,7 @@ export default function RestaurantProfile() {
   if (!data)
     return (
       <div className="flex justify-center mt-10">
-        <img src={noData} className="w-64" />
+        <img src={noData} loading="lazy" className="w-64" />
       </div>
     );
 
@@ -47,6 +47,7 @@ export default function RestaurantProfile() {
           <div className="flex flex-col md:flex-row gap-6 items-center -mt-16">
             <img
               src={data.profile}
+              loading="lazy"
               className="w-32 h-32 rounded-xl object-cover border-4 border-background"
             />
 
@@ -105,6 +106,7 @@ export default function RestaurantProfile() {
                   <img
                     key={i}
                     src={img}
+                    loading="lazy"
                     onClick={() => setPreviewImage(img)}
                     className="w-full h-28 object-cover rounded-lg cursor-pointer hover:scale-105 transition"
                   />
@@ -133,6 +135,7 @@ export default function RestaurantProfile() {
           onClick={() => setPreviewImage(null)}>
           <img
             src={previewImage}
+            loading="lazy"
             className="max-w-[90%] max-h-[90%] rounded-xl shadow-2xl"
           />
         </div>

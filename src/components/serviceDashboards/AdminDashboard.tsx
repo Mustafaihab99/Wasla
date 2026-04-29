@@ -110,6 +110,7 @@ export default function AdminDashboard() {
             <img
               src={logo}
               alt="Logo"
+              loading="lazy"
               className={`w-10 h-10 ${sidebarOpen ? "block" : "hidden"}`}
             />
             {sidebarOpen && (
@@ -217,7 +218,7 @@ export default function AdminDashboard() {
                 </button>
 
                 <div className="flex items-center gap-2 mb-10 mt-6">
-                  <img src={logo} className="w-10 h-10" />
+                  <img src={logo} loading="lazy" className="w-10 h-10" />
                   <h3 className="text-lg font-semibold">{t("admin.panel")}</h3>
                 </div>
 

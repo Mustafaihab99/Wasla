@@ -58,6 +58,7 @@ export default function ChatList() {
             <img
               src={myPhoto}
               alt="me"
+              loading="lazy"
               className="w-10 h-10 rounded-full object-cover ring-2 ring-primary/30"
             />
           ) : (

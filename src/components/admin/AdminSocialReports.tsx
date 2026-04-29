@@ -165,6 +165,7 @@ export default function AdminSocialReports() {
                   {item.targetType === 2 && item.image && (
                     <img
                       src={item.image}
+                      loading="lazy"
                       onClick={() => setPreview(item.image)}
                       className="w-24 h-24 object-cover rounded-lg border cursor-pointer hover:scale-105 transition"
                     />
@@ -192,6 +193,7 @@ export default function AdminSocialReports() {
                                 : "/fallback-user.png"
                             }
                             alt={r.userNameReport || "user"}
+                            loading="lazy"
                             className="w-7 h-7 rounded-full object-cover border"
                             onError={(e) => {
                               (e.currentTarget as HTMLImageElement).src =
@@ -271,6 +273,7 @@ export default function AdminSocialReports() {
           <div onClick={(e) => e.stopPropagation()} className="relative">
             <img
               src={preview}
+              loading="lazy"
               className="max-w-[90vw] max-h-[90vh] rounded-xl shadow-xl"
             />
             <button

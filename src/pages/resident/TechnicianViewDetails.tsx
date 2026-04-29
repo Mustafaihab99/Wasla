@@ -35,12 +35,13 @@ export default function TechnicianViewDetails() {
       <div
         className="max-w-6xl mx-auto p-6 space-y-8"
         style={{ direction: "ltr" }}>
-        {/* 🔥 HEADER CARD */}
+        {/*  HEADER CARD */}
         <div className="bg-background border rounded-3xl shadow-sm p-6 flex flex-col md:flex-row gap-6 items-center">
           {/* IMAGE */}
           <div className="relative">
             <img
               src={profile?.profilePhotoUrl}
+              loading="lazy"
               className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-primary/20"
             />
 
@@ -121,6 +122,7 @@ export default function TechnicianViewDetails() {
                   {type === "image" && (
                     <img
                       src={doc}
+                      loading="lazy"
                       className="w-full h-36 object-cover rounded-lg"
                     />
                   )}

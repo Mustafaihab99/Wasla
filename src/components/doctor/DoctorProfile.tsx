@@ -19,7 +19,7 @@ export default function DoctorProfile() {
   if (!data)
     return (
       <div>
-        <img src={noData} alt="nodata" />
+        <img src={noData} alt="nodata" loading="lazy" />
       </div>
     );
 
@@ -56,6 +56,7 @@ export default function DoctorProfile() {
           <motion.img
             src={import.meta.env.VITE_USER_IMAGE + data.image}
             alt="Doctor"
+            loading="lazy"
             className="w-36 h-36 rounded-full object-cover border border-border shadow-md"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}

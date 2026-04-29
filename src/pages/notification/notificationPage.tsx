@@ -1,7 +1,6 @@
 import { useState } from "react";
 import useGetNotifications from "../../hooks/notifications/useGetNotifications";
 import NotificationCard from "../../components/notifications/NotificationCard";
-import useMarkAllAsRead from "../../hooks/notifications/useMarkAllAsRead";
 import { EmptyNotifications } from "../../components/notifications/EmptyNotification";
 import { useTranslation } from "react-i18next";
 
@@ -12,8 +11,7 @@ export default function NotificationsPage() {
   const { t } = useTranslation();
 
   const { data, isLoading } = useGetNotifications(page, pageSize, userId);
-  const { mutate: markAll, isPending } = useMarkAllAsRead();
-
+  
   const totalPages = Math.ceil((data?.totalCount || 0) / pageSize);
 
   if (isLoading) {
@@ -35,16 +33,6 @@ export default function NotificationsPage() {
         <h2 className="text-xl font-bold text-foreground">
           {t("notification.title")}
         </h2>
-
-        {data!.data.length > 0 && (
-          <button
-            onClick={() => markAll(userId)}
-            disabled={isPending}
-            className="text-sm text-primary hover:underline"
-          >
-            {t("notification.markAll")}
-          </button>
-        )}
       </div>
 
       {/* List */}

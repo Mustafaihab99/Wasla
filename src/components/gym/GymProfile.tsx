@@ -22,7 +22,7 @@ export default function GymProfile() {
     return (
       <div className="flex justify-center mt-10">
         {" "}
-        <img src={noData} alt="nodata" className="w-64" />{" "}
+        <img src={noData} loading="lazy" alt="nodata" className="w-64" />{" "}
       </div>
     );
   }
@@ -48,6 +48,7 @@ export default function GymProfile() {
             style={{ direction: "ltr" }}>
             <img
               src={data.profilePhoto}
+              loading="lazy"
               className="w-40 h-40 rounded-xl object-cover border-4 border-background shadow-lg"
             />
 
@@ -132,6 +133,7 @@ export default function GymProfile() {
                   <motion.img
                     key={index}
                     src={photo}
+                    loading="lazy"
                     className="w-full h-36 object-cover rounded-lg shadow hover:scale-105 transition"
                   />
                 ))}

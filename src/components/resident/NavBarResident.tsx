@@ -86,7 +86,8 @@ export default function ResidentNavBar() {
 
       {/* Logo */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-2">
-        <img src={logo} alt="Logo" className="w-10 h-10" />
+        <img src={logo}
+        loading="lazy" alt="Logo" className="w-10 h-10" />
         <h3 className="text-lg font-semibold text-foreground">Wasla</h3>
       </motion.div>
 
@@ -214,7 +215,7 @@ export default function ResidentNavBar() {
                 </button>
 
                 <div className="flex items-center gap-2 mb-10 mt-6">
-                  <img src={logo} className="w-10 h-10" />
+                  <img src={logo} loading="lazy" className="w-10 h-10" />
                   <h3 className="text-lg font-semibold">Wasla</h3>
                 </div>
 

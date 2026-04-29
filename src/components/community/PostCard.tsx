@@ -200,6 +200,7 @@ export default function PostCard({
           <img
             src={post.profilePhoto}
             alt={post.userName}
+            loading="lazy"
             className="w-10 h-10 rounded-full object-cover hover:opacity-90 transition"
           />
         </button>
@@ -323,6 +324,7 @@ export default function PostCard({
         <img
           src={lightboxImg}
           alt="preview"
+          loading="lazy"
           className="w-full h-[80vh] object-contain rounded-xl"
         />
       </Modal>

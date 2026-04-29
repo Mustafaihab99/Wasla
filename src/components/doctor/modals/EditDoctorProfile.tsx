@@ -91,7 +91,7 @@ export default function NewEditDoctorProfileModal({
           <label htmlFor="image-upload" className="cursor-pointer relative group">
             <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-primary flex items-center justify-center bg-muted">
               {previewImage ? (
-                <img src={previewImage} alt="preview" className="w-full h-full object-cover" />
+                <img src={previewImage} alt="preview" loading="lazy" className="w-full h-full object-cover" />
               ) : (
                 <FaCamera className="text-gray-400 w-10 h-10" />
               )}

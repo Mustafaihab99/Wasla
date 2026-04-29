@@ -88,6 +88,7 @@ function InlineEdit({
           <img
             src={displayPreview}
             alt="preview"
+            loading="lazy"
             className="h-24 rounded-2xl object-cover border border-[#2f3336]"
           />
           <button
@@ -253,6 +254,7 @@ export default function CommentCard({ comment, postId, currentUserId }: Props) {
         <div className="flex flex-col items-center gap-1 flex-shrink-0">
           <img
             src={comment.userProfile}
+            loading="lazy"
             alt={comment.userName}
             className="w-10 h-10 rounded-full object-cover ring-1 ring-[#2f3336]"
           />
@@ -304,6 +306,7 @@ export default function CommentCard({ comment, postId, currentUserId }: Props) {
                   <img
                     src={comment.file}
                     alt="Files"
+                    loading="lazy"
                     className="w-full object-cover max-h-60 hover:scale-[1.02] transition"
                   />
                 </div>

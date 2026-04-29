@@ -90,7 +90,9 @@ export default function DoctorServiceManage() {
 
       {!isLoading && data && data.length === 0 && (
         <div className="flex justify-center mt-10">
-          <img src={noData} alt="no data found" className="opacity-80" />
+          <img src={noData} alt="no data found"
+           loading="lazy"
+           className="opacity-80" />
         </div>
       )}
       {!isLoading && data && data.length > 0 && (

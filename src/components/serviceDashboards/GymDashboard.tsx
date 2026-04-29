@@ -125,6 +125,7 @@ export default function GymDashboard() {
             <img
               src={logo}
               alt="Logo"
+              loading="lazy"
               className={`w-10 h-10 ${sidebarOpen ? "block" : "hidden"}`}
             />
             {sidebarOpen && (

@@ -91,6 +91,7 @@ export default function ServiceBookTechnician() {
                 <div className="relative h-52">
                   <img
                     src={tech.imageUrl}
+                    loading="lazy"
                     className="w-full h-full object-cover"
                   />
 
@@ -174,7 +175,7 @@ export default function ServiceBookTechnician() {
         </>
       ) : (
         <div className="flex justify-center mt-10">
-          <img src={noData} />
+          <img src={noData} loading="lazy" />
         </div>
       )}
     </div>

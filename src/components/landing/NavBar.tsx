@@ -79,7 +79,7 @@ export default function NavBar() {
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}>
-        <img src={logo} alt="Logo" className="w-10 h-10" />
+        <img src={logo} loading="lazy" alt="Logo" className="w-10 h-10" />
         <h3 className="text-lg font-semibold text-foreground">Wasla</h3>
       </motion.div>
 
@@ -201,7 +201,7 @@ export default function NavBar() {
 
                 {/* Logo */}
                 <div className="flex items-center gap-2 mb-8 mt-8">
-                  <img src={logo} alt="Logo" className="w-10 h-10" />
+                  <img src={logo} loading="lazy" alt="Logo" className="w-10 h-10" />
                   <h3 className="text-lg font-semibold text-foreground">Wasla</h3>
                 </div>
 

@@ -128,6 +128,7 @@ export default function ReviewSection({ doctorId, currentUserId }: Props) {
                   <div className="flex flex-col gap-3 md:flex-row md:gap-0 justify-between items-start">
                     <div className="flex gap-4 items-center">
                       <img
+                      loading="lazy"
                         src={
                           import.meta.env.VITE_USER_IMAGE + review.userImageUrl
                         }

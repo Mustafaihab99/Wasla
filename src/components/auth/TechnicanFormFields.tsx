@@ -104,6 +104,7 @@ export default function TechnicianFormFields({ email }: { email: string }) {
                   {previewImage ? (
                     <img
                       src={previewImage}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   ) : (

@@ -133,6 +133,7 @@ export default function AdminServiceDashboard() {
               <div className="flex items-center gap-3">
                 <img
                   src={getImage(card.item)}
+                  loading="lazy"
                   className="w-16 h-16 rounded-xl object-cover"
                 />
 

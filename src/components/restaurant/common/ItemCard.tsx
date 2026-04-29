@@ -39,6 +39,7 @@ const categoryName = i18next.language == "en" ?  category?.name?.english : categ
             <img
               src={item.imageUrl}
               alt={item.nameValue}
+              loading="lazy"
               className="w-full h-full object-cover"
             />
           ) : (

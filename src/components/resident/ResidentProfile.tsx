@@ -47,6 +47,7 @@ export default function ResidentProfile() {
           <motion.img
             initial={{ opacity: 0, scale: 0.7 }}
             animate={{ opacity: 1, scale: 1 }}
+            loading="lazy"
             src={import.meta.env.VITE_USER_IMAGE + data?.imageUrl}
             className="w-36 h-36 rounded-full border-4 border-primary shadow-xl object-cover"
           />

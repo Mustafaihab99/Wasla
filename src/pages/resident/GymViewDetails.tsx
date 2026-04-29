@@ -89,6 +89,7 @@ export default function GymViewDetails() {
           <div className="w-40 h-40 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-primary/30 shadow-md">
             <img
               src={profile?.profilePhoto}
+              loading="lazy"
               alt={profile?.businessName}
               className="w-full h-full object-cover"
             />
@@ -171,6 +172,7 @@ export default function GymViewDetails() {
                 className="overflow-hidden rounded-2xl border border-border shadow-sm bg-background">
                 <img
                   src={photo}
+                  loading="lazy"
                   alt={`gym-photo-${idx}`}
                   className="w-full h-36 object-cover"
                 />
@@ -210,6 +212,7 @@ export default function GymViewDetails() {
                       alt={
                         isArabic ? service.name.arabic : service.name.english
                       }
+                      loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                     />
                     <div className="absolute inset-0 bg-black/30" />
@@ -277,7 +280,7 @@ export default function GymViewDetails() {
           </div>
         ) : (
           <div className="flex justify-center mt-10 col-span-full">
-            <img src={noData} alt="no data found" className="w-72 opacity-80" />
+            <img src={noData} loading="lazy" alt="no data found" className="w-72 opacity-80" />
           </div>
         )}
       </div>

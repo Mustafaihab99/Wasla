@@ -78,6 +78,7 @@ export default function ResidentFormFields({ email }: { email: string }) {
                     <img
                       src={previewImage}
                       alt="profile preview"
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   ) : (

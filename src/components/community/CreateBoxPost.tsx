@@ -63,6 +63,7 @@ export default function CreatePostBox({ currentUserId }: CreatePostBoxProps) {
          style={{ background: "var(--background)", color: "var(--foreground)" }}>
       <img
         src={myImage!}
+        loading="lazy"
         className="w-10 h-10 rounded-full object-cover flex-shrink-0"
         alt={t("common.myAvatar")}
       />
@@ -98,6 +99,7 @@ export default function CreatePostBox({ currentUserId }: CreatePostBoxProps) {
                 ) : (
                   <img
                     src={preview}
+                    loading="lazy"
                     className="w-full max-h-60 object-cover"
                     alt="preview"
                   />

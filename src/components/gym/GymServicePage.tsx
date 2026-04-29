@@ -55,7 +55,7 @@ export default function GymServicesPage() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {data?.length === 0 ? (
           <div className="flex justify-center mt-10 col-span-full">
-            <img src={noData} alt="no data found" className="w-72 opacity-80" />
+            <img src={noData} loading="lazy" alt="no data found" className="w-72 opacity-80" />
           </div>
         ) : (
           data?.map((service) => {
@@ -83,6 +83,7 @@ export default function GymServicesPage() {
                 <div className="relative h-44 overflow-hidden">
                   <img
                     src={import.meta.env.VITE_GYM_IMAGE + service.photoUrl}
+                    loading="lazy"
                     alt={isArabic ? service.name.arabic : service.name.english}
                     className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                   />

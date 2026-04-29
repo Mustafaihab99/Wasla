@@ -97,6 +97,7 @@ export default function GymFormFields({ email }: { email: string }) {
                   {previewImage ? (
                     <img
                       src={previewImage}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -238,6 +239,7 @@ export default function GymFormFields({ email }: { email: string }) {
                   <div key={index} className="relative">
                     <img
                       src={src}
+                      loading="lazy"
                       className="w-20 h-20 object-cover rounded-lg border"
                     />
                     <button

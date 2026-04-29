@@ -47,6 +47,7 @@ export default function AboutSection() {
 
               <img
                 src={communityImage}
+                loading="lazy"
                 alt="Community connection"
                 className="relative w-full h-full object-cover rounded-3xl shadow-2xl border border-border 
                 group-hover:scale-[1.03] transition-transform duration-700 ease-out"

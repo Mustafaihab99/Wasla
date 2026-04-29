@@ -53,6 +53,7 @@ export default function AdminViewDetails() {
               <div className="w-28 h-28 rounded-2xl overflow-hidden border-4 border-primary/20 shadow-lg">
                 {userBase.profilePhoto ? (
                   <img
+                  loading="lazy"
                     src={import.meta.env.VITE_USER_IMAGE + userBase.profilePhoto}
                     className="w-full h-full object-cover"
                   />
@@ -221,6 +222,7 @@ function ImageGrid({ images = [] }: { images: string[] }) {
       {images.map((img, i) => (
         <img
           key={i}
+          loading="lazy"
           src={import.meta.env.VITE_USER_IMAGE + img}
           className="h-28 w-full object-cover rounded-lg border"
         />

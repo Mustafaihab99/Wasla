@@ -45,6 +45,7 @@ shadow-2xl z-50
             <div className="flex items-center gap-2">
               <img
                 src={item.imageUrl}
+                loading="lazy"
                 className="w-12 h-12 sm:w-14 sm:h-14 rounded object-cover"
               />
 

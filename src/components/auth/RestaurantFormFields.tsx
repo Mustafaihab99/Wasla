@@ -85,7 +85,7 @@ export default function RestaurantForm({ email }: { email: string }) {
               <label className="cursor-pointer group">
                 <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-primary flex items-center justify-center bg-muted">
                   {preview ? (
-                    <img src={preview} className="w-full h-full object-cover" />
+                    <img src={preview} className="w-full h-full object-cover" loading="lazy" />
                   ) : (
                     <FaCamera className="text-gray-400 w-8 h-8 group-hover:text-primary transition" />
                   )}
@@ -240,6 +240,7 @@ export default function RestaurantForm({ email }: { email: string }) {
                   <div key={index} className="relative">
                     <img
                       src={src}
+                      loading="lazy"
                       className="w-20 h-20 object-cover rounded-lg border"
                     />
                     <button

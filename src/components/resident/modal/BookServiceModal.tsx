@@ -300,6 +300,7 @@ export default function BookServiceModal({
                       <img
                         src={img.preview}
                         alt="preview"
+                        loading="lazy"
                         className="w-full h-24 object-cover"
                       />
 

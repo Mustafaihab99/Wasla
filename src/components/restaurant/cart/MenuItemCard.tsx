@@ -42,6 +42,7 @@ const handleAddToCart = () => {
   <img
     src={item.imageUrl}
     alt={item.name}
+    loading="lazy"
     className="w-full sm:w-24 h-40 sm:h-24 object-cover rounded-lg"
   />
 

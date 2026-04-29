@@ -30,7 +30,7 @@ export default function TechnicianProfile() {
   if (!data) {
     return (
       <div className="flex justify-center mt-10">
-        <img src={noData} className="w-64" />
+        <img src={noData} loading="lazy" className="w-64" />
       </div>
     );
   }
@@ -61,6 +61,7 @@ export default function TechnicianProfile() {
           <div className="flex flex-col md:flex-row gap-8 items-center -mt-20">
             <img
               src={data.profilePhotoUrl}
+              loading="lazy"
               className="w-40 h-40 rounded-xl object-cover border-4 border-background shadow-lg"
             />
 

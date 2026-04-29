@@ -100,6 +100,7 @@ export default function RestaurantsPage() {
                 <div className="relative h-52 overflow-hidden">
                   <img
                     src={res.profile}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                   />
 
@@ -189,7 +190,7 @@ export default function RestaurantsPage() {
         </>
       ) : (
         <div className="flex justify-center mt-10">
-          <img src={noData} className="w-60 opacity-80" />
+          <img src={noData} loading="lazy" className="w-60 opacity-80" />
         </div>
       )}
     </div>

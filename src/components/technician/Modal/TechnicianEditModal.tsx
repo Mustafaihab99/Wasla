@@ -96,6 +96,7 @@ export default function EditTechnicianProfileModal({
                     <label className="cursor-pointer relative">
                       <img
                         src={preview || ""}
+                        loading="lazy"
                         className="w-28 h-28 rounded-full object-cover border-2 border-primary shadow-md"
                       />
                       <input

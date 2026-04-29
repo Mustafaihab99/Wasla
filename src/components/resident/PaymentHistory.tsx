@@ -52,7 +52,7 @@ export default function PaymentHistory() {
       {/* EMPTY */}
       {!isLoading && !data?.length && (
         <div className="flex flex-col items-center justify-center py-20 gap-6">
-          <img src={noData} className="w-40 opacity-80"/>
+          <img src={noData} loading="lazy" className="w-40 opacity-80"/>
           <p className="text-gray-500 text-lg">{t("payment.noPayments")}</p>
         </div>
       )}

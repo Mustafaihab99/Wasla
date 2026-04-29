@@ -129,6 +129,7 @@ export default function EditPostModal({
         src={src}
         className="w-full max-h-40 object-cover"
         alt="preview"
+        loading="lazy"
       />
     );
   };
@@ -176,6 +177,7 @@ export default function EditPostModal({
             src={myImage!}
             className="w-10 h-10 rounded-full object-cover flex-shrink-0"
             alt="avatar"
+            loading="lazy"
           />
 
           <div className="flex-1 min-w-0 flex flex-col gap-3">

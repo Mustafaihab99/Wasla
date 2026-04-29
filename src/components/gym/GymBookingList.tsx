@@ -64,6 +64,7 @@ export default function GymBookingList() {
                 {/* User Image */}
                 {b.imageUrl && (
                   <img
+                  loading="lazy"
                     src={import.meta.env.VITE_USER_IMAGE + b.imageUrl}
                     className="w-16 h-16 rounded-full object-cover border shadow"
                   />

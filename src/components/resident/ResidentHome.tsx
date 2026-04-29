@@ -79,6 +79,7 @@ export default function ResidentHome() {
               <img
                 src={community}
                 alt="community"
+                loading="lazy"
                 className="w-full h-full object-cover scale-110 hover:scale-125 transition duration-700"
               />
             </div>

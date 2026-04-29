@@ -86,6 +86,7 @@ export default function ServiceBookDoctor() {
                 <img
                   src={import.meta.env.VITE_USER_IMAGE + doc.imageUrl}
                   alt={doc.fullName}
+                  loading="lazy"
                   className="w-full h-full object-cover"
                 />
                 <button
@@ -162,7 +163,7 @@ export default function ServiceBookDoctor() {
         </div>
       ) : (
         <div className="flex justify-center mt-10">
-          <img src={noData} alt="no data found" className="opacity-80" />
+          <img src={noData} loading="lazy" alt="no data found" className="opacity-80" />
         </div>
       )}
     </div>

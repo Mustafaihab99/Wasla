@@ -163,6 +163,7 @@ export default function MessageBubble({
             <img
               src={lightboxImg}
               alt="preview"
+              loading="lazy"
               className="w-full h-[80vh] object-contain rounded-xl"
             />
           </Modal>

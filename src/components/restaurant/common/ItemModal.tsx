@@ -314,7 +314,7 @@ export default function ItemModal({ open, onClose, restaurantId, categories, ini
           {/* Image Upload */}
           {imagePreview ? (
             <div className="relative h-40">
-              <img src={imagePreview} alt="Preview" className="w-full h-full object-cover rounded-xl" />
+              <img src={imagePreview} loading="lazy" alt="Preview" className="w-full h-full object-cover rounded-xl" />
               <button
                 type="button"
                 onClick={() => {

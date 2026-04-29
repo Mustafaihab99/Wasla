@@ -222,6 +222,7 @@ useEffect(() => {
             <img
               src={profile.profileImage}
               alt={profile.name || ""}
+              loading="lazy"
               className="w-9 h-9 rounded-full object-cover shrink-0"
             />
           ) : (
@@ -336,6 +337,7 @@ useEffect(() => {
                 <img
                   src={URL.createObjectURL(f)}
                   alt="file"
+                  loading="lazy"
                   className="w-14 h-14 rounded-xl object-cover"
                 />
               ) : (

@@ -30,7 +30,7 @@ export default function GymMembersPage() {
 
       {data?.length === 0 ? (
         <div className="flex justify-center mt-10">
-          <img src={noData} className="w-56 sm:w-72 opacity-80" />
+          <img src={noData} loading="lazy" className="w-56 sm:w-72 opacity-80" />
         </div>
       ) : (
         <div className="border border-border rounded-2xl overflow-hidden bg-card shadow-sm">
@@ -90,10 +90,11 @@ function ServiceRow({
       {/* Wrapper */}
       <div className="border-b">
 
-        {/* ✅ Mobile Card */}
+        {/*  Mobile Card */}
         <div className="md:hidden p-4 space-y-3">
           <div className="flex items-center gap-3">
             <img
+            loading="lazy"
               src={import.meta.env.VITE_GYM_IMAGE + service.photoUrl}
               className="w-12 h-12 rounded-lg object-cover"
             />
@@ -127,10 +128,11 @@ function ServiceRow({
           </div>
         </div>
 
-        {/* ✅ Desktop Row */}
+        {/*  Desktop Row */}
         <div className="hidden md:grid grid-cols-12 items-center px-4 py-4 hover:bg-muted/20 transition">
           <div className="col-span-5 flex items-center gap-3">
             <img
+            loading="lazy"
               src={import.meta.env.VITE_GYM_IMAGE + service.photoUrl}
               className="w-12 h-12 rounded-lg object-cover"
             />
@@ -198,10 +200,11 @@ function MemberRow({ member }: { member: memberData }) {
   return (
     <div className="p-4 md:px-6 md:py-3 text-sm">
 
-      {/* ✅ Mobile */}
+      {/*  Mobile */}
       <div className="md:hidden space-y-2">
         <div className="flex items-center gap-3">
           <img
+          loading="lazy"
             src={
               member.image
                 ? import.meta.env.VITE_USER_IMAGE + member.image
@@ -221,7 +224,7 @@ function MemberRow({ member }: { member: memberData }) {
         </div>
       </div>
 
-      {/* ✅ Desktop */}
+      {/* Desktop */}
       <div className="hidden md:grid grid-cols-12 items-center">
         <div className="col-span-5 flex items-center gap-3">
           <img
@@ -230,6 +233,7 @@ function MemberRow({ member }: { member: memberData }) {
                 ? import.meta.env.VITE_USER_IMAGE + member.image
                 : "/avatar.png"
             }
+            loading="lazy"
             className="w-9 h-9 rounded-full object-cover"
           />
           <span className="font-medium">{member.name}</span>

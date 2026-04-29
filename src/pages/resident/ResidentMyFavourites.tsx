@@ -31,7 +31,7 @@ export default function ResidentMyFavourites() {
       {/* No Data */}
       {!isLoading && favourites.length === 0 && (
         <div className="flex flex-col items-center justify-center mt-20 gap-4">
-          <img src={noData} alt="no data found" className="w-48 opacity-70" />
+          <img src={noData} loading="lazy" alt="no data found" className="w-48 opacity-70" />
           <p className="text-gray-400 text-lg font-semibold">
             {t("resident.noFavourites")}
           </p>
@@ -76,6 +76,7 @@ export default function ResidentMyFavourites() {
                     import.meta.env.VITE_USER_IMAGE +
                     fav.serviceProviderProfilePhoto
                   }
+                  loading="lazy"
                   alt={fav.serviceProviderName}
                   className="w-20 h-20 rounded-full object-cover border-2 border-primary shadow-md"
                 />

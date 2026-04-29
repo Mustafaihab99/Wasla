@@ -61,6 +61,7 @@ export default function ServiceBookGyms() {
                   <img
                     src={gym.imageUrl}
                     alt={gym.name}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
 
@@ -180,7 +181,7 @@ export default function ServiceBookGyms() {
         </>
       ) : (
         <div className="flex justify-center mt-10">
-          <img src={noData} alt="no data found" className="opacity-80" />
+          <img src={noData} loading="lazy" alt="no data found" className="opacity-80" />
         </div>
       )}
     </div>

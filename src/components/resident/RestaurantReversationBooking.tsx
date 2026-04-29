@@ -64,7 +64,7 @@ export default function RestaurantBookings() {
   if (!bookings.length)
     return (
       <div className="flex flex-col items-center mt-20 gap-4">
-        <img src={noData} className="w-48 opacity-70" />
+        <img src={noData} loading="lazy" className="w-48 opacity-70" />
         <p className="text-gray-400">{t("restaurant.noBookings")}</p>
       </div>
     );
@@ -81,6 +81,7 @@ export default function RestaurantBookings() {
             <div className="flex justify-center sm:justify-start">
               <img
                 src={b.restaurantProfile}
+                loading="lazy"
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-primary"
               />
             </div>

@@ -78,7 +78,7 @@ export default function ResidentServices() {
       {/* EMPTY */}
       {!loading && data.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 gap-6">
-          <img src={noData} alt="no data" className="w-40 opacity-80" />
+          <img src={noData} loading="lazy" alt="no data" className="w-40 opacity-80" />
           <p className="text-gray-500 text-lg font-medium text-center">
             {t("resident.noServices")}
           </p>
@@ -102,6 +102,7 @@ export default function ResidentServices() {
                 <div className="relative h-48 overflow-hidden">
                   <img
                     src={p.photo}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
                   {/* FAV */}

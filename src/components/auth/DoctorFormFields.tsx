@@ -110,6 +110,7 @@ export default function DoctorFormFields({ email }: { email: string }) {
                   {previewImage ? (
                     <img
                       src={previewImage}
+                      loading="lazy"
                       alt="profile preview"
                       className="w-full h-full object-cover"
                     />

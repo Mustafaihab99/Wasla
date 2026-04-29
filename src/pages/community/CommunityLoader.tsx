@@ -52,7 +52,7 @@ export default function CommunityLoader() {
               transition={{ duration: 0.8, type: "spring" }}
             >
               <div className="absolute inset-0 rounded-full bg-white/30 blur-2xl animate-pulse"></div>
-              <img src={logo} alt="Wasla Logo" className="w-28 h-28 relative z-10" />
+              <img src={logo} loading="lazy" alt="Wasla Logo" className="w-28 h-28 relative z-10" />
             </motion.div>
 
             {/* Title */}

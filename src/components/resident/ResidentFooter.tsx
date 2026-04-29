@@ -44,6 +44,7 @@ export default function ResidentFooter() {
             <img
               src={logo}
               alt="logo"
+              loading="lazy"
               className="w-11 h-11 cursor-pointer"
               onClick={() => navigate("/")}
             />

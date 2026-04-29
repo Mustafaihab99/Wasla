@@ -103,6 +103,7 @@ export default function EditRestaurantProfileModal({
                     <label className="relative cursor-pointer group">
                       <img
                         src={preview}
+                        loading="lazy"
                         className="w-28 h-28 rounded-full object-cover border-4 border-primary shadow"
                       />
 
@@ -170,6 +171,7 @@ export default function EditRestaurantProfileModal({
                         <div key={i} className="relative group">
                           <img
                             src={img}
+                            loading="lazy"
                             className="w-full h-24 object-cover rounded-lg"
                           />
                           <button
@@ -191,6 +193,7 @@ export default function EditRestaurantProfileModal({
                         <div key={i} className="relative group">
                           <img
                             src={img.preview}
+                            loading="lazy"
                             className="w-full h-24 object-cover rounded-lg border-2 border-primary"
                           />
                           <button

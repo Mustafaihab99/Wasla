@@ -125,6 +125,7 @@ hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-[2p
                   <img
                     src={import.meta.env.VITE_USER_IMAGE + b.userImage}
                     className="w-20 h-20 rounded-full object-cover border shadow cursor-pointer"
+                    loading="lazy"
                     onClick={() =>
                       setOpenImage({
                         show: true,
@@ -187,6 +188,7 @@ hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-[2p
                   {b.bookingImages.map((img, i) => (
                     <img
                       key={i}
+                      loading="lazy"
                       src={import.meta.env.VITE_BOOKING_IMAGE + img}
                       onClick={() =>
                         setOpenImage({
@@ -228,6 +230,7 @@ hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-[2p
           onClick={() => setOpenImage({ show: false, img: null })}>
           <img
             src={openImage.img!}
+            loading="lazy"
             className="max-w-[90vw] max-h-[90vh] rounded shadow-xl"
           />
         </div>

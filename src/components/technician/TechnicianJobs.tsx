@@ -69,7 +69,7 @@ export default function TechnicianJobs() {
   if (!bookings || bookings.length === 0)
     return (
       <div className="flex flex-col items-center mt-20 gap-4">
-        <img src={noData} className="w-48 opacity-70" />
+        <img src={noData} loading="lazy" className="w-48 opacity-70" />
         <p className="text-gray-400">{t("tech.noBookings")}</p>
       </div>
     );
@@ -96,6 +96,7 @@ export default function TechnicianJobs() {
               <div className="flex items-center gap-3 flex-1">
                 <img
                   src={b.residentImage}
+                  loading="lazy"
                   className="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-primary"
                 />
 
