@@ -47,6 +47,7 @@ const AdminManageUsers = lazy(() => import ("../components/admin/AdminManageUser
 const AdminOverview = lazy(() => import ("../components/admin/AdminOverview"));
 const AdminViewDetails = lazy(() => import ("../components/admin/AdminViewDetails"));
 const AdminServiceDashboard = lazy(() => import ("../components/admin/AdminServiceOverview"));
+const AdminSocialReports = lazy(() => import ("../components/admin/AdminSocialReports"));
 // gym dashboard
 const GymDashboard = lazy(() => import ("../components/serviceDashboards/GymDashboard"));
 const GymProfile = lazy(() => import ("../components/gym/GymProfile"));
@@ -147,7 +148,7 @@ export default function AppRoutes() {
         <Route path="/admin" element={<AdminDashboard />}>
           <Route index element={<Navigate to="overview" replace />} />
           <Route path="overview" element={<AdminOverview />} />
-          <Route path="reports" element={<AdminReports />} />
+          <Route path="reports" element={<AdminSocialReports />} />
           <Route path="viewers-messages" element={<AdminReports />} />
           <Route path="manage-users" element={<AdminManageUsers />} />
           <Route path="services-overview" element={<AdminServiceDashboard />} />

@@ -9,7 +9,7 @@ export default function useToggleReport() {
     mutationFn: (id:number) => toogleReport(id),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reports"] });
+      queryClient.invalidateQueries({ queryKey: ["reports"] , exact:false });
     },
   });
 }

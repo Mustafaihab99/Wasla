@@ -124,7 +124,21 @@ export interface GetUserDetailsResponse {
   message: string;
   data: UserDetailsData;
 }
+export interface Reports{
+  id: number,
+  reason: string,
+  userReportId: string,
+  userReportProfile: string,
+  userNameReport: string,
+  createdAt: string
+}
 
 export interface ReportsTargetData{
-  id:number
+  targetId: number,
+  targetType: number,
+  image: string,
+  images: string[],
+  countReports: number,
+  content : string,
+  reports : Reports[]
 }

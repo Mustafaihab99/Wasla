@@ -93,7 +93,7 @@ export async function getAdminUserDetails(
 // post reports
 export async function toogleReport(id:number) {
   try{
-      const response = await axiosInstance.post(`Social/Toggle_Hide?id=${id}`);
+      const response = await axiosInstance.put(`Social/Toggle_Hide?id=${id}`);
       toast.success(response?.data?.message || "changed successfully");
     return response;
   } catch (error) {
