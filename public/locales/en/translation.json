@@ -596,6 +596,8 @@
     "services": "Services",
     "trainers": "Trainers",
     "members": "Members",
+    "bookingCreated" : "Your Qr Code",
+    "showQR" : "Show QRCode",
     "messages": "Messages",
     "profile": "Profile",
     "gymprofile": "Gym Profile",

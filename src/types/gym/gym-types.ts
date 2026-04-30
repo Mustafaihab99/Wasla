@@ -42,6 +42,7 @@ export interface GymResidentBookingData{
     bookingTime: string,
     durationInMonths: 2,
     isPaid: boolean,
+    qrCode : string,
     serviceName: {
         english: string,
         arabic: string

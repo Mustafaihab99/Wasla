@@ -25,6 +25,7 @@ export interface myBookingDoctor{
     id: number,
     start: string,
     end: string,
+    isPaid : boolean,
     day: string,
     date: string,
     serviceProviderName: string,
@@ -88,10 +89,12 @@ export interface contactUsData{
 // payment
 export interface userCreatePaymentData{
     userId: string,
+    serviceProviderId:string,
     amount: number,
     paymentMethod: number,
     entityId: number,
-    entityType: number
+    entityType: number,
+    serviceType : number
 }
 export interface serviceSearchData{
     id: string,

@@ -115,6 +115,7 @@ export interface doctorBookingListData{
       bookingType: number,
       phone: string,
       price: number,
+      isPaid : boolean,
       bookingImages: string[]
 }
 // update time for book

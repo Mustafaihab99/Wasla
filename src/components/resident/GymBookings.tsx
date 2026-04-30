@@ -6,15 +6,18 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
-import { FaCalendarAlt, FaClock } from "react-icons/fa";
+import { FaCalendarAlt, FaClock, FaQrcode } from "react-icons/fa";
 
 import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
 import ConfirmationModal from "../doctor/modals/ConfirmationModel";
 import noData from "../../assets/images/nodata.webp";
+import BookingQRModal from "../gym/Modal/BookingQRModal";
 
 export default function GymBookings() {
   const id = sessionStorage.getItem("user_id")!;
   const { t } = useTranslation();
+  const [showQR, setShowQR] = useState(false);
+  const [selectedQR, setSelectedQR] = useState<string | null>(null);
 
   const { data: bookings, isLoading } = useShowGymBooking(id);
   const { mutate: cancelGym, isPending } = useCancelGymBook();
@@ -97,7 +100,9 @@ export default function GymBookings() {
                           ? "bg-green-100 text-green-800"
                           : g.bookingStatus === 2
                             ? "bg-red-100 text-red-800"
-                            : "bg-gray-100 text-gray-800"
+                            : g.bookingStatus === 3
+                              ? "bg-gray-100 text-yellow-800"
+                              : "bg-gray-100 text-gray-800"
                     }`}>
                     {g.bookingStatus === 0
                       ? t("gym.active")
@@ -105,7 +110,9 @@ export default function GymBookings() {
                         ? t("doctor.completed")
                         : g.bookingStatus === 2
                           ? t("doctor.canceled")
-                          : t("admin.unknown")}
+                          : g.bookingStatus === 3
+                            ? t("doctor.pending")
+                            : t("admin.unknown")}
                   </span>
 
                   {/* isPaid */}
@@ -144,6 +151,19 @@ export default function GymBookings() {
                   </button>
                 </div>
               )}
+              {g.isPaid && g.qrCode && (
+                <div className="flex justify-center sm:justify-end mt-3">
+                  <button
+                    onClick={() => {
+                      setSelectedQR(g.qrCode);
+                      setShowQR(true);
+                    }}
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-primary text-primary hover:bg-primary hover:text-white transition">
+                    <FaQrcode size={14} />
+                    {t("gym.showQR")}
+                  </button>
+                </div>
+              )}
             </div>
           </motion.div>
         ))}
@@ -154,6 +174,15 @@ export default function GymBookings() {
         onClose={() => setShowConfirm(false)}
         onConfirm={confirmCancel}
       />
+      {showQR && selectedQR && (
+        <BookingQRModal
+          qrImage={selectedQR}
+          onClose={() => {
+            setShowQR(false);
+            setSelectedQR(null);
+          }}
+        />
+      )}
     </>
   );
 }

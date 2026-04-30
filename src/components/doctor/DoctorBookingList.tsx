@@ -46,7 +46,7 @@ export default function DoctorBookingList() {
 
   const handleConfirmCancel = () => {
     if (selectedBookingId) {
-      cancelBook(selectedBookingId);
+      cancelBook({ bookingId: selectedBookingId, isResident: false });
       setShowConfirm(false);
       setSelectedBookingId(null);
     }
@@ -167,6 +167,9 @@ hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-[2p
                   </p>
                   <p>
                     <b>{t("doctor.Price")}:</b> {b.price} {t("doctor.EGP")}
+                  </p>
+                  <p className="text-primary font-semibold">
+                    {b.isPaid ? t("gym.paid") : t("gym.notPaid")}
                   </p>
                 </div>
               </div>

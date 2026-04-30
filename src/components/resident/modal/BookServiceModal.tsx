@@ -151,6 +151,7 @@ export default function BookServiceModal({
       formData.append("serviceDayId", selectedTimeSlotId?.toString() || "");
       formData.append("price", price.toString());
       formData.append("serviceProviderType", "1");
+      formData.append("isPaymentOnline", (payment === 1) ? "true" : "false");
       formData.append("bookingType", bookingType.toString());
       formData.append("bookingDate", bookingDateStr);
 
@@ -171,10 +172,12 @@ export default function BookServiceModal({
         createPaymentMutation(
           {
             userId,
+            serviceProviderId : serviceProviderId,
             amount: price,
             paymentMethod: 1,
             entityId: bookingId,
             entityType: 0,
+            serviceType: 1
           },
           {
             onSuccess: (paymentRes: any) => {
@@ -185,6 +188,7 @@ export default function BookServiceModal({
       } else {
         // CASH
         onClose();
+        toast.success("Booking confirmed ✅");
       }
     } catch {
       toast.error(t("doctor.error.bookingFailed"));

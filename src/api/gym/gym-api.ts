@@ -193,10 +193,10 @@ export async function fetchChartsGymData(gymId :string) : Promise<GymChartsData>
   }
 }
 // book with gym
-export async function bookGymService(gymId : string , serviceId : number , residentId: string) {
+export async function bookGymService(gymId : string , serviceId : number , residentId: string , isPaymentOnline:boolean) {
   try {
     const response = await axiosInstance.post("GymBooking/book" , {
-      gymId , serviceId , residentId
+      gymId , serviceId , residentId , isPaymentOnline
     });
     toast.success(response.data.message || "Gym Service Booked successfully!");
     return response.data;

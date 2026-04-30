@@ -13,6 +13,7 @@ import i18next from "i18next";
 import { gymServiceData } from "../../types/gym/gym-types";
 import useCreatePayment from "../../hooks/resident/payment/useCreatePayment";
 import { FiMessageCircle } from "react-icons/fi";
+import { toast } from "sonner";
 
 export default function GymViewDetails() {
   const { gymId } = useParams();
@@ -22,7 +23,8 @@ export default function GymViewDetails() {
   );
   const navigate = useNavigate();
   const residentId = sessionStorage.getItem("user_id") || "";
-  const [bookingId] = useState<number | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<number | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { mutate: createPaymentMutation } = useCreatePayment();
   const { data: profile, isLoading: loadingProfile } = useGetGymProfile(gymId!);
   const { data: services, isLoading: loadingServices } = useGetGymService(
@@ -32,39 +34,36 @@ export default function GymViewDetails() {
     gymId!,
     selectedService?.id || 0,
     residentId,
+    paymentMethod === 1
   );
 
   if (loadingProfile) return <DoctorCardSkeleton />;
 
   const isArabic = i18next.language === "ar";
 
-  const handleBook = (service: gymServiceData) => {
-    setSelectedService(service);
-
-    bookGym(undefined, {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onSuccess: (res: any) => {
-        const bookingId = res.data.bookingId;
-        handleContinuePayment(service, bookingId);
-      },
-    });
-  };
+const handleBook = (service: gymServiceData) => {
+  setSelectedService(service);
+  setPaymentMethod(null); // reset
+  setShowPaymentModal(true);
+};
 
   const handleContinuePayment = (
     service?: gymServiceData,
     bookingIdParam?: number,
   ) => {
     const serviceData = service || selectedService;
-    const bookingIdData = bookingIdParam || bookingId;
+    const bookingIdData = bookingIdParam;
     if (!serviceData || !bookingIdData) return;
 
     createPaymentMutation(
       {
         userId: residentId,
+        serviceProviderId: gymId!,
         amount: serviceData.newPrice || serviceData.price,
         paymentMethod: 1,
         entityType: 0,
         entityId: bookingIdData,
+        serviceType: 4,
       },
       {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -74,6 +73,26 @@ export default function GymViewDetails() {
       },
     );
   };
+
+  const confirmBooking = () => {
+  if (!selectedService || !paymentMethod) return;
+
+  bookGym(undefined, {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSuccess: (res: any) => {
+      const bookingId = res.data.bookingId;
+
+      if (paymentMethod === 1) {
+        // CARD
+        handleContinuePayment(selectedService, bookingId);
+      } else {
+        // CASH
+        setShowPaymentModal(false);
+        toast.success("Booking confirmed ✅");
+      }
+    },
+  });
+};
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-10">
@@ -115,7 +134,7 @@ export default function GymViewDetails() {
               {profile?.reviewsCount} {t("resident.reviews")}
             </p>
             <button
-              onClick={()=>  navigate(`/chat/${profile?.id}`)}
+              onClick={() => navigate(`/chat/${profile?.id}`)}
               className="flex items-center mt-2 gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition shadow-sm">
               <FiMessageCircle size={18} />
               <span className="text-sm font-medium">{t("chat.message")}</span>
@@ -280,10 +299,63 @@ export default function GymViewDetails() {
           </div>
         ) : (
           <div className="flex justify-center mt-10 col-span-full">
-            <img src={noData} loading="lazy" alt="no data found" className="w-72 opacity-80" />
+            <img
+              src={noData}
+              loading="lazy"
+              alt="no data found"
+              className="w-72 opacity-80"
+            />
           </div>
         )}
       </div>
+      {showPaymentModal && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50"
+        style={{marginTop:"0"}}
+        >
+          <div className="bg-background p-6 rounded-2xl w-80 space-y-4 shadow-xl">
+            <h3 className="text-lg font-bold text-center">
+              {t("restaurant.paymentMethod")}
+            </h3>
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPaymentMethod(1)}
+                className={`flex-1 py-2 rounded-lg border ${
+                  paymentMethod === 1
+                    ? "bg-primary text-white"
+                    : "hover:border-primary"
+                }`}>
+                💳 {t("restaurant.card")}
+              </button>
+
+              <button
+                onClick={() => setPaymentMethod(3)}
+                className={`flex-1 py-2 rounded-lg border ${
+                  paymentMethod === 3
+                    ? "bg-primary text-white"
+                    : "hover:border-primary"
+                }`}>
+                💵 {t("restaurant.cash")}
+              </button>
+            </div>
+
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={() => setShowPaymentModal(false)}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg">
+                {t("doctor.Cancel")}
+              </button>
+
+              <button
+                onClick={confirmBooking}
+                disabled={!paymentMethod}
+                className="px-4 py-2 bg-primary text-white rounded-lg disabled:opacity-50">
+                {t("tech.Confirm")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Reviews */}
       <ReviewSection

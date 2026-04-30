@@ -128,9 +128,9 @@ export async function EditDoctorProfile(formData: FormData) {
   }
 }
 // cancel Book
-export async function cancelDoctorBook(bookingId: number) {
+export async function cancelDoctorBook(bookingId: number , isResident:boolean) {
    try {
-    const response = await axiosInstance.put(`DoctorBook/UpdateBookingStatus?bookingId=${bookingId}&status=3`);
+    const response = await axiosInstance.put(`DoctorBook/UpdateBookingStatus?bookingId=${bookingId}&status=3&isResident=${isResident}`);
     toast.success(response.data.message || "Book Canceled successfully");
     return response.data;
   } catch (error) {

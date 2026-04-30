@@ -7,13 +7,14 @@ export default function useBookGymService(
   gymId: string,
   serviceId: number,
   residentId: string,
+  isPaymentOnline: boolean
 ) {
   const queryClient = useQueryClient();
   const createEvent = useCreateEvent();
 
   return useMutation({
     mutationKey: ["book-gym"],
-    mutationFn: () => bookGymService(gymId, serviceId, residentId),
+    mutationFn: () => bookGymService(gymId, serviceId, residentId , isPaymentOnline),
     onSuccess: () => {
       createEvent.mutate({
         userId: residentId,

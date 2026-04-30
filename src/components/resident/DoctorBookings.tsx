@@ -37,7 +37,7 @@ export default function DoctorBookings() {
   };
 
   const confirmCancel = () => {
-    if (selectedId) cancelBook(selectedId);
+    if (selectedId) cancelBook({ bookingId: selectedId, isResident: true });;
     setShowConfirm(false);
     setSelectedId(null);
   };
@@ -84,28 +84,26 @@ export default function DoctorBookings() {
                     {b.serviceName}
                   </p>
                 </div>
-
-                {/* Status Badge */}
-                <span
-                  className={`self-center sm:self-auto px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${
-                    b.status === 1
-                      ? "bg-yellow-100 text-yellow-800"
+                  {/* Status */}
+                  <span
+                    className={`self-center sm:self-auto px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${
+                      b.status === 1
+                        ? "bg-yellow-100 text-yellow-800"
+                        : b.status === 2
+                          ? "bg-green-100 text-green-800"
+                          : b.status === 3
+                            ? "bg-red-100 text-red-800"
+                            : "bg-gray-100 text-gray-800"
+                    }`}>
+                    {b.status === 1
+                      ? t("doctor.pending")
                       : b.status === 2
-                        ? "bg-green-100 text-green-800"
+                        ? t("doctor.completed")
                         : b.status === 3
-                          ? "bg-red-100 text-red-800"
-                          : "bg-gray-100 text-gray-800"
-                  }`}>
-                  {b.status === 1
-                    ? t("doctor.pending")
-                    : b.status === 2
-                      ? t("doctor.completed")
-                      : b.status === 3
-                        ? t("doctor.canceled")
-                        : t("doctor.unknown")}
-                </span>
-              </div>
-
+                          ? t("doctor.canceled")
+                          : t("doctor.unknown")}
+                  </span>
+                </div>
               {/* Info */}
               <div className="mt-3 space-y-1 text-dried text-sm sm:text-base">
                 <p>
@@ -121,6 +119,12 @@ export default function DoctorBookings() {
                 <p className="font-semibold text-green-500">
                   <FaMoneyBill className="inline mr-2" />
                   {b.price} {t("doctor.EGP")}
+                </p>
+                <p
+                  className={`font-semibold ${
+                    b.isPaid ? "text-green-500" : "text-red-500"
+                  }`}>
+                  💳 {b.isPaid ? t("gym.paid") : t("gym.notPaid")}
                 </p>
               </div>
 
