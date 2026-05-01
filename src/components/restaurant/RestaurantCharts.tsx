@@ -19,10 +19,15 @@ export default function RestaurantCharts() {
 
   const [year, setYear] = useState<number | null>(null);
 
-  const { availableYears, chartData } = useMemo(() => {
-    if (!data?.years) return { availableYears: [], chartData: [] };
+  const { availableYears, chartData, insights } = useMemo(() => {
+    if (!data?.years)
+      return {
+        availableYears: [],
+        chartData: [],
+        insights: null,
+      };
 
-    const monthsList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const monthsList = [1,2,3,4,5,6,7,8,9,10,11,12];
 
     const years = data.years.map((y) => y.year);
     const selectedYear = year ?? years[years.length - 1];
@@ -35,7 +40,29 @@ export default function RestaurantCharts() {
       return { name: month, amount: match ? match.amount : 0 };
     });
 
-    return { availableYears: years, chartData: finalMonths };
+    // 🔥 Insights Logic
+    const total = finalMonths.reduce((acc, m) => acc + m.amount, 0);
+
+    const maxMonth = finalMonths.reduce((prev, curr) =>
+      curr.amount > prev.amount ? curr : prev
+    );
+
+    const minMonth = finalMonths.reduce((prev, curr) =>
+      curr.amount < prev.amount ? curr : prev
+    );
+
+    const avg = total / 12;
+
+    return {
+      availableYears: years,
+      chartData: finalMonths,
+      insights: {
+        total,
+        maxMonth,
+        minMonth,
+        avg,
+      },
+    };
   }, [data, year]);
 
   if (isLoading) {
@@ -133,6 +160,56 @@ export default function RestaurantCharts() {
           </ResponsiveContainer>
         </div>
       </div>
+
+      {insights && (
+  <div className="grid md:grid-cols-4 gap-4">
+    {[
+      {
+        label: t("restaurant.totalYearRevenue"),
+        value: insights.total,
+        color: "text-primary",
+      },
+      {
+        label: t("restaurant.bestMonth"),
+        value: `${t(`months.${insights.maxMonth.name}`)} (${insights.maxMonth.amount})`,
+        color: "text-green-600",
+      },
+      {
+        label: t("restaurant.worstMonth"),
+        value: `${t(`months.${insights.minMonth.name}`)} (${insights.minMonth.amount})`,
+        color: "text-red-500",
+      },
+      {
+        label: t("restaurant.average"),
+        value: Math.round(insights.avg),
+        color: "text-blue-500",
+      },
+    ].map((item, i) => (
+      <motion.div
+        key={i}
+        initial={{ opacity: 0, y: 40, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{
+          duration: 0.5,
+          delay: i * 0.15,
+          type: "spring",
+          stiffness: 120,
+        }}
+        whileHover={{
+          scale: 1.05,
+          rotate: 0.5,
+          boxShadow: "0px 10px 30px rgba(0,0,0,0.15)",
+        }}
+        className="p-5 border rounded-xl shadow bg-background cursor-pointer"
+      >
+        <p className="text-sm text-gray-500">{item.label}</p>
+        <p className={`text-xl font-bold mt-2 ${item.color}`}>
+          {item.value}
+        </p>
+      </motion.div>
+    ))}
+  </div>
+)}
     </div>
   );
 }
