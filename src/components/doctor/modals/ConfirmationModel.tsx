@@ -62,7 +62,7 @@ export default function ConfirmationModal({
                 onClick={onConfirm}
                 className={`px-4 py-2 rounded-lg text-white transition font-semibold ${getButtonColor()}`}
               >
-                {t(`tech.${type}`)}
+                {type === "cancel" ? t("gym.yes") : t(`tech.${type}`)}
               </button>
             </div>
           </motion.div>

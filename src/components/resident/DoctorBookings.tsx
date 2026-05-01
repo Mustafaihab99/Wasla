@@ -10,6 +10,7 @@ import { FaCalendarAlt, FaClock, FaMoneyBill } from "react-icons/fa";
 import DoctorCardSkeleton from "../../components/resident/DoctorCardSkelton";
 import ConfirmationModal from "../doctor/modals/ConfirmationModel";
 import noData from "../../assets/images/nodata.webp";
+import { formatChatTime } from "../../utils/chatUtils";
 
 export default function DoctorBookings() {
   const id = sessionStorage.getItem("user_id")!;
@@ -108,7 +109,7 @@ export default function DoctorBookings() {
               <div className="mt-3 space-y-1 text-dried text-sm sm:text-base">
                 <p>
                   <FaCalendarAlt className="inline mr-2 text-blue-400" />
-                  {dayNames[Number(b.day)]} - {b.date}
+                  {dayNames[Number(b.day)]} - {formatChatTime(b.date)}
                 </p>
 
                 <p>

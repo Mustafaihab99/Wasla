@@ -41,7 +41,7 @@ export default function GymBookings() {
   };
 
   const confirmCancel = () => {
-    if (selectedId) cancelGym(selectedId);
+    if (selectedId) cancelGym({ bookingId: selectedId, isResident: true });
     setShowConfirm(false);
     setSelectedId(null);
   };
@@ -141,7 +141,7 @@ export default function GymBookings() {
               </div>
 
               {/* Cancel */}
-              {g.bookingStatus === 0 && (
+              {(g.bookingStatus === 0 || g.bookingStatus === 3) && (
                 <div className="flex justify-center sm:justify-end mt-4">
                   <button
                     onClick={() => handleCancel(g.bookingId)}
@@ -151,7 +151,7 @@ export default function GymBookings() {
                   </button>
                 </div>
               )}
-              {g.isPaid && g.qrCode && (
+              {g.isPaid && g.qrCode && (g.bookingStatus === 0 || g.bookingStatus === 1) && (
                 <div className="flex justify-center sm:justify-end mt-3">
                   <button
                     onClick={() => {

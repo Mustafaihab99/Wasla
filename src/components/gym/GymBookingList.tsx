@@ -106,7 +106,7 @@ export default function GymBookingList() {
                 <div className="flex justify-end mt-4">
                   <button
                     disabled={isPending}
-                    onClick={() => cancelBook(b.bookingId)}
+                    onClick={() => cancelBook({ bookingId: b.bookingId, isResident: false })}
                     className="px-4 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 transition disabled:opacity-50">
                     {isPending ? t("gym.canceling") : t("gym.cancelBooking")}
                   </button>

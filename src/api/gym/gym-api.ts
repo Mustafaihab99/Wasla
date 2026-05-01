@@ -149,9 +149,9 @@ export async function getGymResidnetBooking(residentId: string): Promise<GymResi
   }
 }
 // cancel book
-export async function cancelGymBook(bookingId: number) {
+export async function cancelGymBook(bookingId: number , isResident: boolean) {
    try {
-    const response = await axiosInstance.put(`GymBooking/cancel/${bookingId}`);
+    const response = await axiosInstance.put(`GymBooking/cancel/${bookingId}?isResident=${isResident}`);
     toast.success(response.data.message || "Book Canceled successfully");
     return response.data;
   } catch (error) {
