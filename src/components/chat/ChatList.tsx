@@ -16,12 +16,9 @@ export default function ChatList() {
   const { t } = useTranslation();
   const currentUserId = sessionStorage.getItem("user_id") || "";
   const myPhoto = sessionStorage.getItem("profilePhoto") || "";
-  const token = localStorage.getItem("auth_token") || "";
   const [search, setSearch] = useState("");
 
   useChatHub({
-    token,
-    currentUserId,
     activeChatUserId: undefined,
   });
 
