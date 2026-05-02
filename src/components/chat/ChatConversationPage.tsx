@@ -34,7 +34,6 @@ export default function ChatConversationPage() {
   const navigate = useNavigate();
 
   const currentUserId = sessionStorage.getItem("user_id") || "";
-  const token = localStorage.getItem("auth_token") || "";
 
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
@@ -94,8 +93,6 @@ export default function ChatConversationPage() {
   const { mutate: markAsRead } = useMarkasRead(currentUserId);
 
   const { sendTyping, sendStopTyping } = useChatHub({
-    token,
-    currentUserId,
     activeChatUserId: receiverId,
     onTyping: (sid) => {
       if (sameId(sid, receiverId)) setIsTyping(true);
@@ -129,7 +126,11 @@ export default function ChatConversationPage() {
 useEffect(() => {
   if (!receiverId || !data?.pages) return;
 
-  const allMessages = data.pages.flatMap(p => p.messages?.data ?? []);
+  const allMessages: Message[] =
+  data?.pages
+    ?.filter(Boolean)
+    ?.flatMap((p) => p?.messages?.data ?? [])
+    ?.reverse() ?? [];
   
   const unreadMessages = allMessages.filter(
     (msg: Message) => !msg.isMine && !msg.readAt

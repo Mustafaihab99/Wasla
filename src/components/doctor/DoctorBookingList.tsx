@@ -6,6 +6,7 @@ import useCancelDoctorBook from "../../hooks/doctor/useCancelBook";
 import ConfirmationModal from "./modals/ConfirmationModel";
 import EditBookingModal from "./modals/UpdateBookModal";
 import { FaPhone } from "react-icons/fa";
+import { formatChatTime } from "../../utils/chatUtils";
 
 export default function DoctorBookingList() {
   const { t } = useTranslation();
@@ -155,7 +156,7 @@ hover:shadow-[0_6px_18px_rgba(0,0,0,0.16)] transition-all hover:-translate-y-[2p
                       : t("doctor.consult")}
                   </p>
                   <p>
-                    <b>{t("doctor.date")}:</b> {b.date}
+                    <b>{t("doctor.date")}:</b> {formatChatTime(b.date)}
                   </p>
                   <p>
                     <b>{t("doctor.day")}:</b>

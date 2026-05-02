@@ -54,7 +54,7 @@ export default function AdminViewDetails() {
                 {userBase.profilePhoto ? (
                   <img
                   loading="lazy"
-                    src={import.meta.env.VITE_USER_IMAGE + userBase.profilePhoto}
+                    src={userBase.profilePhoto}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -90,16 +90,21 @@ export default function AdminViewDetails() {
       </motion.div>
 
       {/* BASIC INFO */}
+        {
+          role !== "gym" &&
       <div className="bg-card border rounded-xl p-6">
         <h3 className="font-semibold text-lg mb-4">
           {t("admin.basicInfo")}
         </h3>
-
         <div className="grid md:grid-cols-2 gap-4">
           <InfoRow label="Phone" value={userBase.phone} />
+          {
+            role !== "restaurant" &&
           <InfoRow label="Birthday" value={userBase.birthDay} />
+          }
         </div>
       </div>
+        }
 
       {/* RESIDENT */}
       {role === "resident" && (
@@ -121,7 +126,7 @@ export default function AdminViewDetails() {
 
           {details.cv && (
             <a
-              href={import.meta.env.VITE_DOCTOR_CV + details.cv}
+              href={details.cv}
               target="_blank"
               className="btn-primary-outline"
             >
@@ -223,7 +228,7 @@ function ImageGrid({ images = [] }: { images: string[] }) {
         <img
           key={i}
           loading="lazy"
-          src={import.meta.env.VITE_USER_IMAGE + img}
+          src={img}
           className="h-28 w-full object-cover rounded-lg border"
         />
       ))}
