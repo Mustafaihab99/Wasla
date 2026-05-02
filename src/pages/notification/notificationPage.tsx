@@ -12,7 +12,10 @@ export default function NotificationsPage() {
 
   const { data, isLoading } = useGetNotifications(page, pageSize, userId);
   
-  const totalPages = Math.ceil((data?.totalCount || 0) / pageSize);
+ const totalPages = Math.max(
+  1,
+  Math.ceil((data?.totalCount || 0) / pageSize)
+);
 
   if (isLoading) {
     return (
@@ -21,9 +24,8 @@ export default function NotificationsPage() {
       </div>
     );
   }
-  if(userId === null){
-    window.location.reload();
-  }
+  
+  if (!userId) return null;
 
   return (
     <div className="p-4 bg-background min-h-full">
@@ -37,7 +39,7 @@ export default function NotificationsPage() {
 
       {/* List */}
       <div className="space-y-3">
-        {data?.data.length ? (
+        {data?.data?.length ? (
           data.data.map((n) => (
             <NotificationCard key={n.id} notification={n} />
           ))
@@ -47,7 +49,7 @@ export default function NotificationsPage() {
       </div>
 
       {/* Pagination */}
-      {data!.data.length > 0 && (
+      {data!.data?.length > 0 && (
         <div className="flex justify-center items-center gap-3 mt-8">
 
           <button

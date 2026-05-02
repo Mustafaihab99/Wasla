@@ -130,6 +130,8 @@ export default function DoctorBookings() {
               </div>
 
               {/* Cancel */}
+              <div 
+              className="mt-auto pt-4 h-[70px] md:h-[55px]">
               {b.status === 1 && (
                 <div className="flex justify-center sm:justify-end mt-4">
                   <button
@@ -140,6 +142,7 @@ export default function DoctorBookings() {
                   </button>
                 </div>
               )}
+              </div>
             </div>
           </motion.div>
         ))}

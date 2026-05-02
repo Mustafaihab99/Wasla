@@ -164,7 +164,9 @@ export default function ItemModal({ open, onClose, restaurantId, categories, ini
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center"
+    style={{marginTop : "0"}}
+    >
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
       
       <div className="relative bg-background border border-border rounded-2xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">

@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Cairo';
-  src: url('/fonts/Cairo-VariableFont_slnt,wght.ttf') format('truetype');
+  font-family: "Cairo";
+  src: url("/fonts/Cairo-VariableFont_slnt,wght.ttf") format("truetype");
   font-display: swap;
 }
 
@@ -12,13 +12,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Cairo', sans-serif;
+  font-family: "Cairo", sans-serif;
   scroll-behavior: smooth;
 }
 :root {
   --background: #f9fafb;
   --foreground: #111827;
-  --primary: #7c3aed; 
+  --primary: #7c3aed;
   --secondary: #f59e0b;
   --border: #e5e7eb;
   --canceled: #f3f4f6;
@@ -42,7 +42,7 @@
 [data-theme="dark"] {
   --background: #080d18;
   --foreground: #f9fafb;
-  --primary: #a855f7; 
+  --primary: #a855f7;
   --secondary: #facc15;
   --border: #1e293b;
   --canceled: #576a83;
@@ -72,7 +72,7 @@
   --canceled: #e0f2fe;
   --success: #14b8a6;
   --error: #ef4444;
-  --dried: #475569; 
+  --dried: #475569;
 }
 
 @layer utilities {
@@ -109,12 +109,37 @@
   background: linear-gradient(135deg, var(--primary), var(--secondary));
 }
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out forwards;
+}
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 /* في ملف global.css */
 
@@ -124,12 +149,12 @@
     padding-left: 12px;
     padding-right: 12px;
   }
-  
+
   /* تأكد إن الـ input مش بيخرج برة */
   .input-bar textarea {
     max-width: calc(100vw - 120px);
   }
-  
+
   /* تصغير الـ bubble شوية على الموبايل */
   .message-bubble {
     max-width: 90% !important;
@@ -139,17 +164,19 @@
 /* تحسين الـ scroll */
 .overflow-y-auto {
   scrollbar-width: thin;
-  scrollbar-color: rgba(99,102,241,0.3) transparent;
+  scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
 }
 
 /* منع الـ zoom على الموبايل */
-input, textarea, select {
+input,
+textarea,
+select {
   font-size: 16px !important;
 }
 
 /* تحسين الـ touch targets */
 @media (max-width: 640px) {
-  button, 
+  button,
   [role="button"] {
     min-height: 44px;
     min-width: 44px;
@@ -169,18 +196,18 @@ input, textarea, select {
   .max-w-\[85\%\] {
     max-width: 90% !important;
   }
-  
+
   /* تأكد إن النص مش بيخرج */
   .text-sm {
     font-size: 0.875rem !important;
     line-height: 1.25rem !important;
   }
-  
+
   /* الميتا بيانات تبقى مرنة */
   .flex-wrap {
     flex-wrap: wrap !important;
   }
-  
+
   /* لو الكلام طويل جداً، نعمله break */
   .whitespace-pre-wrap {
     white-space: pre-wrap !important;
@@ -192,7 +219,7 @@ input, textarea, select {
   .max-w-\[85\%\] {
     max-width: 92% !important;
   }
-  
+
   .break-all {
     word-break: break-all !important;
   }

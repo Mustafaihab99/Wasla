@@ -4,16 +4,17 @@ import { FaFlag, FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import useGetReportsByHidden from "../../hooks/admin/useGetReportsByHidden";
 import useToggleReport from "../../hooks/admin/useToggleReport";
+import ReasonModal from "./Modal/ReasonModal";
 
 const PAGE_SIZE = 10;
 
 export default function AdminSocialReports() {
   const { t } = useTranslation();
-
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [openReasonModal, setOpenReasonModal] = useState(false);
   const [flag, setFlag] = useState(false);
   const [page, setPage] = useState(1);
 
-  // 🖼️ preview state
   const [preview, setPreview] = useState<string | null>(null);
 
   const { data, isLoading, isError } = useGetReportsByHidden(
@@ -32,6 +33,16 @@ export default function AdminSocialReports() {
     total: reports.length,
     posts: reports.filter((r) => r.targetType === 1).length,
     comments: reports.filter((r) => r.targetType === 2).length,
+  };
+
+  const handleHide = (id: number, reason: string) => {
+    toggle({
+      id,
+      reason,
+    });
+
+    setOpenReasonModal(false);
+    setSelectedId(null);
   };
 
   return (
@@ -222,7 +233,14 @@ export default function AdminSocialReports() {
                 <div className="mt-4 flex justify-end">
                   <button
                     disabled={isPending}
-                    onClick={() => toggle(item.targetId)}
+                    onClick={() => {
+                      if (flag) {
+                        toggle({ id: item.targetId });
+                      } else {
+                        setSelectedId(item.targetId);
+                        setOpenReasonModal(true);
+                      }
+                    }}
                     className={`px-5 py-2 rounded-xl text-white flex items-center gap-2
                       ${
                         flag
@@ -284,6 +302,18 @@ export default function AdminSocialReports() {
           </div>
         </div>
       )}
+      <ReasonModal
+        open={openReasonModal}
+        loading={isPending}
+        onClose={() => {
+          setOpenReasonModal(false);
+          setSelectedId(null);
+        }}
+        onSubmit={(reason) => {
+          if (!selectedId) return;
+          handleHide(selectedId, reason);
+        }}
+      />
     </div>
   );
 }

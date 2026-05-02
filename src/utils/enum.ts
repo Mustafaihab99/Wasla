@@ -65,7 +65,11 @@ export const enum NotificationType{
         userTechnicianBookingCancelled,
         technicianCancelBooking,
         postCommented,
-        postReacted
+        postReacted,
+        residentCancelDoctorBooking,
+        restaurantReservationAccepted,
+        restaurantNewReservation,
+        orderStartedPreparing,
 }
 export const  enum PaymentStatus{
         Pending,

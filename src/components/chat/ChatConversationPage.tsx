@@ -39,6 +39,7 @@ export default function ChatConversationPage() {
   const [files, setFiles] = useState<File[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isOnline, setIsOnline] = useState(false);
+  const [lastSeenTime, setLastSeenTime] = useState<string | null>(null);
   const [editingMsg, setEditingMsg] = useState<{
     id: number;
     text: string;
@@ -66,7 +67,10 @@ export default function ChatConversationPage() {
   useEffect(() => {
     const onResize = () => {
       if (window.visualViewport) {
-        const kbHeight = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+        const kbHeight =
+          window.innerHeight -
+          window.visualViewport.height -
+          window.visualViewport.offsetTop;
         setKeyboardHeight(Math.max(0, kbHeight));
       }
     };
@@ -101,10 +105,16 @@ export default function ChatConversationPage() {
       if (sameId(sid, receiverId)) setIsTyping(false);
     },
     onUserOnline: (userId) => {
-      if (sameId(userId, receiverId)) setIsOnline(true);
+      if (sameId(userId, receiverId)) {
+        setIsOnline(true);
+        setLastSeenTime(null); // ✅ مسح lastSeen عند الاتصال
+      }
     },
-    onUserOffline: (userId) => {
-      if (sameId(userId, receiverId)) setIsOnline(false);
+    onUserOffline: (data: { userId: string; lastSeen: string }) => {
+      if (sameId(data.userId, receiverId)) {
+        setIsOnline(false);
+        setLastSeenTime(data.lastSeen); // ✅ حفظ lastSeen من الـ real-time
+      }
     },
   });
 
@@ -123,23 +133,23 @@ export default function ChatConversationPage() {
     }
   }, [keyboardHeight]);
 
-useEffect(() => {
-  if (!receiverId || !data?.pages) return;
+  useEffect(() => {
+    if (!receiverId || !data?.pages) return;
 
-  const allMessages: Message[] =
-  data?.pages
-    ?.filter(Boolean)
-    ?.flatMap((p) => p?.messages?.data ?? [])
-    ?.reverse() ?? [];
-  
-  const unreadMessages = allMessages.filter(
-    (msg: Message) => !msg.isMine && !msg.readAt
-  );
+    const allMessages: Message[] =
+      data?.pages
+        ?.filter(Boolean)
+        ?.flatMap((p) => p?.messages?.data ?? [])
+        ?.reverse() ?? [];
 
-  if (unreadMessages.length > 0) {
-    markAsRead(data.pages?.[0]?.chatId);
-  }
-}, [receiverId, data, markAsRead]);
+    const unreadMessages = allMessages.filter(
+      (msg: Message) => !msg.isMine && !msg.readAt,
+    );
+
+    if (unreadMessages.length > 0) {
+      markAsRead(data.pages?.[0]?.chatId);
+    }
+  }, [receiverId, data, markAsRead]);
 
   const handleTextChange = (val: string) => {
     setText(val);
@@ -203,12 +213,19 @@ useEffect(() => {
     (text.trim().length > 0 || files.length > 0) && !audioUrl;
   const isAudioMode = recording || !!audioUrl;
 
+  const getStatusText = () => {
+    if (isTyping) return t("chat.typing");
+    if (isOnline) return t("chat.online");
+    if (lastSeenTime) return formatLastSeen(lastSeenTime);
+    if (profile?.lastSeen) return formatLastSeen(profile.lastSeen);
+    return "";
+  };
+
   return (
     <div
       className="fixed inset-0 flex flex-col bg-background"
       style={{ bottom: keyboardHeight > 0 ? keyboardHeight : 0 }}
       onClick={() => setOpenMenuId(null)}>
-
       <div className="flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-3 border-b border-border shrink-0 bg-background z-20 w-full">
         <button
           onClick={() => navigate(-1)}
@@ -235,16 +252,10 @@ useEffect(() => {
             <p className="text-sm font-semibold truncate text-foreground">
               {profile?.name || "..."}
             </p>
-            {isTyping ? (
-              <p className="text-xs text-primary animate-pulse">
-                {t("chat.typing")}
-              </p>
-            ) : isOnline ? (
-              <p className="text-xs text-green-500">{t("chat.online")}</p>
-            )
-            :
-            <p className="text-xs text-dried">{formatLastSeen(profile?.lastSeen)}</p>
-          }
+            <p
+              className={`text-xs ${isTyping ? "text-primary animate-pulse" : isOnline ? "text-green-500" : "text-dried"}`}>
+              {getStatusText()}
+            </p>
           </div>
         </button>
       </div>

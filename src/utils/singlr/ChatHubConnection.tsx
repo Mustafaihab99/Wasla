@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  createContext, useContext, useEffect, useRef,
-  useCallback, ReactNode, MutableRefObject,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useCallback,
+  ReactNode,
+  MutableRefObject,
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import * as signalR from "@microsoft/signalr";
@@ -31,10 +36,12 @@ export interface ChatEventHandlers {
   onStopTyping?: (senderId: string) => void;
   onNewMessage?: (message: Message) => void;
   onUserOnline?: (userId: string) => void;
-  onUserOffline?: (userId: string) => void;
+  onUserOffline?: (data: { userId: string; lastSeen: string }) => void;
 }
 
-const ChatHubContext = createContext<ChatHubContextValue | undefined>(undefined);
+const ChatHubContext = createContext<ChatHubContextValue | undefined>(
+  undefined,
+);
 
 interface ChatHubProviderProps {
   token: string;
@@ -42,7 +49,11 @@ interface ChatHubProviderProps {
   children: ReactNode;
 }
 
-export function ChatHubProvider({ token, currentUserId, children }: ChatHubProviderProps) {
+export function ChatHubProvider({
+  token,
+  currentUserId,
+  children,
+}: ChatHubProviderProps) {
   const queryClient = useQueryClient();
   const connectionRef = useRef<signalR.HubConnection | null>(null);
   const currentUserIdRef = useRef(currentUserId);
@@ -51,7 +62,9 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
   // مجموعة الـ handlers المسجلة من الـ components
   const handlersSetRef = useRef<Set<ChatEventHandlers>>(new Set());
 
-  useEffect(() => { currentUserIdRef.current = currentUserId; }, [currentUserId]);
+  useEffect(() => {
+    currentUserIdRef.current = currentUserId;
+  }, [currentUserId]);
 
   useEffect(() => {
     if (!token || !currentUserId) return;
@@ -69,23 +82,32 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
     const handleReceiveMessage = (raw: any) => {
       const message = normalizeMessage(raw);
       const myId = currentUserIdRef.current;
-      const otherId = sameId(message.senderId, myId) ? message.receiverId : message.senderId;
+      const otherId = sameId(message.senderId, myId)
+        ? message.receiverId
+        : message.senderId;
       if (!otherId) return;
 
-      const msg: Message = { ...message, isMine: sameId(message.senderId, myId) };
+      const msg: Message = {
+        ...message,
+        isMine: sameId(message.senderId, myId),
+      };
 
       // تجنب التكرار
       const convKey = chatKeys.conversation(myId, otherId);
       const existingConv = queryClient.getQueryData<any>(convKey);
       if (existingConv) {
         const exists = existingConv.pages.some((page: any) =>
-          page.messages.data.some((m: Message) => m.messageId === msg.messageId)
+          page.messages.data.some(
+            (m: Message) => m.messageId === msg.messageId,
+          ),
         );
         if (exists) return;
       }
 
       // تحديث الـ cache
-      const allConvQueries = queryClient.getQueriesData<any>({ queryKey: ["chat-conversation"] });
+      const allConvQueries = queryClient.getQueriesData<any>({
+        queryKey: ["chat-conversation"],
+      });
       const matchedEntry = allConvQueries.find(([key]) => {
         const k = key as string[];
         return k.length === 3 && sameId(k[1], myId) && sameId(k[2], otherId);
@@ -107,13 +129,23 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
                       totalCount: page.messages.totalCount + 1,
                     },
                   }
-                : page
+                : page,
             ),
           };
         });
       } else {
         queryClient.setQueryData(["chat-conversation", myId, otherId], {
-          pages: [{ messages: { data: [msg], pageNumber: 1, pageSize: 30, totalCount: 1, totalPages: 1 } }],
+          pages: [
+            {
+              messages: {
+                data: [msg],
+                pageNumber: 1,
+                pageSize: 30,
+                totalCount: 1,
+                totalPages: 1,
+              },
+            },
+          ],
           pageParams: [1],
         });
       }
@@ -121,22 +153,35 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
       // تحديث الـ recent chats
       queryClient.setQueryData(chatKeys.recentChats(myId), (oldData: any) => {
         if (!oldData) return oldData;
-        const arr: any[] = Array.isArray(oldData) ? oldData : (oldData?.data ?? []);
-        const existingIndex = arr.findIndex((chat: any) => sameId(chat.userId, otherId));
+        const arr: any[] = Array.isArray(oldData)
+          ? oldData
+          : (oldData?.data ?? []);
+        const existingIndex = arr.findIndex((chat: any) =>
+          sameId(chat.userId, otherId),
+        );
         const updated = [...arr];
-        const currentUnread = existingIndex >= 0 ? (updated[existingIndex]?.unreadMessageCount ?? 0) : 0;
+        const currentUnread =
+          existingIndex >= 0
+            ? (updated[existingIndex]?.unreadMessageCount ?? 0)
+            : 0;
         const isActiveChat = sameId(otherId, activeChatUserIdRef.current);
         const newRecent = {
           userId: otherId,
-          lastMessage: msg.messageText || (msg.audio ? "🎤 Voice message" : "📎 File"),
+          lastMessage:
+            msg.messageText || (msg.audio ? "🎤 Voice message" : "📎 File"),
           lastMessageTime: msg.sentAt,
-          unreadMessageCount: !msg.isMine && !isActiveChat ? currentUnread + 1 : 0,
+          unreadMessageCount:
+            !msg.isMine && !isActiveChat ? currentUnread + 1 : 0,
         };
         if (existingIndex >= 0) {
           updated[existingIndex] = { ...updated[existingIndex], ...newRecent };
-          return Array.isArray(oldData) ? updated : { ...oldData, data: updated };
+          return Array.isArray(oldData)
+            ? updated
+            : { ...oldData, data: updated };
         }
-        return Array.isArray(oldData) ? [newRecent, ...updated] : { ...oldData, data: [newRecent, ...updated] };
+        return Array.isArray(oldData)
+          ? [newRecent, ...updated]
+          : { ...oldData, data: [newRecent, ...updated] };
       });
 
       setTimeout(() => {
@@ -150,7 +195,9 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
     // ── MessageDeleted ────────────────────────────────────────────────────
     const handleMessageDeleted = (messageId: number) => {
       const myId = currentUserIdRef.current;
-      const allConvQueries = queryClient.getQueriesData<any>({ queryKey: ["chat-conversation"] });
+      const allConvQueries = queryClient.getQueriesData<any>({
+        queryKey: ["chat-conversation"],
+      });
 
       for (const [key, oldData] of allConvQueries) {
         if (!oldData) continue;
@@ -160,7 +207,9 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
 
         let newLastMessage: Message | undefined;
         for (const page of oldData.pages) {
-          const index = page.messages.data.findIndex((m: Message) => m.messageId === messageId);
+          const index = page.messages.data.findIndex(
+            (m: Message) => m.messageId === messageId,
+          );
           if (index !== -1) {
             if (index > 0) newLastMessage = page.messages.data[index - 1];
             break;
@@ -173,7 +222,9 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
             ...page,
             messages: {
               ...page.messages,
-              data: page.messages.data.filter((m: Message) => m.messageId !== messageId),
+              data: page.messages.data.filter(
+                (m: Message) => m.messageId !== messageId,
+              ),
               totalCount: Math.max(0, page.messages.totalCount - 1),
             },
           })),
@@ -181,31 +232,52 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
 
         if (newLastMessage) {
           const otherId = sameId(senderId, myId) ? receiverId : senderId;
-          queryClient.setQueryData(chatKeys.recentChats(myId), (oldData: any) => {
-            if (!oldData) return oldData;
-            const arr: any[] = Array.isArray(oldData) ? oldData : (oldData?.data ?? []);
-            const existingIndex = arr.findIndex((chat: any) => sameId(chat.userId, otherId));
-            if (existingIndex >= 0) {
-              const updated = [...arr];
-              updated[existingIndex] = {
-                ...updated[existingIndex],
-                lastMessage: newLastMessage!.messageText || (newLastMessage!.audio ? "🎤 Voice message" : "📎 File"),
-                lastMessageTime: newLastMessage!.sentAt,
-              };
-              return Array.isArray(oldData) ? updated : { ...oldData, data: updated };
-            }
-            return oldData;
-          });
+          queryClient.setQueryData(
+            chatKeys.recentChats(myId),
+            (oldData: any) => {
+              if (!oldData) return oldData;
+              const arr: any[] = Array.isArray(oldData)
+                ? oldData
+                : (oldData?.data ?? []);
+              const existingIndex = arr.findIndex((chat: any) =>
+                sameId(chat.userId, otherId),
+              );
+              if (existingIndex >= 0) {
+                const updated = [...arr];
+                updated[existingIndex] = {
+                  ...updated[existingIndex],
+                  lastMessage:
+                    newLastMessage!.messageText ||
+                    (newLastMessage!.audio ? "🎤 Voice message" : "📎 File"),
+                  lastMessageTime: newLastMessage!.sentAt,
+                };
+                return Array.isArray(oldData)
+                  ? updated
+                  : { ...oldData, data: updated };
+              }
+              return oldData;
+            },
+          );
         }
       }
-      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(currentUserIdRef.current) });
+      queryClient.invalidateQueries({
+        queryKey: chatKeys.recentChats(currentUserIdRef.current),
+      });
     };
 
     // ── MessagesRead ──────────────────────────────────────────────────────
-    const handleMessagesRead = ({ messageIds }: { chatId: number; readerId: string; messageIds: number[] }) => {
+    const handleMessagesRead = ({
+      messageIds,
+    }: {
+      chatId: number;
+      readerId: string;
+      messageIds: number[];
+    }) => {
       const myId = currentUserIdRef.current;
       const messageIdSet = new Set(messageIds);
-      const allConvQueries = queryClient.getQueriesData<any>({ queryKey: ["chat-conversation"] });
+      const allConvQueries = queryClient.getQueriesData<any>({
+        queryKey: ["chat-conversation"],
+      });
 
       for (const [key, oldData] of allConvQueries) {
         if (!oldData) continue;
@@ -216,7 +288,9 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
             messages: {
               ...page.messages,
               data: page.messages.data.map((m: Message) =>
-                messageIdSet.has(m.messageId!) ? { ...m, isRead: true, readAt: new Date().toISOString() } : m
+                messageIdSet.has(m.messageId!)
+                  ? { ...m, isRead: true, readAt: new Date().toISOString() }
+                  : m,
               ),
             },
           })),
@@ -229,11 +303,16 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
     const handleMessageUpdated = (raw: any) => {
       const updatedMessage = normalizeMessage(raw);
       const myId = currentUserIdRef.current;
-      const allConvQueries = queryClient.getQueriesData<any>({ queryKey: ["chat-conversation"] });
+      const allConvQueries = queryClient.getQueriesData<any>({
+        queryKey: ["chat-conversation"],
+      });
 
       for (const [key, oldData] of allConvQueries) {
         if (!oldData) continue;
-        const msg: Message = { ...updatedMessage, isMine: sameId(updatedMessage.senderId, myId) };
+        const msg: Message = {
+          ...updatedMessage,
+          isMine: sameId(updatedMessage.senderId, myId),
+        };
         queryClient.setQueryData(key, {
           ...oldData,
           pages: oldData.pages.map((page: any) => ({
@@ -241,27 +320,37 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
             messages: {
               ...page.messages,
               data: page.messages.data.map((m: Message) =>
-                m.messageId === updatedMessage.messageId ? msg : m
+                m.messageId === updatedMessage.messageId ? msg : m,
               ),
             },
           })),
         });
       }
 
-      const otherId = sameId(updatedMessage.senderId, myId) ? updatedMessage.receiverId : updatedMessage.senderId;
+      const otherId = sameId(updatedMessage.senderId, myId)
+        ? updatedMessage.receiverId
+        : updatedMessage.senderId;
       if (otherId) {
         queryClient.setQueryData(chatKeys.recentChats(myId), (oldData: any) => {
           if (!oldData) return oldData;
-          const arr: any[] = Array.isArray(oldData) ? oldData : (oldData?.data ?? []);
-          const existingIndex = arr.findIndex((chat: any) => sameId(chat.userId, otherId));
+          const arr: any[] = Array.isArray(oldData)
+            ? oldData
+            : (oldData?.data ?? []);
+          const existingIndex = arr.findIndex((chat: any) =>
+            sameId(chat.userId, otherId),
+          );
           if (existingIndex >= 0) {
             const updated = [...arr];
             updated[existingIndex] = {
               ...updated[existingIndex],
-              lastMessage: updatedMessage.messageText || (updatedMessage.audio ? "🎤 Voice message" : "📎 File"),
+              lastMessage:
+                updatedMessage.messageText ||
+                (updatedMessage.audio ? "🎤 Voice message" : "📎 File"),
               lastMessageTime: updatedMessage.sentAt,
             };
-            return Array.isArray(oldData) ? updated : { ...oldData, data: updated };
+            return Array.isArray(oldData)
+              ? updated
+              : { ...oldData, data: updated };
           }
           return oldData;
         });
@@ -272,7 +361,9 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
     // ── ChatUpdated ───────────────────────────────────────────────────────
     const handleChatUpdated = ({ chatId }: { chatId: number }) => {
       console.log("ChatUpdated:", chatId);
-      queryClient.invalidateQueries({ queryKey: chatKeys.recentChats(currentUserIdRef.current) });
+      queryClient.invalidateQueries({
+        queryKey: chatKeys.recentChats(currentUserIdRef.current),
+      });
     };
 
     // ── Typing / Online ───────────────────────────────────────────────────
@@ -297,12 +388,17 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
       handlersSetRef.current.forEach((h) => h.onUserOnline?.(data.userId));
     });
 
-    connection.on("UserOffline", (data: { userId: string }) => {
-      if (sameId(data.userId, currentUserIdRef.current)) return;
-      handlersSetRef.current.forEach((h) => h.onUserOffline?.(data.userId));
-    });
+    connection.on(
+      "UserOffline",
+      (data: { userId: string; lastSeen: string }) => {
+        if (sameId(data.userId, currentUserIdRef.current)) return;
 
-    connection.start()
+        handlersSetRef.current.forEach((h) => h.onUserOffline?.(data));
+      },
+    );
+
+    connection
+      .start()
       .then(() => console.log("✅ SignalR ChatHub connected"))
       .catch((err) => console.error("❌ SignalR connection failed:", err));
 
@@ -328,12 +424,21 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
 
   const sendStopTyping = useCallback((toReceiverId: string) => {
     if (connectionRef.current?.state === signalR.HubConnectionState.Connected) {
-      connectionRef.current.invoke("StopTyping", toReceiverId).catch(console.error);
+      connectionRef.current
+        .invoke("StopTyping", toReceiverId)
+        .catch(console.error);
     }
   }, []);
 
   return (
-    <ChatHubContext.Provider value={{ connectionRef, sendTyping, sendStopTyping, registerHandlers, activeChatUserIdRef }}>
+    <ChatHubContext.Provider
+      value={{
+        connectionRef,
+        sendTyping,
+        sendStopTyping,
+        registerHandlers,
+        activeChatUserIdRef,
+      }}>
       {children}
     </ChatHubContext.Provider>
   );
@@ -342,6 +447,7 @@ export function ChatHubProvider({ token, currentUserId, children }: ChatHubProvi
 // eslint-disable-next-line react-refresh/only-export-components
 export function useChatHubConnection() {
   const ctx = useContext(ChatHubContext);
-  if (!ctx) throw new Error("useChatHubConnection must be used within ChatHubProvider");
+  if (!ctx)
+    throw new Error("useChatHubConnection must be used within ChatHubProvider");
   return ctx;
 }

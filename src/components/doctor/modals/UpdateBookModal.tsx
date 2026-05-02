@@ -11,20 +11,29 @@ interface EditBookingModalProps {
   show: boolean;
   onClose: () => void;
   bookingId: number;
-  currentDate: string; 
+  currentDate: string;
   currentDayOfWeek: number;
-  currentStart: string; 
-  currentEnd: string; 
+  currentStart: string;
+  currentEnd: string;
 }
 
-const parseDateFromString = (dateStr: string): Date => {
-  const [year, month, day] = dateStr.split("-").map(Number);
-  return new Date(year, month - 1, day);
+const parseDateFromString = (dateStr: string): Date | null => {
+  if (!dateStr) return null;
+
+  const iso = dateStr.replace(" ", "T");
+
+  const date = new Date(iso);
+
+  return isNaN(date.getTime()) ? null : date;
 };
 
 const getCustomDayOfWeek = (date: Date): number => {
-  const localDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const jsDay = localDate.getDay(); 
+  const localDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
+  const jsDay = localDate.getDay();
   return (jsDay + 1) % 7;
 };
 
@@ -37,17 +46,25 @@ export default function EditBookingModal({
   currentStart,
   currentEnd,
 }: EditBookingModalProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>(parseDateFromString(currentDate));
+  const [selectedDate, setSelectedDate] = useState<Date | null>(
+    parseDateFromString(currentDate) || new Date(),
+  );
   const [startTime, setStartTime] = useState(currentStart);
   const [endTime, setEndTime] = useState(currentEnd);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const { mutate: updateBook, isPending } = useUpdateDoctorBook();
 
   const handleConfirm = () => {
+    if (!selectedDate) {
+      toast.error(t("doctor.selectDate"));
+      return;
+    }
+
     const dayOfWeek = getCustomDayOfWeek(selectedDate);
     const currentDateObj = parseDateFromString(currentDate);
 
     if (
+      currentDateObj &&
       dayOfWeek === currentDayOfWeek &&
       selectedDate.toDateString() === currentDateObj.toDateString()
     ) {
@@ -78,29 +95,33 @@ export default function EditBookingModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          style={{marginTop:"0"}}
-        >
+          style={{ marginTop: "0" }}>
           <motion.div
             className="bg-background rounded-xl p-6 w-[90%] max-w-md text-center shadow-lg"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          >
-            <h2 className="text-xl text-foreground font-bold mb-4">{t("doctor.editBooking")}</h2>
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}>
+            <h2 className="text-xl text-foreground font-bold mb-4">
+              {t("doctor.editBooking")}
+            </h2>
             <div className="mb-4 flex flex-col gap-3 text-sm">
               <div>
-                <label className="font-semibold mb-1 block">{t("doctor.newDate")}</label>
+                <label className="font-semibold mb-1 block">
+                  {t("doctor.newDate")}
+                </label>
                 <DatePicker
                   selected={selectedDate}
-                  onChange={(date: Date | null) => date && setSelectedDate(date)}
+                  onChange={(date: Date | null) => setSelectedDate(date)}
                   dateFormat="yyyy-MM-dd"
                   className="bg-background border px-3 py-2 rounded w-full"
                   minDate={new Date()}
                 />
               </div>
               <div>
-                <label className="font-semibold mb-1 block">{t("doctor.start")}</label>
+                <label className="font-semibold mb-1 block">
+                  {t("doctor.start")}
+                </label>
                 <input
                   type="time"
                   value={startTime}
@@ -109,7 +130,9 @@ export default function EditBookingModal({
                 />
               </div>
               <div>
-                <label className="font-semibold mb-1 block">{t("doctor.end")}</label>
+                <label className="font-semibold mb-1 block">
+                  {t("doctor.end")}
+                </label>
                 <input
                   type="time"
                   value={endTime}
@@ -121,15 +144,13 @@ export default function EditBookingModal({
             <div className="flex justify-center gap-4">
               <button
                 onClick={onClose}
-                className="px-4 py-2 rounded-lg text-white bg-dried hover:bg-gray-400 transition font-semibold"
-              >
+                className="px-4 py-2 rounded-lg text-white bg-dried hover:bg-gray-400 transition font-semibold">
                 {t("doctor.Cancel")}
               </button>
               <button
                 disabled={isPending}
                 onClick={handleConfirm}
-                className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition font-semibold"
-              >
+                className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition font-semibold">
                 {isPending ? t("profile.Saving...") : t("doctor.conf")}
               </button>
             </div>

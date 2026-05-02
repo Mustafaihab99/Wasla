@@ -91,15 +91,25 @@ export async function getAdminUserDetails(
   }
 }
 // post reports
-export async function toogleReport(id:number) {
-  try{
-      const response = await axiosInstance.put(`Social/Toggle_Hide?id=${id}`);
-      toast.success(response?.data?.message || "changed successfully");
+export async function toogleReport(id: number, reason?: string) {
+  try {
+    const response = await axiosInstance.put(
+      `Social/Toggle_Hide?id=${id}`,
+      { reason }, // ✅ إرسال الـ reason في الـ Body بدلاً من Headers
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    toast.success(response?.data?.message || "Changed successfully");
     return response;
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     const errorMessage =
-      axiosError.response?.data?.message || "changed failed";
+      axiosError.response?.data?.message || "An error occurred";
+
     toast.error(errorMessage);
     throw error;
   }

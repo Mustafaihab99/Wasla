@@ -12,12 +12,12 @@ interface PaginatedResponse<T> {
 
 export async function fetchAllNotifications(
   pageNumber: number = 1,
-  pageSize: number = 6,
+  pageSize: number = 10,
   userId:string,
 ): Promise<PaginatedResponse<notificationData>> {
   try {
     const response = await axiosInstance.get(
-      `Notification/User/${userId}?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      `Notification/User/${userId}?pageNumber=${pageNumber}&pageSize=${10}`,
     );
     const result = response.data;
     return {

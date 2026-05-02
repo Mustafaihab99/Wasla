@@ -24,7 +24,7 @@ export function getNotificationAction(
     case NotificationType.reviewScreen:
       return {
         type: "navigate",
-        path: `reviews`,
+        path: window.location.pathname.replace("notifications", "reviews"),
         label: "View Review",
       };
 
@@ -115,6 +115,36 @@ export function getNotificationAction(
         label: "Complete Info",
       };
 
+    case NotificationType.residentCancelDoctorBooking:
+      return {
+        type: "navigate",
+        path: `/resident/profile/my-bookings`,
+        label: "Complete Info",
+      };
+      
+    case NotificationType.orderStartedPreparing:
+      return {
+        type: "navigate",
+        path: `/resident/profile/my-bookings`,
+        label: "Complete Info",
+      };
+      
+    /** ---------------- RESTAURANT ---------------- */
+    case NotificationType.restaurantReservationAccepted:
+      return {
+        type: "navigate",
+        path: `/restaurant/orders`,
+        label: "Complete Info",
+      };
+
+    case NotificationType.restaurantNewReservation:
+      return {
+        type: "navigate",
+        path: `/restaurant/orders`,
+        label: "Complete Info",
+      };
+      
+
     /** ---------------- CHAT ---------------- */
     case NotificationType.messageReceived:
       return {
@@ -127,7 +157,7 @@ export function getNotificationAction(
     default:
       return {
         type: "navigate",
-        path: `notifications`,
+        path: window.location.pathname.replace("notifications", "notifications"),
         label: "View Details",
       };
   }

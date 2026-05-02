@@ -60,34 +60,39 @@ export default function ReportModal({
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
+      closeTimeoutMS={200}
       className="
-        bg-[#0f0f0f] w-full max-w-md mx-auto 
+        bg-background w-full max-w-md mx-auto 
         mt-10 md:mt-24 
         rounded-2xl shadow-2xl outline-none 
-        border border-[#2f3336]
+        border border-border
+        max-h-[85vh] flex flex-col
+        animate-[modalIn_0.25s_ease-out]
       "
       overlayClassName="
         fixed inset-0 bg-black/60 z-40 
         flex justify-center items-start md:items-center 
-        p-4 pb-24 md:pb-4
+        p-4
+        animate-[fadeIn_0.2s_ease-out]
       "
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-[#2f3336]">
-        <h2 className="text-white text-lg font-bold">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
+        <h2 className="text-foreground text-lg font-bold">
           {t("report.title")}
         </h2>
+
         <button
           onClick={onClose}
-          className="text-gray-400 hover:text-white transition"
+          className="text-dried hover:text-error transition"
         >
           <FaTimes />
         </button>
       </div>
 
       {/* Body */}
-      <div className="p-5 space-y-4">
-        <p className="text-gray-400 text-sm">
+      <div className="p-5 space-y-4 overflow-y-auto flex-1">
+        <p className="text-dried text-sm">
           {t("report.subtitle")}
         </p>
 
@@ -95,7 +100,7 @@ export default function ReportModal({
           {reportReasonsKeys.map((key) => (
             <label
               key={key}
-              className="flex items-center gap-2 text-white cursor-pointer hover:bg-white/5 px-3 py-2 rounded-lg transition"
+              className="flex items-center gap-2 text-foreground cursor-pointer hover:bg-secondary/10 px-3 py-2 rounded-lg transition"
             >
               <input
                 type="radio"
@@ -103,6 +108,7 @@ export default function ReportModal({
                 value={key}
                 checked={reason === key}
                 onChange={(e) => setReason(e.target.value)}
+                className="accent-primary"
               />
               {t(`report.reasons.${key}`)}
             </label>
@@ -114,16 +120,22 @@ export default function ReportModal({
             value={customReason}
             onChange={(e) => setCustomReason(e.target.value)}
             placeholder={t("report.placeholder")}
-            className="w-full p-2 rounded-lg bg-[#1a1a1a] text-white border border-[#2f3336] focus:outline-none focus:border-sky-500"
+            className="
+              w-full p-3 rounded-lg
+              bg-background text-foreground
+              border border-border
+              focus:outline-none focus:border-primary
+              resize-none max-h-[120px]
+            "
           />
         )}
       </div>
 
       {/* Footer */}
-      <div className="flex justify-end gap-2 px-5 py-4 border-t border-[#2f3336]">
+      <div className="flex justify-end gap-2 px-5 py-4 border-t border-border shrink-0">
         <button
           onClick={onClose}
-          className="px-4 py-2 rounded-lg text-gray-400 hover:bg-white/10 transition"
+          className="px-4 py-2 rounded-lg text-dried hover:bg-secondary/10 transition"
         >
           {t("common.cancel")}
         </button>
@@ -131,7 +143,12 @@ export default function ReportModal({
         <button
           onClick={handleSubmit}
           disabled={isPending || !reason}
-          className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition disabled:opacity-50"
+          className="
+            px-4 py-2 rounded-lg
+            bg-primary text-white
+            hover:opacity-90 transition
+            disabled:opacity-50
+          "
         >
           {isPending
             ? t("report.submitting")
