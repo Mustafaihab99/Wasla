@@ -4,14 +4,19 @@ import axios, { AxiosError } from "axios";
 import { addAdminData, allAdminsData } from "../../../types/admin/adminTypes";
 
 export async function addAdmin(formData: addAdminData) {
+  try{
   const response = await axiosInstance.post(
     "SuperAdmin/AddAdmin",
     formData 
   );
-  if (response?.status === 201) {
     toast.success(response?.data?.message || "Added successful");
-  }
   return response;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message;
+    toast.error(errorMessage);
+    throw error;
+  }
 }
 
 export async function getAllAdmins(): Promise<allAdminsData[]> {

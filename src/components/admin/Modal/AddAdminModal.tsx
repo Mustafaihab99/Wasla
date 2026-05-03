@@ -35,6 +35,10 @@ export default function AddAdminModal({ isOpen, onClose, onSubmit }: Props) {
         .required(t("admin.validation.required")),
 
       password: Yup.string()
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/,
+      t("login.passregex")
+    )
         .min(6, t("admin.validation.passwordMin"))
         .required(t("admin.validation.required")),
     }),

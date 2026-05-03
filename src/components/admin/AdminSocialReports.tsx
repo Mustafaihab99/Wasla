@@ -14,7 +14,7 @@ export default function AdminSocialReports() {
   const [openReasonModal, setOpenReasonModal] = useState(false);
   const [flag, setFlag] = useState(false);
   const [page, setPage] = useState(1);
-
+  const adminId = sessionStorage.getItem("user_id")!;
   const [preview, setPreview] = useState<string | null>(null);
 
   const { data, isLoading, isError } = useGetReportsByHidden(
@@ -38,6 +38,7 @@ export default function AdminSocialReports() {
   const handleHide = (id: number, reason: string) => {
     toggle({
       id,
+      adminId,
       reason,
     });
 
@@ -235,7 +236,7 @@ export default function AdminSocialReports() {
                     disabled={isPending}
                     onClick={() => {
                       if (flag) {
-                        toggle({ id: item.targetId });
+                        toggle({ id: item.targetId , adminId });
                       } else {
                         setSelectedId(item.targetId);
                         setOpenReasonModal(true);

@@ -91,10 +91,10 @@ export async function getAdminUserDetails(
   }
 }
 // post reports
-export async function toogleReport(id: number, reason?: string) {
+export async function toogleReport(id: number, adminId:string , reason?: string ) {
   try {
     const response = await axiosInstance.put(
-      `Social/Toggle_Hide?id=${id}`,
+      `Social/Toggle_Hide?id=${id}&adminId=${adminId}`,
       { reason }, 
       {
         headers: {

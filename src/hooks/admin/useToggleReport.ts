@@ -6,8 +6,8 @@ export default function useToggleReport() {
 
   return useMutation({
     mutationKey: ["toggle-report"],
-    mutationFn: ({ id, reason }: { id: number; reason?: string }) =>
-      toogleReport(id, reason),
+    mutationFn: ({ id, adminId ,reason }: { id: number; adminId:string; reason?: string }) =>
+      toogleReport(id, adminId , reason),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reports"], exact: false });
