@@ -3,14 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaStar } from "react-icons/fa";
 import useGetDoctorReviews from "../../hooks/doctor/useGetDoctorReviews";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 export default function DoctorReviews() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [ratingFilter, setRatingFilter] = useState<number>(0);
   const doctorId = sessionStorage.getItem("user_id")!;
   const { data: reviews, isLoading } = useGetDoctorReviews(
     doctorId,
-    ratingFilter
+    ratingFilter,
   );
 
   const hasNoData = !isLoading && (!reviews || reviews.length === 0);
@@ -21,20 +22,16 @@ export default function DoctorReviews() {
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-2xl font-bold"
-      >
+        className="text-2xl font-bold ml-4 mr-4">
         {t("doctor.reviews")}
-        <span className="text-primary ml-2">
-          ({reviews?.length || 0})
-        </span>
+        <span className="text-primary ml-2">({reviews?.length || 0})</span>
       </motion.h2>
 
       {/* Rating Filter */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="flex gap-3 flex-wrap"
-      >
+        className="flex gap-3 flex-wrap">
         {[0, 5, 4, 3, 2, 1].map((r) => (
           <button
             key={r}
@@ -44,8 +41,7 @@ export default function DoctorReviews() {
                 ratingFilter === r
                   ? "bg-primary text-white border-primary"
                   : "bg-card hover:bg-primary/10"
-              }`}
-          >
+              }`}>
             {r === 0 ? (
               t("doctor.All")
             ) : (
@@ -64,8 +60,7 @@ export default function DoctorReviews() {
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
-              className="p-6 rounded-2xl border bg-card animate-pulse space-y-4"
-            >
+              className="p-6 rounded-2xl border bg-card animate-pulse space-y-4">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-gray-300" />
                 <div className="space-y-2 flex-1">
@@ -85,8 +80,7 @@ export default function DoctorReviews() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="text-center py-20 border rounded-2xl bg-card"
-        >
+          className="text-center py-20 border rounded-2xl bg-card">
           <p className="text-lg font-semibold text-dried">
             {t("doctor.noRev")}
           </p>
@@ -103,9 +97,8 @@ export default function DoctorReviews() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="p-6 rounded-2xl border bg-card shadow hover:shadow-lg transition"
-              >
-                <div className="flex justify-between items-start">
+                className="p-6 rounded-2xl border bg-card shadow hover:shadow-lg transition">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                   <div className="flex gap-4 items-center">
                     <img
                       src={
@@ -117,9 +110,7 @@ export default function DoctorReviews() {
                     />
 
                     <div>
-                      <h4 className="font-bold">
-                        {review.reviewerName}
-                      </h4>
+                      <h4 className="font-bold">{review.reviewerName}</h4>
                       <div className="flex text-yellow-400 text-sm mt-1">
                         {[...Array(5)].map((_, i) => (
                           <FaStar
@@ -136,7 +127,13 @@ export default function DoctorReviews() {
                   </div>
 
                   <span className="text-xs text-dried">
-                    {new Date(review.createdAt).toLocaleDateString()}
+                    {new Date(review.createdAt).toLocaleString(
+                      i18next.language === "ar" ? "ar-EG" : "en-GB",
+                      {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                      },
+                    )}
                   </span>
                 </div>
 

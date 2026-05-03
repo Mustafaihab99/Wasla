@@ -461,3 +461,16 @@ export async function changeToDeliverd(id:number) {
     throw error;
   }
 }
+
+export async function cancelOrder(orderId: number , isResident:boolean) {
+   try {
+    const response = await axiosInstance.put(`RestaurantOrder/cancel-order?orderId=${orderId}&isResident=${isResident}`);
+    toast.success(response.data.message || "Book Canceled successfully");
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    const errorMessage = axiosError.response?.data?.message || "canceled failed";
+    toast.error(errorMessage);
+    throw error;
+  }
+}

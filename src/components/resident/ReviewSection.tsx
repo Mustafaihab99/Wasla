@@ -7,6 +7,7 @@ import useAddReviews from "../../hooks/resident/useAddReviews";
 import useDeleteReview from "../../hooks/resident/useDeleteReview";
 import useEditReview from "../../hooks/resident/useEditReview";
 import { toast } from "sonner";
+import i18next from "i18next";
 
 interface Props {
   doctorId: string;
@@ -153,7 +154,13 @@ export default function ReviewSection({ doctorId, currentUserId }: Props) {
                     </div>
 
                     <span className="text-xs text-dried self-end">
-                      {new Date(review.createdAt).toLocaleDateString()}
+                      {new Date(review.createdAt).toLocaleString(
+                      i18next.language === "ar" ? "ar-EG" : "en-GB",
+                      {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                      },
+                    )}
                     </span>
                   </div>
 

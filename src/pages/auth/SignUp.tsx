@@ -138,7 +138,7 @@ const validationSchema = Yup.object({
               >
                 <option value="">{t("login.chooseRole")}</option>
                 {roles.map((role) => (
-                  role.value !== "admin" && role.value !== "driver" ?
+                  role.value !== "admin" && role.value !== "driver" && role.value !== "superadmin" ?
                   <option key={role.id} value={role.id}>
                     {role.roleName}
                   </option>

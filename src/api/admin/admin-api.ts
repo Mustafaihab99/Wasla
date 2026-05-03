@@ -95,7 +95,7 @@ export async function toogleReport(id: number, reason?: string) {
   try {
     const response = await axiosInstance.put(
       `Social/Toggle_Hide?id=${id}`,
-      { reason }, // ✅ إرسال الـ reason في الـ Body بدلاً من Headers
+      { reason }, 
       {
         headers: {
           'Content-Type': 'application/json',

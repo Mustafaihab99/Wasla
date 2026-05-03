@@ -142,3 +142,17 @@ export interface ReportsTargetData{
   content : string,
   reports : Reports[]
 }
+export interface addAdminData{
+  email: string,
+  password: string,
+  fullName: string,
+  gender: string,
+  phone: string
+}
+export interface allAdminsData{
+    id: string,
+    fullName: string,
+    email: string,
+    phone: string,
+    status: number // o -> active , 2-> suspend
+}

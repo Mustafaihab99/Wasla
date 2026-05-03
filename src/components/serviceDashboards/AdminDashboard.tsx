@@ -15,7 +15,7 @@ import {
   FaUsers,
 } from "react-icons/fa6";
 import { GrServices } from "react-icons/gr";
-import { MdDashboard, MdReport } from "react-icons/md";
+import { MdDashboard, MdReport , MdAdminPanelSettings } from "react-icons/md";
 import logo from "../../assets/images/icons/app-logo.png";
 import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -29,6 +29,7 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { mutate: logout, isPending } = useLogout();
+  const role = sessionStorage.getItem("role");
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("appTheme");
@@ -57,33 +58,43 @@ export default function AdminDashboard() {
 
   const handleLogout = () => logout();
 
-  const navItems = [
-    {
-      label: t("admin.dashboard"),
-      link: "/admin/overview",
-      icon: <MdDashboard />,
-    },
-    {
-      label: t("admin.users"),
-      link: "/admin/manage-users",
-      icon: <FaUsers />,
-    },
-    {
-      label: t("admin.serv"),
-      link: "/admin/services-overview",
-      icon: <GrServices />,
-    },
-    {
-      label: t("admin.viewers"),
-      link: "/admin/viewers-messages",
-      icon: <FaCommentSms />,
-    },
-    {
-      label: t("admin.reports"),
-      link: "/admin/reports",
-      icon: <MdReport />,
-    },
-  ];
+ const navItems = [
+  {
+    label: t("admin.dashboard"),
+    link: "/admin/overview",
+    icon: <MdDashboard />,
+  },
+  {
+    label: t("admin.users"),
+    link: "/admin/manage-users",
+    icon: <FaUsers />,
+  },
+  {
+    label: t("admin.serv"),
+    link: "/admin/services-overview",
+    icon: <GrServices />,
+  },
+  {
+    label: t("admin.viewers"),
+    link: "/admin/viewers-messages",
+    icon: <FaCommentSms />,
+  },
+  {
+    label: t("admin.reports"),
+    link: "/admin/reports",
+    icon: <MdReport />,
+  },
+
+  ...(role === "superadmin"
+    ? [
+        {
+          label: t("admin.adminsControl"),
+          link: "/admin/admins-control",
+          icon: <MdAdminPanelSettings />,
+        },
+      ]
+    : []),
+];
 
   const themeIcon = (th : string) => {
     switch (th) {

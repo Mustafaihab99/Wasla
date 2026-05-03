@@ -3,11 +3,8 @@ import { useState } from "react";
 import i18next from "i18next";
 import { useTranslation } from "react-i18next";
 import useGetResidentOrders from "../../hooks/restaurant/cart/useGetResidentOrders";
-
-import {
-  FaCreditCard,
-  FaMoneyBillWave,
-} from "react-icons/fa";
+import useCancelOrder from "../../hooks/restaurant/useCancelOrder";
+import { FaCreditCard, FaMoneyBillWave } from "react-icons/fa";
 
 import {
   MdPendingActions,
@@ -25,17 +22,14 @@ export default function TakeAwayOrder() {
   const { t } = useTranslation();
   const totalPages = Math.ceil((data?.totalCount || 0) / pageSize);
   const [openOrder, setOpenOrder] = useState<number | null>(null);
+  const cancelOrder = useCancelOrder();
 
   if (isLoading)
-    return (
-      <p className="text-center mt-10 text-dried">Loading...</p>
-    );
+    return <p className="text-center mt-10 text-dried">Loading...</p>;
 
   if (!data?.data?.length)
     return (
-      <p className="text-center text-dried mt-10">
-        {t("restaurant.noOrders")}
-      </p>
+      <p className="text-center text-dried mt-10">{t("restaurant.noOrders")}</p>
     );
 
   // Payment icon
@@ -96,121 +90,120 @@ export default function TakeAwayOrder() {
 
   return (
     <>
-    <div className="max-w-5xl mx-auto space-y-4 p-4">
+      <div className="max-w-5xl mx-auto space-y-4 p-4">
+        {data.data.map((order) => {
+          const status = getStatusUI(order.status);
 
-      {data.data.map((order) => {
-        const status = getStatusUI(order.status);
+          return (
+            <motion.div
+              key={order.id}
+              whileHover={{ y: -4, scale: 1.01 }}
+              className="bg-background border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition">
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+                <div className="flex items-start gap-2">
+                  <MdRestaurant className="text-primary text-xl mt-1" />
 
-        return (
-          <motion.div
-            key={order.id}
-            whileHover={{ y: -4, scale: 1.01 }}
-            className="bg-background border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition"
-          >
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+                  <div>
+                    <h2 className="font-bold text-primary">
+                      {order.restaurantName}
+                    </h2>
 
-              <div className="flex items-start gap-2">
-                <MdRestaurant className="text-primary text-xl mt-1" />
+                    <p className="text-xs text-dried">
+                      {new Date(order.createdAt).toLocaleString(
+                        i18next.language,
+                      )}
+                    </p>
+                  </div>
+                </div>
 
-                <div>
-                  <h2 className="font-bold text-primary">
-                    {order.restaurantName}
-                  </h2>
+                {/* Badges */}
+                <div className="flex flex-wrap gap-2">
+                  <span
+                    className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${status.style}`}>
+                    {status.icon}
+                    {status.label}
+                  </span>
 
-                  <p className="text-xs text-dried">
-                    {new Date(order.createdAt).toLocaleString(
-                      i18next.language
-                    )}
-                  </p>
+                  <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs bg-gray-100 text-gray-700">
+                    {PaymentIcon(order.paymentMethod)}
+                    {order.paymentMethod === 1
+                      ? t("restaurant.card")
+                      : t("restaurant.cash")}
+                  </span>
                 </div>
               </div>
 
-              {/* Badges */}
-              <div className="flex flex-wrap gap-2">
+              {/* Price */}
+              <div className="mt-3 flex justify-between items-center">
+                <p className="font-bold text-lg text-primary">
+                  {order.totalPrice} {t("doctor.EGP")}
+                </p>
 
-                <span
-                  className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${status.style}`}
-                >
-                  {status.icon}
-                  {status.label}
-                </span>
-
-                <span className="flex items-center gap-1 px-3 py-1 rounded-full text-xs bg-gray-100 text-gray-700">
-                  {PaymentIcon(order.paymentMethod)}
-                  {order.paymentMethod === 1 ? t("restaurant.card") : t("restaurant.cash")}
-                </span>
-
+                <button
+                  onClick={() =>
+                    setOpenOrder(openOrder === order.id ? null : order.id)
+                  }
+                  className="text-sm text-primary hover:underline">
+                  {openOrder === order.id
+                    ? t("restaurant.hideItems")
+                    : t("restaurant.viewItems")}
+                </button>
               </div>
-            </div>
+              {(order.status === 0 || order.status === 1) && (
+                <button
+                  onClick={() =>
+                    cancelOrder.mutate({
+                      orderId: order.id,
+                      isResident: true,
+                    })
+                  }
+                  className="px-3 py-1 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition">
+                  {t("restaurant.cancel")}
+                </button>
+              )}
 
-            {/* Price */}
-            <div className="mt-3 flex justify-between items-center">
-              <p className="font-bold text-lg text-primary">
-                {order.totalPrice} {t("doctor.EGP")}
-              </p>
+              {/* Items */}
+              {openOrder === order.id && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  className="mt-3 space-y-2 overflow-hidden">
+                  {order.items.map((item) => (
+                    <div
+                      key={item.orderItemId}
+                      className="flex justify-between text-sm border-b border-border py-1">
+                      <span>{item.orderItemName}</span>
+                      <span className="text-dried">
+                        {item.quantity} × {item.price}
+                      </span>
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
+      <div className="flex justify-center items-center gap-3 mt-6">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+          className="px-4 py-2 rounded-lg border border-border disabled:opacity-40">
+          {t("restaurant.prev")}
+        </button>
 
-              <button
-                onClick={() =>
-                  setOpenOrder(
-                    openOrder === order.id ? null : order.id
-                  )
-                }
-                className="text-sm text-primary hover:underline"
-              >
-                {openOrder === order.id
-                  ? t("restaurant.hideItems")
-                  : t("restaurant.viewItems")}
-              </button>
-            </div>
+        <span className="text-sm text-dried">
+          {page} / {totalPages}
+        </span>
 
-            {/* Items */}
-            {openOrder === order.id && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                className="mt-3 space-y-2 overflow-hidden"
-              >
-                {order.items.map((item) => (
-                  <div
-                    key={item.orderItemId}
-                    className="flex justify-between text-sm border-b border-border py-1"
-                  >
-                    <span>{item.orderItemName}</span>
-                    <span className="text-dried">
-                      {item.quantity} × {item.price}
-                    </span>
-                  </div>
-                ))}
-              </motion.div>
-            )}
-          </motion.div>
-        );
-      })}
-    </div>
-    <div className="flex justify-center items-center gap-3 mt-6">
-
-  <button
-    disabled={page === 1}
-    onClick={() => setPage((p) => p - 1)}
-    className="px-4 py-2 rounded-lg border border-border disabled:opacity-40"
-  >
-    {t("restaurant.prev")}
-  </button>
-
-  <span className="text-sm text-dried">
-    {page} / {totalPages}
-  </span>
-
-  <button
-    disabled={page === totalPages}
-    onClick={() => setPage((p) => p + 1)}
-    className="px-4 py-2 rounded-lg border border-border disabled:opacity-40"
-  >
-    {t("restaurant.next")}
-  </button>
-
-</div>
-</>
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
+          className="px-4 py-2 rounded-lg border border-border disabled:opacity-40">
+          {t("restaurant.next")}
+        </button>
+      </div>
+    </>
   );
 }

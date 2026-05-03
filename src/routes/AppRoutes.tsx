@@ -48,6 +48,7 @@ const AdminOverview = lazy(() => import ("../components/admin/AdminOverview"));
 const AdminViewDetails = lazy(() => import ("../components/admin/AdminViewDetails"));
 const AdminServiceDashboard = lazy(() => import ("../components/admin/AdminServiceOverview"));
 const AdminSocialReports = lazy(() => import ("../components/admin/AdminSocialReports"));
+const SuperAdminControl = lazy(() => import ("../components/admin/superAdmin/SuperAdminControl"));
 // gym dashboard
 const GymDashboard = lazy(() => import ("../components/serviceDashboards/GymDashboard"));
 const GymProfile = lazy(() => import ("../components/gym/GymProfile"));
@@ -143,7 +144,7 @@ export default function AppRoutes() {
         {/* end doctor Dashboard */}
 
         {/* admin Dashboard */}
-        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["admin" , "superadmin"]} />}>
         {/* aDmin layout */}
         <Route path="/admin" element={<AdminDashboard />}>
           <Route index element={<Navigate to="overview" replace />} />
@@ -153,6 +154,13 @@ export default function AppRoutes() {
           <Route path="manage-users" element={<AdminManageUsers />} />
           <Route path="services-overview" element={<AdminServiceDashboard />} />
           <Route path="manage-users/:userId" element={<AdminViewDetails />} />
+        </Route>
+      </Route> 
+        <Route element={<ProtectedRoute allowedRoles={["superadmin"]} />}>
+        {/* aDmin layout */}
+        <Route path="/admin" element={<AdminDashboard />}>
+        <Route path="admins-control" element={<SuperAdminControl />}>
+        </Route>
         </Route>
       </Route> 
         {/* end admin Dashboard */}
