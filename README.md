@@ -1,50 +1,173 @@
-# React + TypeScript + Vite
+# 🌐 Wasla Web — Smart Community Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🚀 Live Demo: https://wasla-sepia.vercel.app/
 
-Currently, two official plugins are available:
+Wasla Web is the frontend application of the **Wasla Smart Community Management System**, designed to provide a seamless and modern interface for managing residential compound services.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Built with scalability, performance, and user experience in mind, the platform serves administrators, residents, and service providers through dynamic dashboards and real-time features.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 🧠 Overview
 
-- Configure the top-level `parserOptions` property like this:
+Wasla Web delivers a unified interface that connects multiple community services into a single platform.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Users can:
+
+* Manage bookings and services
+* Interact with real-time systems
+* Access dashboards tailored to their role
+* Monitor activities, analytics, and reports
+
+---
+
+## 🛠️ Tech Stack
+
+* ⚛️ React (with TypeScript)
+* 🔄 React Query (server state management)
+* 🌐 Axios (API communication)
+* 🎨 Modern UI architecture (component-based)
+* 🚀 Deployment via Vercel
+
+---
+
+## 📁 Project Structure
+
+```id="v9kl2p"
+src/
+ ├── components/     # Reusable UI components
+ ├── pages/          # Application pages (routes)
+ ├── services/       # API calls & integration
+ ├── hooks/          # Custom React hooks
+ ├── types/          # TypeScript interfaces & types
+ ├── utils/          # Helper functions
+ └── assets/         # Static assets
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## ⚙️ Features
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+### 🔐 Authentication System
+
+* Login / Register
+* Role-based access control
+* Secure API integration
+
+### 📊 Dashboards
+
+* Admin dashboard
+* Service provider dashboards
+* Analytics and reports
+
+### 📅 Booking Management
+
+* View and manage bookings
+* Track service requests
+
+### 💬 Real-Time Features
+
+* Chat system integration
+* Live updates across dashboards
+
+### ⭐ Reviews & Ratings
+
+* View and manage feedback
+
+### 🔔 Notifications
+
+* Real-time alerts and updates
+
+---
+
+## 🚀 Getting Started
+
+### 📥 Clone the Repository
+
+```bash id="k0m1jd"
+git clone https://github.com/WASLA-Graduation/Wasla-website.git
+cd Wasla-website
 ```
+
+---
+
+### 📦 Install Dependencies
+
+```bash id="3cfd2l"
+npm install
+```
+
+---
+
+### ⚙️ Environment Setup
+
+Create a `.env` file in the root directory:
+
+```env id="m7g0lq"
+VITE_API_BASE_URL=your_backend_api_url
+```
+
+---
+
+### ▶️ Run the Project
+
+```bash id="v13h9q"
+npm run dev
+```
+
+---
+
+### 🏗️ Build for Production
+
+```bash id="0t7z6g"
+npm run build
+```
+
+---
+
+## 🌍 Deployment
+
+The project is deployed on Vercel for fast and reliable delivery.
+
+### 🔗 Live Application
+
+👉 https://wasla-sepia.vercel.app/
+
+---
+
+## 🧩 Architecture
+
+The application follows a **modular and scalable frontend architecture**:
+
+* Component-based design
+* Separation of concerns (UI / logic / API)
+* Centralized API handling using Axios
+* Efficient data fetching with React Query
+
+---
+
+## 👨‍💻 Team
+
+Developed as part of the Wasla Graduation Project.
+
+* Frontend Developer (React)
+* Backend Team (.NET)
+* Mobile Team (Flutter)
+
+---
+
+## 📌 Notes
+
+* Ensure backend API is running before starting the project
+* Configure environment variables correctly
+* Use production API for deployment
+
+---
+
+## ⭐ Final Thoughts
+
+Wasla Web represents a scalable, modern frontend solution for smart community management systems.
+
+Designed with performance, usability, and flexibility in mind, it provides a powerful interface for managing complex multi-service environments.
+
+---
