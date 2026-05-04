@@ -162,6 +162,6 @@ export default function ResidentCharts({ residentId }: { residentId: string }) {
           </ResponsiveContainer>
         </div>
       </div>
-/    </div>
+    </div>
   );
 }
