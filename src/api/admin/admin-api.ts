@@ -91,14 +91,28 @@ export async function getAdminUserDetails(
   }
 }
 // post reports
-export async function toogleReport(id: number, adminId:string , reason?: string ) {
+export async function toogleReport(
+  id: number,
+  adminId: string,
+  reason?: string
+) {
   try {
+    // بناء الـ query params بشكل ديناميكي
+    const params = new URLSearchParams({
+      id: id.toString(),
+      adminId,
+    });
+
+    if (reason) {
+      params.append("reason", reason);
+    }
+
     const response = await axiosInstance.put(
-      `Social/Toggle_Hide?id=${id}&adminId=${adminId}`,
-      { reason }, 
+      `Social/Toggle_Hide?${params.toString()}`,
+      {}, // مفيش body
       {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
