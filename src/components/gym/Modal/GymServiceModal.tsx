@@ -96,11 +96,11 @@ export function ServiceModal({
       style={{marginTop : "0"}}
     >
       <motion.form
-        onSubmit={handleSubmit}
-        className="bg-background p-6 rounded-xl w-full max-w-lg space-y-5 border"
-        initial={{ scale: 0.9 }}
-        animate={{ scale: 1 }}
-      >
+  onSubmit={handleSubmit}
+  className="bg-background p-6 rounded-xl w-full max-w-lg space-y-5 border max-h-[90vh] overflow-y-auto"
+  initial={{ scale: 0.9 }}
+  animate={{ scale: 1 }}
+>
         <h3 className="text-xl font-bold">
           {editData ? t("gym.editser") : t("gym.add")}
         </h3>
@@ -127,7 +127,6 @@ export function ServiceModal({
           className="w-full border border-border rounded-lg px-3 py-2 bg-transparent"
           defaultValue={editData?.description.arabic ?? ""}
         />
-
         <input
           name="description.english"
           placeholder={t("gym.endesc")}

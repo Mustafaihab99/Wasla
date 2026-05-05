@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 interface EditPostModalProps {
   postId: number;
+  postOwnerId: string;
   initialContent: string;
   initialFiles: string[];
   currentUserId: string;
@@ -18,6 +19,7 @@ export default function EditPostModal({
   initialContent,
   initialFiles,
   currentUserId,
+  postOwnerId,
   onClose,
 }: EditPostModalProps) {
   const [content, setContent] = useState(initialContent);
@@ -32,7 +34,7 @@ export default function EditPostModal({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const { mutate: doEdit, isPending } = useEditPost(currentUserId);
+  const { mutate: doEdit, isPending } = useEditPost(currentUserId , postOwnerId);
 
   const charLeft = 280 - content.length;
   const isOverLimit = charLeft < 0;

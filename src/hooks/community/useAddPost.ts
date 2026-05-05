@@ -12,6 +12,9 @@ export function useCreatePost(currentUserId: string) {
       queryClient.invalidateQueries({
         queryKey: communityKeys.feed(currentUserId),
       });
+      queryClient.invalidateQueries({
+        queryKey: communityKeys.userPosts(currentUserId , currentUserId),
+      });
     },
   });
 }

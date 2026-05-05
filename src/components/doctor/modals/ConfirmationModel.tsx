@@ -32,6 +32,7 @@ export default function ConfirmationModal({
         <motion.div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-[1000]"
           initial={{ opacity: 0 }}
+          style={{marginTop:"0"}}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
@@ -53,7 +54,7 @@ export default function ConfirmationModal({
             <div className="flex justify-center gap-4">
               <button
                 onClick={onClose}
-                className="px-4 py-2 rounded-lg bg-dried hover:bg-gray-400 transition font-semibold"
+                className="px-4 py-2 rounded-lg bg-background border border-dried text-dried transition font-semibold"
               >
                 {t("doctor.Cancel")}
               </button>

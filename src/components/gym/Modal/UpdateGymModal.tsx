@@ -129,7 +129,6 @@ export default function EditGymProfileModal({
                   />
                   <ErrorMessage name="ownerName" component="div" className="text-red-500 text-sm" />
                 </div>
-
                 {/* Description */}
                 <div>
                   <label className="text-sm text-muted-foreground">

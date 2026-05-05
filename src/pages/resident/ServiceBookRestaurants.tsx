@@ -32,7 +32,7 @@ export default function RestaurantsPage() {
   const { data, isLoading } = useFetchAllRestaurants(
     page,
     6,
-    selectedCategory ?? 0
+    selectedCategory ?? 0,
   );
 
   const restaurants = data?.data || [];
@@ -44,12 +44,15 @@ export default function RestaurantsPage() {
 
   const isFav = (id: string) =>
     favourites.find(
-      (f: { serviceProviderId: string }) => f.serviceProviderId === id
+      (f: { serviceProviderId: string }) => f.serviceProviderId === id,
     );
+  const getCategoryName = (categoryId: number) => {
+    const cat = categories?.find((c) => c.id === categoryId);
+    return cat?.name || "-";
+  };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-
       <Swiper spaceBetween={10} slidesPerView="auto" className="mb-6">
         <SwiperSlide style={{ width: "auto" }}>
           <button
@@ -61,8 +64,7 @@ export default function RestaurantsPage() {
               selectedCategory === 0
                 ? "bg-primary text-white shadow"
                 : "bg-dried text-white"
-            }`}
-          >
+            }`}>
             {t("resident.All")}
           </button>
         </SwiperSlide>
@@ -78,8 +80,7 @@ export default function RestaurantsPage() {
                 selectedCategory === cat.id
                   ? "bg-primary text-white shadow"
                   : "bg-dried text-white"
-              }`}
-            >
+              }`}>
               {cat.name}
             </button>
           </SwiperSlide>
@@ -94,8 +95,7 @@ export default function RestaurantsPage() {
             {restaurants.map((res) => (
               <div
                 key={res.id}
-                className="rounded-2xl shadow-md hover:shadow-2xl transition duration-300 overflow-hidden flex flex-col group"
-              >
+                className="rounded-2xl shadow-md hover:shadow-2xl transition duration-300 overflow-hidden flex flex-col group">
                 {/* Image */}
                 <div className="relative h-52 overflow-hidden">
                   <img
@@ -110,13 +110,10 @@ export default function RestaurantsPage() {
                       if (fav) removeFav.mutate(fav.id);
                       else addFav.mutate(res.id);
                     }}
-                    className="absolute top-3 right-3 bg-white p-2 rounded-full shadow"
-                  >
+                    className="absolute top-3 right-3 bg-white p-2 rounded-full shadow">
                     <FaHeart
                       className={
-                        isFav(res.id)
-                          ? "text-red-500"
-                          : "text-gray-400"
+                        isFav(res.id) ? "text-red-500" : "text-gray-400"
                       }
                     />
                   </button>
@@ -128,18 +125,17 @@ export default function RestaurantsPage() {
                     <h3 className="text-lg font-bold line-clamp-1">
                       {res.name}
                     </h3>
+                    <p className="text-gray-400 text-xs mt-1">👤 {res.ownerName}</p>
 
-                    <p className="text-primary text-sm">
-                      {t("restaurant.category")}
+                    <p className="text-primary text-sm mt-1">
+                      {getCategoryName(res.restaurantCategoryId)}
                     </p>
 
                     <p className="text-gray-500 text-sm mt-1 line-clamp-6">
                       {res.description}
                     </p>
 
-                    <p className="text-sm mt-5">
-                      📞 {res.phoneNumber}
-                    </p>
+                    <p className="text-sm mt-5">📞 {res.phoneNumber}</p>
                   </div>
 
                   {/* Button */}
@@ -154,10 +150,9 @@ export default function RestaurantsPage() {
                         },
                         {
                           onSettled: () => navigate(`${res.id}`),
-                        }
+                        },
                       );
-                    }}
-                  >
+                    }}>
                     {t("resident.ViewDetails")}
                   </button>
                 </div>
@@ -170,20 +165,16 @@ export default function RestaurantsPage() {
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
-              className="px-4 py-2 bg-dried text-white rounded disabled:opacity-50"
-            >
+              className="px-4 py-2 bg-dried text-white rounded disabled:opacity-50">
               {t("tech.prev")}
             </button>
 
-            <span className="px-4 py-2 font-semibold">
-              {data?.currentPage}
-            </span>
+            <span className="px-4 py-2 font-semibold">{data?.currentPage}</span>
 
             <button
               disabled={page >= Math.ceil((data?.totalCount || 0) / 6)}
               onClick={() => setPage((p) => p + 1)}
-              className="px-4 py-2 bg-dried text-white rounded disabled:opacity-50"
-            >
+              className="px-4 py-2 bg-dried text-white rounded disabled:opacity-50">
               {t("tech.next")}
             </button>
           </div>
