@@ -301,6 +301,7 @@ export default function PostCard({
           postId={post.postId}
           initialContent={post.content}
           initialFiles={post.files}
+          postOwnerId={post.userId}
           currentUserId={currentUserId}
           onClose={() => setShowEdit(false)}
         />
