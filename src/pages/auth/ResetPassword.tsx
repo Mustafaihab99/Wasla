@@ -9,7 +9,6 @@ export default function ResetPassword() {
   const location = useLocation();
   const navigate = useNavigate();
   const email = location.state?.email;
-  const verificationCode = location.state?.verificationCode;
   const { t } = useTranslation();
 
   const { mutateAsync: resetpass, isPending } = useResetPass();
@@ -34,7 +33,7 @@ export default function ResetPassword() {
 
   const handleSubmit = async (values: typeof initialValues) => {
     try {
-      const payload = { email, newPassword: values.newPassword , otp: verificationCode};
+      const payload = { email, newPassword: values.newPassword};
       await resetpass(payload, {
         onSuccess: () => {
           navigate("/auth/login");

@@ -25,7 +25,6 @@ export interface resendData{
 export interface forgetData{
     email: string;
     newPassword: string;
-    otp:string
 }
 export interface changePassData{
     email:string;

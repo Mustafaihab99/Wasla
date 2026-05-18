@@ -128,6 +128,20 @@ export function getNotificationAction(
         path: `/resident/profile/my-bookings`,
         label: "Complete Info",
       };
+
+    case NotificationType.orderCancelled:
+      return {
+        type: "navigate",
+        path: `/resident/profile/my-bookings`,
+        label: "Complete Info",
+      };
+      
+    case NotificationType.SocialHidden:
+      return {
+        type: "navigate",
+        path: `/community/profile/me`,
+        label: "Complete Info",
+      };
       
     /** ---------------- RESTAURANT ---------------- */
     case NotificationType.restaurantReservationAccepted:
@@ -138,6 +152,20 @@ export function getNotificationAction(
       };
 
     case NotificationType.restaurantNewReservation:
+      return {
+        type: "navigate",
+        path: `/restaurant/orders`,
+        label: "Complete Info",
+      };
+
+    case NotificationType.restaurantReservationUpdated:
+      return {
+        type: "navigate",
+        path: `/restaurant/orders`,
+        label: "Complete Info",
+      };
+      
+    case NotificationType.restaurantReservationCancelled:
       return {
         type: "navigate",
         path: `/restaurant/orders`,
