@@ -38,6 +38,9 @@ export default function BookTableModal({ open, onClose, restaurantId }: Props) {
     if (form.numberOfPersons > 20)
       newErrors.numberOfPersons = t("restaurant.maxPersons");
 
+    if (form.numberOfPersons < 1)
+      newErrors.numberOfPersons = t("restaurant.minPersons");
+
     if (!form.date) {
       newErrors.date = t("restaurant.required");
     } else if (selectedDate < today) {

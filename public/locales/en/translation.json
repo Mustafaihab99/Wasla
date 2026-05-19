@@ -986,6 +986,7 @@
     "required": "This field is required",
     "maxTables": "Max 4 tables allowed",
     "maxPersons": "Max 20 persons allowed",
+    "minPersons": "At Least one person",
     "futureDate": "Date must be in the future",
     "noBookings": "No reservations found",
     "pending": "Pending",

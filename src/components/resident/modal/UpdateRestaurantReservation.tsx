@@ -47,6 +47,8 @@ export default function EditReservationModal({
 
     if (numberOfPersons > 20)
       newErrors.numberOfPersons = t("restaurant.maxPersons");
+    if (numberOfPersons < 1)
+      newErrors.numberOfPersons = t("restaurant.minPersons");
 
     if (!reservationDate) {
       newErrors.date = t("restaurant.required");
